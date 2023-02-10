@@ -1,4 +1,4 @@
-package com.example.application.views.list;
+package com.tbleier.application.views.list;
 
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;

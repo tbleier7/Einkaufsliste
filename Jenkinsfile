@@ -32,6 +32,6 @@ pipeline {
             steps {
                 docker build -t kitchenlist .
             }
-        {
+        }
     }
 }

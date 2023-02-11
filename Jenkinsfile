@@ -30,7 +30,7 @@ pipeline {
 
         stage ('Package') {
             steps {
-                docker build -t kitchenlist .
+                sh 'docker build -t kitchenlist .'
             }
         }
     }

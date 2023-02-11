@@ -27,5 +27,11 @@ pipeline {
 //                 }
 //             }
         }
+
+        stage ('Package') {
+            steps {
+                docker build -t kitchenlist
+            }
+        {
     }
 }

@@ -1,20 +1,30 @@
 pipeline {
     agent any
-
+    tools {
+        maven 'M3'
+        jdk 'openJDK17'
+    }
     stages {
-        stage('Build') {
+        stage ('Initialize') {
             steps {
-                echo 'Building..'
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                    env | grep -e PATH -e JAVA_HOME
+                    which java
+                    java -version
+                '''
             }
         }
-        stage('Test') {
+
+        stage ('Build') {
             steps {
-                echo 'Testing..'
+                sh 'mvn -Dmaven.test.failure.ignore=true install'
             }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+            post {
+                success {
+                    junit 'target/surefire-reports/**/*.xml'
+                }
             }
         }
     }

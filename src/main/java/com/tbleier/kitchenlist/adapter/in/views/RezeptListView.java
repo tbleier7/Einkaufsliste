@@ -17,14 +17,31 @@ public class RezeptListView extends VerticalLayout {
 
     Grid<Rezept> grid = new Grid<>(Rezept.class);
     TextField filterText = new TextField();
+    RezeptForm rezeptForm;
 
     public RezeptListView() {
         addClassName("rezept-list-view");
         setSizeFull();
 
         configureGrid();
+        configureRezeptForm();
 
-        add(getToolbar(), grid);
+        add(getToolbar(), getContent());
+    }
+
+    private Component getContent() {
+        HorizontalLayout content = new HorizontalLayout(grid, rezeptForm);
+        content.setFlexGrow(2, grid);
+        content.setFlexGrow(1, rezeptForm);
+        content.addClassName("rezept-content");
+        content.setSizeFull();
+
+        return content;
+    }
+
+    private void configureRezeptForm() {
+        rezeptForm = new RezeptForm();
+        rezeptForm.setWidth("25em");
     }
 
     private Component getToolbar() {

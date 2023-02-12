@@ -1,4 +1,4 @@
-package com.tbleier.application;
+package com.tbleier.kitchenlist;
 
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.page.AppShellConfigurator;

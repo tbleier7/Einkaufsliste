@@ -1,4 +1,4 @@
-package com.tbleier.application.views.list;
+package com.tbleier.kitchenlist.adapter.in.views;
 
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
@@ -18,7 +18,7 @@ public class ListView extends VerticalLayout {
         img.setWidth("200px");
         add(img);
 
-        add(new H2("This place intentionally left empty"));
+        add(new H2("This place intentionally left empty - NOT ANY MORE!!!!"));
         add(new Paragraph("It’s a place where you can grow your own UI 🤗"));
 
         setSizeFull();

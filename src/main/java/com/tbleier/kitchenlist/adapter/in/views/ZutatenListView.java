@@ -14,7 +14,7 @@ import com.vaadin.flow.router.Route;
 
 import java.util.List;
 
-@PageTitle("list")
+@PageTitle("Kitchen List")
 @Route(value = "")
 public class ZutatenListView extends VerticalLayout {
 

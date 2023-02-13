@@ -1,5 +1,6 @@
 package com.tbleier.kitchenlist.adapter.in.views;
 
+import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Zutat;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -10,6 +11,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import java.util.List;
 
 @PageTitle("list")
 @Route(value = "")
@@ -40,7 +43,7 @@ public class ZutatenListView extends VerticalLayout {
     }
 
     private void configureRezeptForm() {
-        zutatenForm = new ZutatenForm();
+        zutatenForm = new ZutatenForm(List.of(new Kategorie("Gemüse")));
         zutatenForm.setWidth("25em");
     }
 

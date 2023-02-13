@@ -8,7 +8,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
-public class RezeptForm extends FormLayout {
+public class ZutatenForm extends FormLayout {
     TextField rezeptName = new TextField("Name");
 
     Button save = new Button("Speichern");
@@ -16,8 +16,8 @@ public class RezeptForm extends FormLayout {
     Button cancel = new Button("Abbrechen");
 
 
-    public RezeptForm() {
-        addClassName("rezept-form");
+    public ZutatenForm() {
+        addClassName("zutaten-form");
         add(rezeptName, createButtonLayout());
     }
 

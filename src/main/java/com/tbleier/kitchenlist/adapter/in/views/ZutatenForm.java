@@ -2,7 +2,12 @@ package com.tbleier.kitchenlist.adapter.in.views;
 
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.domain.Zutat;
+import com.tbleier.kitchenlist.application.ports.in.CommandService;
+import com.tbleier.kitchenlist.application.ports.in.commands.AddZutatCommand;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -10,27 +15,41 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.shared.Registration;
 
 import java.util.List;
 
 public class ZutatenForm extends FormLayout {
-    TextField rezeptName = new TextField("Name");
-    ComboBox<Einheit> einheitComboBox = new ComboBox<>("Einheit");
-    ComboBox<Kategorie> kategorieComboBox = new ComboBox<>("Kategorie");
+    Binder<Zutat> binder = new BeanValidationBinder<>(Zutat.class);
+    private final CommandService<AddZutatCommand> addZutatCommandCommandService;
+    TextField name = new TextField("Name");
+    ComboBox<Einheit> einheit = new ComboBox<>("Einheit");
+    ComboBox<Kategorie> kategorie = new ComboBox<>("Kategorie");
 
     Button save = new Button("Speichern");
     Button delete = new Button("Löschen");
     Button cancel = new Button("Abbrechen");
 
+    private Zutat zutat;
 
-    public ZutatenForm(List<Kategorie> kategorien) {
+
+    public ZutatenForm(List<Kategorie> kategorien, CommandService<AddZutatCommand> addZutatCommandCommandService) {
+
+        this.addZutatCommandCommandService = addZutatCommandCommandService;
+
+        binder.bindInstanceFields(this);
+
         addClassName("zutaten-form");
-        einheitComboBox.setItems(Einheit.values());
-        kategorieComboBox.setItems(kategorien);
-        kategorieComboBox.setItemLabelGenerator(Kategorie::getName);
+        einheit.setItems(Einheit.values());
+        kategorie.setItems(kategorien);
+        kategorie.setItemLabelGenerator(Kategorie::getName);
 
-        add(rezeptName, einheitComboBox, kategorieComboBox, createButtonLayout());
+        add(name, einheit, kategorie, createButtonLayout());
     }
+
+
 
     private Component createButtonLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -39,7 +58,29 @@ public class ZutatenForm extends FormLayout {
 
         save.addClickShortcut(Key.ENTER);
         cancel.addClickShortcut(Key.ESCAPE);
+        
+        save.addClickListener(event -> validateAndSave());
 
         return new HorizontalLayout(save, delete, cancel);
+    }
+
+    private void validateAndSave() {
+        try {
+            binder.writeBean(zutat);
+        }
+        catch (Exception e) {
+            System.out.println("Validation failed");
+        }
+
+        addZutatCommandCommandService.execute(new AddZutatCommand(zutat));
+    }
+
+    public void setZutat(Zutat zutat) {
+        this.zutat = zutat;
+        binder.readBean(zutat);
+    }
+
+    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType, ComponentEventListener<T> listener) {
+        return getEventBus().addListener(eventType, listener);
     }
 }

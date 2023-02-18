@@ -1,5 +1,7 @@
 package com.tbleier.kitchenlist.adapter.in.views;
 
+import com.tbleier.kitchenlist.application.AddZutatService;
+import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Zutat;
 import com.vaadin.flow.component.Component;
@@ -43,8 +45,9 @@ public class ZutatenListView extends VerticalLayout {
     }
 
     private void configureRezeptForm() {
-        zutatenForm = new ZutatenForm(List.of(new Kategorie("Gemüse")));
+        zutatenForm = new ZutatenForm(List.of(new Kategorie("Gemüse")), new AddZutatService());
         zutatenForm.setWidth("25em");
+        zutatenForm.setZutat(new Zutat("something", Einheit.Gramm, null));
     }
 
     private Component getToolbar() {

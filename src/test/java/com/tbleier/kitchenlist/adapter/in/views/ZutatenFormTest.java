@@ -34,8 +34,9 @@ class ZutatenFormTest {
     public void setUp() {
         Kategorie _gemuese = new Kategorie("Gemüse");
         kategorien = List.of(new Kategorie("Obst"), _gemuese);
-        testee = new ZutatenForm(kategorien, addRezeptCommandCommandService);
-        testee.setZutat(new Zutat("something", Einheit.Gramm, null));
+        testee = new ZutatenForm(new Zutat("", Einheit.Gramm, null),
+                kategorien,
+                addRezeptCommandCommandService);
     }
 
     @Test

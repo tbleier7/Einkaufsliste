@@ -13,6 +13,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -20,11 +21,14 @@ import java.util.List;
 @Route(value = "")
 public class ZutatenListView extends VerticalLayout {
 
+    private final ZutatenFormFactory zutatenFormFactory;
     Grid<Zutat> grid = new Grid<>(Zutat.class);
     TextField filterText = new TextField();
     ZutatenForm zutatenForm;
 
-    public ZutatenListView() {
+    @Autowired
+    public ZutatenListView(ZutatenFormFactory zutatenFormFactory) {
+        this.zutatenFormFactory = zutatenFormFactory;
         addClassName("zutaten-list-view");
         setSizeFull();
 
@@ -45,9 +49,9 @@ public class ZutatenListView extends VerticalLayout {
     }
 
     private void configureRezeptForm() {
-        zutatenForm = new ZutatenForm(List.of(new Kategorie("Gemüse")), new AddZutatService());
-        zutatenForm.setWidth("25em");
-        zutatenForm.setZutat(new Zutat("something", Einheit.Gramm, null));
+
+        zutatenForm = zutatenFormFactory.create(new Zutat("something", Einheit.Gramm, null),
+                List.of(new Kategorie("Gemüse")));
     }
 
     private Component getToolbar() {
@@ -66,7 +70,7 @@ public class ZutatenListView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassName("zutaten-grid");
         grid.setSizeFull();
-        grid.setColumns("name","einheit","kategorie");
+        grid.setColumns("name", "einheit", "kategorie");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
     }
 

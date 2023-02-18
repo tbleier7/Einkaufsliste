@@ -35,9 +35,12 @@ public class ZutatenForm extends FormLayout {
     private Zutat zutat;
 
 
-    public ZutatenForm(List<Kategorie> kategorien, CommandService<AddZutatCommand> addZutatCommandCommandService) {
+    public ZutatenForm(Zutat zutat ,List<Kategorie> kategorien, CommandService<AddZutatCommand> addZutatCommandCommandService) {
 
         this.addZutatCommandCommandService = addZutatCommandCommandService;
+        this.setWidth("25em");
+        this.setZutat(zutat);
+
 
         binder.bindInstanceFields(this);
 

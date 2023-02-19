@@ -2,9 +2,9 @@ package com.tbleier.kitchenlist.adapter.in.views;
 
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.domain.Zutat;
+import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
-import com.tbleier.kitchenlist.application.ports.in.commands.AddZutatCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.AddArtikelCommand;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -21,9 +21,9 @@ import com.vaadin.flow.shared.Registration;
 
 import java.util.List;
 
-public class ZutatenForm extends FormLayout {
-    Binder<Zutat> binder = new BeanValidationBinder<>(Zutat.class);
-    private final CommandService<AddZutatCommand> addZutatCommandCommandService;
+public class ArtikelForm extends FormLayout {
+    Binder<Artikel> binder = new BeanValidationBinder<>(Artikel.class);
+    private final CommandService<AddArtikelCommand> addZutatCommandCommandService;
     TextField name = new TextField("Name");
     ComboBox<Einheit> einheit = new ComboBox<>("Einheit");
     ComboBox<Kategorie> kategorie = new ComboBox<>("Kategorie");
@@ -32,19 +32,19 @@ public class ZutatenForm extends FormLayout {
     Button delete = new Button("Löschen");
     Button cancel = new Button("Abbrechen");
 
-    private Zutat zutat;
+    private Artikel artikel;
 
 
-    public ZutatenForm(Zutat zutat ,List<Kategorie> kategorien, CommandService<AddZutatCommand> addZutatCommandCommandService) {
+    public ArtikelForm(Artikel artikel, List<Kategorie> kategorien, CommandService<AddArtikelCommand> addZutatCommandCommandService) {
 
         this.addZutatCommandCommandService = addZutatCommandCommandService;
         this.setWidth("25em");
-        this.setZutat(zutat);
+        this.setZutat(artikel);
 
 
         binder.bindInstanceFields(this);
 
-        addClassName("zutaten-form");
+        addClassName("artikel-form");
         einheit.setItems(Einheit.values());
         kategorie.setItems(kategorien);
         kategorie.setItemLabelGenerator(Kategorie::getName);
@@ -69,18 +69,18 @@ public class ZutatenForm extends FormLayout {
 
     private void validateAndSave() {
         try {
-            binder.writeBean(zutat);
+            binder.writeBean(artikel);
         }
         catch (Exception e) {
             System.out.println("Validation failed");
         }
 
-        addZutatCommandCommandService.execute(new AddZutatCommand(zutat));
+        addZutatCommandCommandService.execute(new AddArtikelCommand(artikel));
     }
 
-    public void setZutat(Zutat zutat) {
-        this.zutat = zutat;
-        binder.readBean(zutat);
+    public void setZutat(Artikel artikel) {
+        this.artikel = artikel;
+        binder.readBean(artikel);
     }
 
     public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType, ComponentEventListener<T> listener) {

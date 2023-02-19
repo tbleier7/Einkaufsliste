@@ -2,25 +2,13 @@ package com.tbleier.kitchenlist.application.domain;
 
 import java.util.Objects;
 
-public class Zutat {
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEinheit(Einheit einheit) {
-        this.einheit = einheit;
-    }
-
-    public void setKategorie(Kategorie kategorie) {
-        this.kategorie = kategorie;
-    }
+public class Artikel {
 
     private String name;
     private Einheit einheit;
     private Kategorie kategorie;
 
-    public Zutat(String name, Einheit einheit, Kategorie kategorie) {
+    public Artikel(String name, Einheit einheit, Kategorie kategorie) {
         this.name = name;
         this.einheit = einheit;
         this.kategorie = kategorie;
@@ -38,12 +26,22 @@ public class Zutat {
         return kategorie;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEinheit(Einheit einheit) { this.einheit = einheit; }
+
+    public void setKategorie(Kategorie kategorie) {
+        this.kategorie = kategorie;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Zutat zutat = (Zutat) o;
-        return name.equals(zutat.name) && einheit == zutat.einheit && kategorie.equals(zutat.kategorie);
+        Artikel artikel = (Artikel) o;
+        return name.equals(artikel.name) && einheit == artikel.einheit && kategorie.equals(artikel.kategorie);
     }
 
     @Override

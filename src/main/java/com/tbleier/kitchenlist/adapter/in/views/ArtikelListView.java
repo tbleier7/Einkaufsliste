@@ -1,9 +1,8 @@
 package com.tbleier.kitchenlist.adapter.in.views;
 
-import com.tbleier.kitchenlist.application.AddZutatService;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.domain.Zutat;
+import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -19,17 +18,17 @@ import java.util.List;
 
 @PageTitle("Kitchen List")
 @Route(value = "")
-public class ZutatenListView extends VerticalLayout {
+public class ArtikelListView extends VerticalLayout {
 
-    private final ZutatenFormFactory zutatenFormFactory;
-    Grid<Zutat> grid = new Grid<>(Zutat.class);
+    private final ArtikelFormFactory artikelFormFactory;
+    Grid<Artikel> grid = new Grid<>(Artikel.class);
     TextField filterText = new TextField();
-    ZutatenForm zutatenForm;
+    ArtikelForm artikelForm;
 
     @Autowired
-    public ZutatenListView(ZutatenFormFactory zutatenFormFactory) {
-        this.zutatenFormFactory = zutatenFormFactory;
-        addClassName("zutaten-list-view");
+    public ArtikelListView(ArtikelFormFactory artikelFormFactory) {
+        this.artikelFormFactory = artikelFormFactory;
+        addClassName("artikel-list-view");
         setSizeFull();
 
         configureGrid();
@@ -39,10 +38,10 @@ public class ZutatenListView extends VerticalLayout {
     }
 
     private Component getContent() {
-        HorizontalLayout content = new HorizontalLayout(grid, zutatenForm);
+        HorizontalLayout content = new HorizontalLayout(grid, artikelForm);
         content.setFlexGrow(2, grid);
-        content.setFlexGrow(1, zutatenForm);
-        content.addClassName("zutaten-content");
+        content.setFlexGrow(1, artikelForm);
+        content.addClassName("artikel-content");
         content.setSizeFull();
 
         return content;
@@ -50,25 +49,25 @@ public class ZutatenListView extends VerticalLayout {
 
     private void configureRezeptForm() {
 
-        zutatenForm = zutatenFormFactory.create(new Zutat("something", Einheit.Gramm, null),
+        artikelForm = artikelFormFactory.create(new Artikel("something", Einheit.Gramm, null),
                 List.of(new Kategorie("Gemüse")));
     }
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Zutaten nach Namen filtern...");
+        filterText.setPlaceholder("Artikel nach Namen filtern...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
         Button addRezeptButton = new Button("Zutat hinzufügen");
 
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addRezeptButton);
-        toolbar.addClassName("zutaten-toolbar");
+        toolbar.addClassName("artikel-toolbar");
 
         return toolbar;
     }
 
     private void configureGrid() {
-        grid.addClassName("zutaten-grid");
+        grid.addClassName("artikel-grid");
         grid.setSizeFull();
         grid.setColumns("name", "einheit", "kategorie");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));

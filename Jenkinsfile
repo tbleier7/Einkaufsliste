@@ -19,7 +19,7 @@ pipeline {
 
         stage ('Build') {
             steps {
-                sh 'mvn clean -Dmaven.test.failure.ignore=true install -Pproduction'
+                sh 'mvn clean -Dmaven.test.failure.ignore=false install -Pproduction'
             }
 //             post {
 //                 success {

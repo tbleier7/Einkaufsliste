@@ -21,11 +21,11 @@ pipeline {
             steps {
                 sh 'mvn clean -Dmaven.test.failure.ignore=false install -Pproduction'
             }
-//             post {
-//                 success {
-//                     junit 'target/surefire-reports/**/*.xml'
-//                 }
-//             }
+            post {
+                success {
+                    junit 'target/surefire-reports/**/*.xml'
+                }
+            }
         }
 
         stage ('Deploy') {

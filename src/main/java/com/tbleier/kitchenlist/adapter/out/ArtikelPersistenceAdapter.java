@@ -12,4 +12,9 @@ public class ArtikelPersistenceAdapter implements ArtikelRepository {
     public void save(Artikel artikel) {
         System.out.println("Save " + artikel.toString());
     }
+
+    @Override
+    public Artikel findByName(String artikelName) {
+        return null;
+    }
 }

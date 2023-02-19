@@ -15,6 +15,7 @@
         <!-- this parameter is needed as spring-boot bom overwrites it -->
         <selenium.version>4.5.3</selenium.version>
         <testcontainers.version>1.17.3</testcontainers.version>
+        <posgresql.version>42.5.4</posgresql.version>
     </properties>
 
     <parent>
@@ -181,8 +182,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${posgresql.version}</version>
             <scope>runtime</scope>
         </dependency>
 

@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class ApplicationIT {
-
     @Test
     void should_build_dependency_tree() {
     }

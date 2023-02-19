@@ -3,8 +3,8 @@ package com.tbleier.kitchenlist.adapter.out;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -47,18 +47,17 @@ public class ArtikelPersistenceAdapterTest {
         testee = new ArtikelPersistenceAdapter();
     }
 
-    @Test
-    @Ignore("not ready yet")
-    public void should_save_a_artikel_to_database() {
-        //Arrange
-        var expectedArtikel = new Artikel("someArtikel", Einheit.Stueck, new Kategorie("SomeKategorie"));
-
-        //Act
-        testee.save(expectedArtikel);
-        Artikel actual = testee.findByName("someArtikel");
-
-        //Assert
-        assertEquals(expectedArtikel,actual);
-
-    }
+//    @Test
+//    @Disabled("not ready yet")
+//    public void should_save_a_artikel_to_database() {
+//        //Arrange
+//        var expectedArtikel = new Artikel("someArtikel", Einheit.Stueck, new Kategorie("SomeKategorie"));
+//
+//        //Act
+//        testee.save(expectedArtikel);
+//        Artikel actual = testee.findByName("someArtikel");
+//
+//        //Assert
+//        assertEquals(expectedArtikel,actual);
+//    }
 }

@@ -43,7 +43,7 @@ public class ArtikelPersistenceAdapterTest {
     private ArtikelPersistenceAdapter testee;
 
     @Test
-    public void should_save_a_artikel_to_database() {
+    public void should_persist_an_artikel() {
         //Arrange
         var expectedArtikel = new Artikel("someArtikel", Einheit.Stueck, new Kategorie("SomeKategorie"));
 

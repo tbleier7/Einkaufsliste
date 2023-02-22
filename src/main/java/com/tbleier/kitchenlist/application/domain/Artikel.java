@@ -51,7 +51,7 @@ public class Artikel {
 
     @Override
     public String toString() {
-        return "Zutat{" +
+        return "Artikel{" +
                 "name='" + name + '\'' +
                 ", einheit=" + einheit +
                 ", kategorie=" + kategorie +

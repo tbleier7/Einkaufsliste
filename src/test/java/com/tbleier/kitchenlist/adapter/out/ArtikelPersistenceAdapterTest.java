@@ -1,11 +1,12 @@
 package com.tbleier.kitchenlist.adapter.out;
 
+import com.tbleier.kitchenlist.adapter.out.persistence.artikel.ArtikelPersistenceAdapter;
+import com.tbleier.kitchenlist.adapter.out.persistence.PersistenceConfig;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.ApplicationContextInitializer;
@@ -21,7 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(initializers = ArtikelPersistenceAdapterTest.DataSourceInitializer.class)
+@ContextConfiguration(initializers = ArtikelPersistenceAdapterTest.DataSourceInitializer.class,
+        classes = {ArtikelPersistenceAdapter.class,
+                PersistenceConfig.class})
 public class ArtikelPersistenceAdapterTest {
 
     @Container
@@ -32,32 +35,23 @@ public class ArtikelPersistenceAdapterTest {
 
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
-            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
-                    applicationContext,
-                    "spring.datasource.url=" + database.getJdbcUrl(),
-                    "spring.datasource.username=" + database.getUsername(),
-                    "spring.datasource.password=" + database.getPassword());
+            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(applicationContext, "spring.datasource.url=" + database.getJdbcUrl(), "spring.datasource.username=" + database.getUsername(), "spring.datasource.password=" + database.getPassword());
         }
     }
 
+    @Autowired
     private ArtikelPersistenceAdapter testee;
 
-    @BeforeEach
-    public void setUp() {
-        testee = new ArtikelPersistenceAdapter();
-    }
+    @Test
+    public void should_save_a_artikel_to_database() {
+        //Arrange
+        var expectedArtikel = new Artikel("someArtikel", Einheit.Stueck, new Kategorie("SomeKategorie"));
 
-//    @Test
-//    @Disabled("not ready yet")
-//    public void should_save_a_artikel_to_database() {
-//        //Arrange
-//        var expectedArtikel = new Artikel("someArtikel", Einheit.Stueck, new Kategorie("SomeKategorie"));
-//
-//        //Act
-//        testee.save(expectedArtikel);
-//        Artikel actual = testee.findByName("someArtikel");
-//
-//        //Assert
-//        assertEquals(expectedArtikel,actual);
-//    }
+        //Act
+        testee.save(expectedArtikel);
+        Artikel actual = testee.findByName("someArtikel");
+
+        //Assert
+        assertEquals(expectedArtikel, actual);
+    }
 }

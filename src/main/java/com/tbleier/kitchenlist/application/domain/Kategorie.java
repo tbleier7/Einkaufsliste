@@ -1,5 +1,7 @@
 package com.tbleier.kitchenlist.application.domain;
 
+import java.util.Objects;
+
 public class Kategorie {
 
     private final String name;
@@ -17,5 +19,18 @@ public class Kategorie {
         return "Kategorie{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Kategorie kategorie = (Kategorie) o;
+        return name.equals(kategorie.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

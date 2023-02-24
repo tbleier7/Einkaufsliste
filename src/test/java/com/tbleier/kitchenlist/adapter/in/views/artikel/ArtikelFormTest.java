@@ -1,4 +1,4 @@
-package com.tbleier.kitchenlist.adapter.in.views;
+package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
@@ -40,13 +40,13 @@ class ArtikelFormTest {
     }
 
     @Test
-    public void should_save_a_new_zutat() {
+    public void should_add_a_new_artikel_on_save_click() {
         //Arrange
-        var expectedZutat = new Artikel("Zwiebeln", Einheit.Stueck, kategorien.get(1));
+        var expectedArtikel = new Artikel("Zwiebeln", Einheit.Stueck, kategorien.get(1));
 
-        testee.name.setValue(expectedZutat.getName());
-        testee.einheit.setValue(expectedZutat.getEinheit());
-        testee.kategorie.setValue(expectedZutat.getKategorie());
+        testee.name.setValue(expectedArtikel.getName());
+        testee.einheit.setValue(expectedArtikel.getEinheit());
+        testee.kategorie.setValue(expectedArtikel.getKategorie());
 
         //Act
         testee.save.click();
@@ -54,6 +54,6 @@ class ArtikelFormTest {
         //Assert
         verify(addRezeptCommandCommandService).execute(addZutatCommandCaptor.capture());
         var addZutatCommand = addZutatCommandCaptor.getValue();
-        assertEquals(expectedZutat, addZutatCommand.getZutat()); // Da stimmt was nicht!!!
+        assertEquals(expectedArtikel, addZutatCommand.getZutat());
     }
 }

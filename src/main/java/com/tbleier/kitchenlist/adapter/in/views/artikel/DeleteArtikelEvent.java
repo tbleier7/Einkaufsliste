@@ -1,4 +1,4 @@
-package com.tbleier.kitchenlist.adapter.in.views;
+package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
 import com.tbleier.kitchenlist.application.domain.Artikel;
 

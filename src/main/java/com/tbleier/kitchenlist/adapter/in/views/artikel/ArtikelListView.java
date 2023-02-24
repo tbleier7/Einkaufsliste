@@ -1,5 +1,6 @@
-package com.tbleier.kitchenlist.adapter.in.views;
+package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
+import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Artikel;
@@ -17,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @PageTitle("Kitchen List")
-@Route(value = "")
+@Route(value = "", layout = MainLayout.class)
 public class ArtikelListView extends VerticalLayout {
 
     private final ArtikelFormFactory artikelFormFactory;

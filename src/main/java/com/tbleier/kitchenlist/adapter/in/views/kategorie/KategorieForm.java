@@ -1,6 +1,5 @@
 package com.tbleier.kitchenlist.adapter.in.views.kategorie;
 
-import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
 import com.vaadin.flow.component.Component;
@@ -26,7 +25,7 @@ public class KategorieForm extends FormLayout {
     Button delete = new Button("Löschen");
     Button cancel = new Button("Abbrechen");
 
-    private KategorieModel kategorie;
+    private KategorieModel kategorieModel;
 
 
     public KategorieForm(KategorieModel kategorieModel,
@@ -36,11 +35,10 @@ public class KategorieForm extends FormLayout {
         this.addKategorieCommandService = addKategorieCommandService;
         this.mapper = mapper;
         this.setWidth("25em");
-        this.setKategorie(kategorieModel);
-
-
-        binder.bindInstanceFields(this);
         addClassName("kategorie-form");
+
+        this.setKategorieModel(kategorieModel);
+        binder.bindInstanceFields(this);
 
         add(name, createButtonLayout());
     }
@@ -62,19 +60,19 @@ public class KategorieForm extends FormLayout {
 
     private void validateAndSave() {
         try {
-            binder.writeBean(kategorie);
+            binder.writeBean(kategorieModel);
         }
         catch (Exception e) {
             System.out.println("Validation failed");
         }
 
-        var kategorie = mapper.modelToKategorie(this.kategorie);
+        var kategorie = mapper.modelToKategorie(kategorieModel);
         addKategorieCommandService.execute(new SaveKategorieCommand(kategorie));
     }
 
-    public void setKategorie(KategorieModel kategorie) {
-        this.kategorie = kategorie;
-        binder.readBean(kategorie);
+    public void setKategorieModel(KategorieModel kategorieModel) {
+        this.kategorieModel = kategorieModel;
+        binder.readBean(this.kategorieModel);
     }
 
     public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType, ComponentEventListener<T> listener) {

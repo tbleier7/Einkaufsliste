@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 class KategorieFormTest {
 
     @Mock
-    private CommandService<SaveKategorieCommand> addKategorieCommandService;
+    private CommandService<SaveKategorieCommand> saveKategorieCommandService;
 
     private KategorieModelMapper mapper;
 
@@ -30,23 +30,22 @@ class KategorieFormTest {
     @BeforeEach
     public void setUp() {
         mapper = KategorieModelMapper.INSTANCE;
-        testee = new KategorieForm(new KategorieModel(), addKategorieCommandService, mapper);
+        testee = new KategorieForm(new KategorieModel(), saveKategorieCommandService, mapper);
     }
     
     @Test
     public void Should_save_kategorie_on_save_click() {
         //Arrange
         var expectedKategorie = new Kategorie("Gemuese");
-
         testee.name.setValue(expectedKategorie.getName());
     
         //Act
         testee.save.click();
     
         //Assert
-        verify(addKategorieCommandService).execute(addKategorieCommandCaptor.capture());
-        var addZutatCommand = addKategorieCommandCaptor.getValue();
-        assertEquals(expectedKategorie, addZutatCommand.getKategorie());
+        verify(saveKategorieCommandService).execute(addKategorieCommandCaptor.capture());
+        var saveKategorieCommand = addKategorieCommandCaptor.getValue();
+        assertEquals(expectedKategorie, saveKategorieCommand.getKategorie());
     }
 
 }

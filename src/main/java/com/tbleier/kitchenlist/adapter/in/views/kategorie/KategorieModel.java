@@ -6,10 +6,6 @@ public class KategorieModel {
 
     private String name;
 
-    public KategorieModel() {
-
-    }
-
     public String getName() {
         return name;
     }

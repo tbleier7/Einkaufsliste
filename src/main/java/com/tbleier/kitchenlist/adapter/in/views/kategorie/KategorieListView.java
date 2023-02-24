@@ -5,31 +5,42 @@ import com.tbleier.kitchenlist.adapter.in.views.artikel.ArtikelForm;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @PageTitle("Kitchen List")
 @Route(value = "kategorie", layout = MainLayout.class)
 public class KategorieListView extends VerticalLayout {
 
     private final KategorieFormFactory kategorieFormFactory;
-    Grid<Kategorie> grid = new Grid<>(Kategorie.class);
+    private final QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
+    private final KategorieModelMapper mapper;
+    Grid<KategorieModel> grid = new Grid<>(KategorieModel.class);
     TextField filterText = new TextField();
     KategorieForm kategorieForm;
 
     @Autowired
-    public KategorieListView(KategorieFormFactory kategorieFormFactory) {
+    public KategorieListView(KategorieFormFactory kategorieFormFactory,
+                             QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService,
+                             KategorieModelMapper mapper) {
         this.kategorieFormFactory = kategorieFormFactory;
+        this.listAllKategorienQueryService = listAllKategorienQueryService;
+        this.mapper = mapper;
         addClassName("kategorie-list-view");
         setSizeFull();
 
@@ -37,6 +48,17 @@ public class KategorieListView extends VerticalLayout {
         configureKategorieForm();
 
         add(getToolbar(), getContent());
+    }
+
+    private Stream<KategorieModel> loadKategorien() {
+        var kategorien = listAllKategorienQueryService.execute(new ListAllKategorienQuery());
+
+        if(kategorien.isEmpty())
+            return Stream.<KategorieModel>builder().build();
+
+        var models = mapper.kategorieToModel(kategorien);
+
+        return models.stream();
     }
 
     private Component getContent() {
@@ -68,10 +90,12 @@ public class KategorieListView extends VerticalLayout {
     }
 
     private void configureGrid() {
+
         grid.addClassName("kategorie-grid");
         grid.setSizeFull();
         grid.setColumns("name");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        grid.setItems(query -> loadKategorien());
     }
 
 }

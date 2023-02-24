@@ -20,6 +20,8 @@ class KategorieFormTest {
     @Mock
     private CommandService<SaveKategorieCommand> addKategorieCommandService;
 
+    private KategorieModelMapper mapper;
+
     @Captor
     ArgumentCaptor<SaveKategorieCommand> addKategorieCommandCaptor;
 
@@ -27,13 +29,15 @@ class KategorieFormTest {
 
     @BeforeEach
     public void setUp() {
-        testee = new KategorieForm(new Kategorie("Irgendwas"), addKategorieCommandService );
+        mapper = KategorieModelMapper.INSTANCE;
+        testee = new KategorieForm(new KategorieModel(), addKategorieCommandService, mapper);
     }
     
     @Test
     public void Should_save_kategorie_on_save_click() {
         //Arrange
         var expectedKategorie = new Kategorie("Gemuese");
+
         testee.name.setValue(expectedKategorie.getName());
     
         //Act

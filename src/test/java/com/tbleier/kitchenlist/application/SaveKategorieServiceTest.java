@@ -1,0 +1,38 @@
+package com.tbleier.kitchenlist.application;
+
+import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
+import com.tbleier.kitchenlist.application.ports.out.KategorieRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
+class SaveKategorieServiceTest {
+
+    @Mock
+    private KategorieRepository kategorieRepository;
+    private SaveKategorieService testee;
+
+    @BeforeEach
+    public void setUp() {
+        testee = new SaveKategorieService(kategorieRepository);
+    }
+
+    @Test
+    public void should_save_kategorie_to_repository() {
+        //Arrange
+        var kategorie = new Kategorie("TestKategorie");
+
+        //Act
+        testee.execute(new SaveKategorieCommand(kategorie));
+
+        //Assert
+        verify(kategorieRepository).save(kategorie);
+    }
+}

@@ -1,4 +1,6 @@
-package com.tbleier.kitchenlist.adapter.out.persistence.artikel;
+package com.tbleier.kitchenlist.adapter.out.persistence.kategorie;
+
+import com.tbleier.kitchenlist.adapter.out.persistence.artikel.ArtikelJpaEntity;
 
 import javax.persistence.*;
 

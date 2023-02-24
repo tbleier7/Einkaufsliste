@@ -1,6 +1,5 @@
-package com.tbleier.kitchenlist.adapter.out;
+package com.tbleier.kitchenlist.adapter.out.persistence.artikel;
 
-import com.tbleier.kitchenlist.adapter.out.persistence.artikel.ArtikelPersistenceAdapter;
 import com.tbleier.kitchenlist.adapter.out.persistence.PersistenceConfig;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;

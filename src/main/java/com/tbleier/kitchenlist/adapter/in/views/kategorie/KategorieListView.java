@@ -51,7 +51,7 @@ public class KategorieListView extends VerticalLayout {
 
     private void configureKategorieForm() {
 
-        kategorieForm = kategorieFormFactory.create(new Kategorie("Irgendwas"));
+        kategorieForm = kategorieFormFactory.create(new KategorieModel());
     }
 
     private Component getToolbar() {

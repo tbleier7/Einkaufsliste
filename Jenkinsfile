@@ -33,7 +33,7 @@ pipeline {
 
         stage ('Deploy') {
             steps {
-                sshPublisher failOnError: true, publishers: [sshPublisherDesc(configName: 'ubuntu-house-server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sudo systemctl restart kitchenlist.service', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/webapps/kitchenlist', remoteDirectorySDF: false, removePrefix: 'target', sourceFiles: 'target/*.jar')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)]
+                sshPublisher failOnError: true, publishers: [sshPublisherDesc(configName: 'kitchenlist_tu@UbuntuHouseServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sudo systemctl restart kitchenlist.service', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/webapps/kitchenlist', remoteDirectorySDF: false, removePrefix: 'target', sourceFiles: 'target/*.jar')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)]
             }
         }
     }

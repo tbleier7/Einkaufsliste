@@ -4,6 +4,7 @@ import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.tbleier.kitchenlist.application.ports.out.KategorieRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class FindAllKategorienService implements QueryService<ListAllKategorienQ
 
     private final KategorieRepository repository;
 
+    @Autowired
     public FindAllKategorienService(KategorieRepository repository) {
         this.repository = repository;
     }

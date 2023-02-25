@@ -5,6 +5,8 @@ import com.tbleier.kitchenlist.application.ports.out.KategorieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class KategoriePersistenceAdapter implements KategorieRepository {
 
@@ -29,5 +31,13 @@ public class KategoriePersistenceAdapter implements KategorieRepository {
         var domainEntity = mapper.jpaEntityToKategorie(jpaEntity);
 
         return domainEntity;
+    }
+
+    @Override
+    public List<Kategorie> findAll() {
+        var jpaEntities = kategorieJpaRepository.findAll();
+        var kategorien = mapper.jpaEntityToKategorie(jpaEntities);
+
+        return kategorien;
     }
 }

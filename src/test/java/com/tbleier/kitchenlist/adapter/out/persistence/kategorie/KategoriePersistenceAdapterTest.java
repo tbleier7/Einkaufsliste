@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,6 +19,8 @@ import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,6 +45,9 @@ class KategoriePersistenceAdapterTest {
     }
 
     @Autowired
+    private TestEntityManager entityManager;
+
+    @Autowired
     private KategoriePersistenceAdapter testee;
 
     @Test
@@ -55,5 +61,26 @@ class KategoriePersistenceAdapterTest {
 
         //Assert
         assertEquals(expectedKategorie, actual);
+    }
+
+    @Test
+    public void should_find_all_kategorien() {
+        //Arrange
+        var kategorie1 = new KategorieJpaEntity();
+        kategorie1.setName("Gemüse");
+
+        var kategorie2 = new KategorieJpaEntity();
+        kategorie2.setName("Fleisch");
+
+        entityManager.persist(kategorie1);
+        entityManager.persist(kategorie2);
+
+        var expectedKategorien = List.of(new Kategorie("Gemüse"), new Kategorie("Fleisch"));
+
+        //Act
+        List<Kategorie> actual = testee.findAll();
+
+        //Assert
+        assertEquals(expectedKategorien, actual);
     }
 }

@@ -24,6 +24,7 @@ pipeline {
             post {
                 success {
                     junit 'target/surefire-reports/**/*.xml'
+                    emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
                 }
                 failure {
                     emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'

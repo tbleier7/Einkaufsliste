@@ -7,13 +7,11 @@ import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieComman
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +61,48 @@ class KategorieListViewTest {
         //Assert
         assertThat(actual, hasSize(2));
         assertThat(actual, hasItems(kategorieModel1, kategorieModel2));
+    }
+    
+    @Test
+    public void should_not_be_in_editing_mode_initially() {
+
+        //Assert
+        assertThatEditing(false);
+    }
+    
+    @Test
+    public void should_go_into_editing_mode_when_grid_item_gets_selected() {
+        //Arrange
+        var selectedKategorie = new KategorieModel();
+        selectedKategorie.setName("SelectedKategorie");
+
+        //Act
+        testee.grid.select(selectedKategorie);
+
+        //Assert
+        assertThatEditing(true);
+    }
+
+    @Test
+    public void should_leave_editing_mode_when_unselecting_an_item() {
+        //Arrange
+        testee.grid.select(new KategorieModel());
+
+        //Act
+        testee.grid.deselectAll();
+
+        //Assert
+        assertThatEditing(false);
+    }
+
+    private void assertThatEditing(boolean editing) {
+        var classnames = testee.getClassNames();
+        var editingMode = "editing";
+
+        if(editing)
+            assertThat(classnames, hasItem(editingMode));
+        else
+            assertThat(classnames, not(hasItem(editingMode)));
     }
 
     private void GivenKategorien(List<Kategorie> kategorien) {

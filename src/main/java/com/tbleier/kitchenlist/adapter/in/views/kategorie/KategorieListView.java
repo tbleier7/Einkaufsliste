@@ -1,9 +1,6 @@
 package com.tbleier.kitchenlist.adapter.in.views.kategorie;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
-import com.tbleier.kitchenlist.adapter.in.views.artikel.ArtikelForm;
-import com.tbleier.kitchenlist.application.domain.Artikel;
-import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
@@ -13,8 +10,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.provider.CallbackDataProvider;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -48,11 +43,18 @@ public class KategorieListView extends VerticalLayout {
         configureKategorieForm();
 
         add(getToolbar(), getContent());
+        closeEditor();
     }
 
-    private Stream<KategorieModel> loadKategorien() {
-        var kategorien = listAllKategorienQueryService.execute(new ListAllKategorienQuery());
+    private void closeEditor() {
+        kategorieForm.setKategorieModel(null);
+        kategorieForm.setVisible(false);
+        removeClassName("editing");
+    }
 
+    private Stream<KategorieModel> loadKategorien(int offset, int limit) {
+
+        var kategorien = listAllKategorienQueryService.execute(new ListAllKategorienQuery());
         if(kategorien.isEmpty())
             return Stream.<KategorieModel>builder().build();
 
@@ -95,7 +97,21 @@ public class KategorieListView extends VerticalLayout {
         grid.setSizeFull();
         grid.setColumns("name");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        grid.setItems(query -> loadKategorien());
+        grid.setItems(vaadinQuery -> loadKategorien(vaadinQuery.getOffset(), vaadinQuery.getLimit()));
+
+        grid.asSingleSelect().addValueChangeListener(e -> editKategorie(e.getValue()));
+    }
+
+    private void editKategorie(KategorieModel kategorieModel) {
+
+        if(kategorieModel == null) {
+            closeEditor();
+            return;
+        }
+
+        kategorieForm.setKategorieModel(kategorieModel);
+        kategorieForm.setVisible(true);
+        addClassName("editing");
     }
 
 }

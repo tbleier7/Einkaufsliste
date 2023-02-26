@@ -40,6 +40,7 @@ public class KategorieForm extends FormLayout {
         this.setKategorieModel(kategorieModel);
         binder.bindInstanceFields(this);
 
+
         add(name, createButtonLayout());
     }
 
@@ -68,6 +69,7 @@ public class KategorieForm extends FormLayout {
 
         var kategorie = mapper.modelToKategorie(kategorieModel);
         addKategorieCommandService.execute(new SaveKategorieCommand(kategorie));
+        fireEvent(new SaveKategorieEvent(this, kategorieModel));
     }
 
     public void setKategorieModel(KategorieModel kategorieModel) {

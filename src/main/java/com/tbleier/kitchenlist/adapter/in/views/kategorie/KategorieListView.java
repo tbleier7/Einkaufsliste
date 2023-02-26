@@ -5,6 +5,7 @@ import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -26,8 +27,8 @@ public class KategorieListView extends VerticalLayout {
     private final QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
     private final KategorieModelMapper mapper;
     Grid<KategorieModel> grid = new Grid<>(KategorieModel.class);
-    TextField filterText = new TextField();
     KategorieForm kategorieForm;
+    Button addKategorieButton;
 
     @Autowired
     public KategorieListView(KategorieFormFactory kategorieFormFactory,
@@ -76,19 +77,27 @@ public class KategorieListView extends VerticalLayout {
     private void configureKategorieForm() {
 
         kategorieForm = kategorieFormFactory.create(new KategorieModel());
+        kategorieForm.addListener(SaveKategorieEvent.class, this::reloadKategorien);
+    }
+
+    private <T extends ComponentEvent<?>> void reloadKategorien(SaveKategorieEvent event) {
+        grid.getDataProvider().refreshAll();
     }
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Kategorien nach Namen filtern...");
-        filterText.setClearButtonVisible(true);
-        filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
-        Button addRezeptButton = new Button("Kategorie hinzufügen");
+        addKategorieButton = new Button("Kategorie hinzufügen");
+        addKategorieButton.addClickListener(click -> openKategorieForm());
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterText, addRezeptButton);
+        HorizontalLayout toolbar = new HorizontalLayout(addKategorieButton);
         toolbar.addClassName("kategorie-toolbar");
 
         return toolbar;
+    }
+
+    private void openKategorieForm() {
+        grid.asSingleSelect().clear();
+        editKategorie(new KategorieModel());
     }
 
     private void configureGrid() {
@@ -97,9 +106,8 @@ public class KategorieListView extends VerticalLayout {
         grid.setSizeFull();
         grid.setColumns("name");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        grid.setItems(vaadinQuery -> loadKategorien(vaadinQuery.getOffset(), vaadinQuery.getLimit()));
-
         grid.asSingleSelect().addValueChangeListener(e -> editKategorie(e.getValue()));
+        grid.setItems(vaadinQuery -> loadKategorien(vaadinQuery.getOffset(), vaadinQuery.getLimit()));
     }
 
     private void editKategorie(KategorieModel kategorieModel) {

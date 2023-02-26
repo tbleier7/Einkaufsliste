@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class KategorieListViewTest {
@@ -67,7 +67,7 @@ class KategorieListViewTest {
     public void should_not_be_in_editing_mode_initially() {
 
         //Assert
-        assertThatEditing(false);
+        assertThatEditingIs(false);
     }
     
     @Test
@@ -80,7 +80,7 @@ class KategorieListViewTest {
         testee.grid.select(selectedKategorie);
 
         //Assert
-        assertThatEditing(true);
+        assertThatEditingIs(true);
     }
 
     @Test
@@ -92,10 +92,20 @@ class KategorieListViewTest {
         testee.grid.deselectAll();
 
         //Assert
-        assertThatEditing(false);
+        assertThatEditingIs(false);
     }
 
-    private void assertThatEditing(boolean editing) {
+    @Test
+    public void should_open_form_when_new_kategorie_should_be_added() {
+        //Act
+        testee.addKategorieButton.click();
+    
+        //Assert
+        assertThatEditingIs(true);
+    }
+
+
+    private void assertThatEditingIs(boolean editing) {
         var classnames = testee.getClassNames();
         var editingMode = "editing";
 

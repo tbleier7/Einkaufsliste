@@ -3,7 +3,7 @@ databaseChangeLog:
   - runningAs:
     username: postgres
   - changeSet:
-      id: 1
+      id: create-table-kategorie
       author: tobias
       changes:
         - createTable:
@@ -21,7 +21,15 @@ databaseChangeLog:
                   type: varchar(255)
 
   - changeSet:
-      id: 2
+      id: create-unique-constraints-for-table-kategorie
+      author: tobias
+      changes:
+        - addUniqueConstraint:
+            columnNames: name
+            tableName: kategorie
+
+  - changeSet:
+      id: create-table-artikel
       author: tobias
       changes:
         - createTable:
@@ -47,3 +55,4 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_artikel_kategorie
                     references: kategorie(id)
+

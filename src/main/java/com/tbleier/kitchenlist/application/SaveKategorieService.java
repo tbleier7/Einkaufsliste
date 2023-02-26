@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class SaveKategorieService implements CommandService<SaveKategorieCommand> {
 
-
     private final KategorieRepository kategorieRepository;
 
     @Autowired
@@ -19,9 +18,6 @@ public class SaveKategorieService implements CommandService<SaveKategorieCommand
 
     @Override
     public void execute(SaveKategorieCommand command) {
-        System.out.println("Adding Kategorie");
-        System.out.println(command.getKategorie());
-
         kategorieRepository.save(command.getKategorie());
     }
 }

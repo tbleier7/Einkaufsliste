@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-kategorie-20230226
+      author: tobias
+      changes:
+        - createTable:
+            tableName: kategorie
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+
+  - changeSet:
+      id: create-unique-constraints-for-table-kategorie-20230226
+      author: tobias
+      changes:
+        - addUniqueConstraint:
+            columnNames: name
+            tableName: kategorie
+
+  - changeSet:
+      id: create-table-artikel-20230226
+      author: tobias
+      changes:
+        - createTable:
+            tableName: artikel
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: einheit
+                  type: varchar(255)
+              - column:
+                  name: kategorie_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_artikel_kategorie
+                    references: kategorie(id)

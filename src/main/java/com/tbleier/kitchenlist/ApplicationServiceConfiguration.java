@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BeanConfigurations {
+public class ApplicationServiceConfiguration {
 
     private final KategorieRepository kategorieRepository;
 
     @Autowired
-    public BeanConfigurations(KategorieRepository kategorieRepository) {
+    public ApplicationServiceConfiguration(KategorieRepository kategorieRepository) {
         this.kategorieRepository = kategorieRepository;
     }
 

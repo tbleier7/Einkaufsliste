@@ -7,6 +7,7 @@ import com.tbleier.kitchenlist.adapter.out.persistence.artikel.ArtikelPersistenc
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.ports.out.NonUniqueException;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.Matchers.*;
 
 @Testcontainers
 @DataJpaTest
@@ -101,10 +102,10 @@ class KategoriePersistenceAdapterTest {
         var kategorieJpaEntityDoublette = new Kategorie("doublette");
 
         //Act && Assert
-        var exception = Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+        var exception = Assertions.assertThrows(NonUniqueException.class, () -> {
             testee.save(kategorieJpaEntityDoublette);
         });
 
-        assertThat(exception.getCause(), isA(org.hibernate.exception.ConstraintViolationException.class));
+        assertThat(exception.getMessage(), is("Kategorie existiert bereits!"));
     }
 }

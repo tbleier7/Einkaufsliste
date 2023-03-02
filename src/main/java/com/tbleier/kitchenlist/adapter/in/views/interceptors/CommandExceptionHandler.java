@@ -30,7 +30,7 @@ public class CommandExceptionHandler<T> implements CommandService<T> {
 
         }
         catch (NonUniqueException nonUniqueException) {
-            text.setText("Da ist eine Doublette");
+            text.setText(nonUniqueException.getMessage());
         }
         catch(Exception e) {
             text.setText(e.getMessage());

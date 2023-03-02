@@ -7,6 +7,7 @@ import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQue
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -44,10 +45,10 @@ public class KategorieListView extends VerticalLayout {
         configureKategorieForm();
 
         add(getToolbar(), getContent());
-        closeEditor();
+        closeEditor(null);
     }
 
-    private void closeEditor() {
+    private void closeEditor(CloseEvent event) {
         kategorieForm.setKategorieModel(null);
         kategorieForm.setVisible(false);
         removeClassName("editing");
@@ -78,6 +79,7 @@ public class KategorieListView extends VerticalLayout {
 
         kategorieForm = kategorieFormFactory.create(new KategorieModel());
         kategorieForm.addListener(SaveKategorieEvent.class, this::reloadKategorien);
+        kategorieForm.addListener(CloseEvent.class, this::closeEditor);
     }
 
     private <T extends ComponentEvent<?>> void reloadKategorien(SaveKategorieEvent event) {
@@ -113,7 +115,7 @@ public class KategorieListView extends VerticalLayout {
     private void editKategorie(KategorieModel kategorieModel) {
 
         if(kategorieModel == null) {
-            closeEditor();
+            closeEditor(null);
             return;
         }
 

@@ -55,8 +55,13 @@ public class KategorieForm extends FormLayout {
         cancel.addClickShortcut(Key.ESCAPE);
         
         save.addClickListener(event -> validateAndSave());
+        cancel.addClickListener(event -> closeForm());
 
         return new HorizontalLayout(save, delete, cancel);
+    }
+
+    private void closeForm() {
+        fireEvent(new CloseEvent(this));
     }
 
     private void validateAndSave() {

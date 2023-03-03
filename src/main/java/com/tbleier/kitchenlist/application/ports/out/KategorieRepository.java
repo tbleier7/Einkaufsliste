@@ -10,4 +10,6 @@ public interface KategorieRepository {
     Kategorie findByName(String kategorieName);
 
     List<Kategorie> findAll();
+
+    void delete(Kategorie kategorie);
 }

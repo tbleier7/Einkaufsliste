@@ -48,4 +48,10 @@ public class KategoriePersistenceAdapter implements KategorieRepository {
 
         return kategorien;
     }
+
+    @Override
+    public void delete(Kategorie kategorie) {
+        var jpaEntity = kategorieJpaRepository.findByName(kategorie.getName());
+        kategorieJpaRepository.delete(jpaEntity);
+    }
 }

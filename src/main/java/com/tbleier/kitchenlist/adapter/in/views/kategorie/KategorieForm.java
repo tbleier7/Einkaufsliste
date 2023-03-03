@@ -1,7 +1,9 @@
 package com.tbleier.kitchenlist.adapter.in.views.kategorie;
 
+import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
+import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -18,6 +20,7 @@ import com.vaadin.flow.shared.Registration;
 public class KategorieForm extends FormLayout {
     Binder<KategorieModel> binder = new BeanValidationBinder<>(KategorieModel.class);
     private final CommandService<SaveKategorieCommand> addKategorieCommandService;
+    private final CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
     private final KategorieModelMapper mapper;
     TextField name = new TextField("Name");
 
@@ -30,9 +33,11 @@ public class KategorieForm extends FormLayout {
 
     public KategorieForm(KategorieModel kategorieModel,
                          CommandService<SaveKategorieCommand> addKategorieCommandService,
+                         CommandService<DeleteKategorieCommand> deleteKategorieCommandService,
                          KategorieModelMapper mapper) {
 
         this.addKategorieCommandService = addKategorieCommandService;
+        this.deleteKategorieCommandService = deleteKategorieCommandService;
         this.mapper = mapper;
         this.setWidth("25em");
         addClassName("kategorie-form");
@@ -55,13 +60,25 @@ public class KategorieForm extends FormLayout {
         cancel.addClickShortcut(Key.ESCAPE);
         
         save.addClickListener(event -> validateAndSave());
+        delete.addClickListener(event -> deleteKategorie());
         cancel.addClickListener(event -> closeForm());
 
         return new HorizontalLayout(save, delete, cancel);
     }
 
+    public void setKategorieModel(KategorieModel kategorieModel) {
+        this.kategorieModel = kategorieModel;
+        binder.readBean(this.kategorieModel);
+    }
+
     private void closeForm() {
         fireEvent(new CloseEvent(this));
+    }
+
+    private void deleteKategorie() {
+        var kategorie = mapModelToKategorie();
+        deleteKategorieCommandService.execute(new DeleteKategorieCommand(kategorie));
+        fireEvent(new DeleteKategorieEvent(this, kategorieModel));
     }
 
     private void validateAndSave() {
@@ -72,14 +89,13 @@ public class KategorieForm extends FormLayout {
             System.out.println("Validation failed");
         }
 
-        var kategorie = mapper.modelToKategorie(kategorieModel);
+        var kategorie = mapModelToKategorie();
         addKategorieCommandService.execute(new SaveKategorieCommand(kategorie));
         fireEvent(new SaveKategorieEvent(this, kategorieModel));
     }
 
-    public void setKategorieModel(KategorieModel kategorieModel) {
-        this.kategorieModel = kategorieModel;
-        binder.readBean(this.kategorieModel);
+    private Kategorie mapModelToKategorie() {
+        return mapper.modelToKategorie(kategorieModel);
     }
 
     public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType, ComponentEventListener<T> listener) {

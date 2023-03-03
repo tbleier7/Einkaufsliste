@@ -78,11 +78,15 @@ public class KategorieListView extends VerticalLayout {
     private void configureKategorieForm() {
 
         kategorieForm = kategorieFormFactory.create(new KategorieModel());
-        kategorieForm.addListener(SaveKategorieEvent.class, this::reloadKategorien);
+        kategorieForm.addListener(SaveKategorieEvent.class, e -> reloadKategorien());
         kategorieForm.addListener(CloseEvent.class, e -> closeEditor());
+        kategorieForm.addListener(DeleteKategorieEvent.class, e -> {
+            closeEditor();
+            reloadKategorien();
+        });
     }
 
-    private <T extends ComponentEvent<?>> void reloadKategorien(SaveKategorieEvent event) {
+    private <T extends ComponentEvent<?>> void reloadKategorien() {
         grid.getDataProvider().refreshAll();
     }
 

@@ -5,6 +5,7 @@ import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
 import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ class KategorieListViewTest {
     private CommandService<SaveKategorieCommand> addKategorieCommandService;
 
     @Mock
+    private CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
+
+    @Mock
     private QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
 
     private KategorieListView testee;
@@ -37,6 +41,7 @@ class KategorieListViewTest {
 
         var formFactory = new KategorieFormFactory(
                 addKategorieCommandService,
+                deleteKategorieCommandService,
                 mapper);
 
         testee = new KategorieListView(formFactory,

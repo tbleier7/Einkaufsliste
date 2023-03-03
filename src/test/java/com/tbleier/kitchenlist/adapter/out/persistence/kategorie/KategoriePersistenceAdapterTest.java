@@ -2,13 +2,8 @@ package com.tbleier.kitchenlist.adapter.out.persistence.kategorie;
 
 import com.tbleier.kitchenlist.adapter.out.persistence.JpaMapperConfig;
 import com.tbleier.kitchenlist.adapter.out.persistence.PersistenceConfig;
-import com.tbleier.kitchenlist.adapter.out.persistence.artikel.ArtikelPersistenceAdapter;
-import com.tbleier.kitchenlist.adapter.out.persistence.artikel.ArtikelPersistenceAdapterTest;
-import com.tbleier.kitchenlist.application.domain.Artikel;
-import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.out.NonUniqueException;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +12,18 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @Testcontainers
 @DataJpaTest
@@ -107,5 +101,20 @@ class KategoriePersistenceAdapterTest {
         });
 
         assertThat(exception.getMessage(), is("Kategorie existiert bereits!"));
+    }
+
+    @Test
+    public void should_delete_a_kategorie() {
+        //Arrange
+        var kategorieJpaEntity = new KategorieJpaEntity();
+        kategorieJpaEntity.setName("toDelete");
+        entityManager.persist(kategorieJpaEntity);
+
+        //Act
+        testee.delete(new Kategorie("toDelete"));
+
+        //Assert
+        var deletedKategorie = entityManager.find(KategorieJpaEntity.class, kategorieJpaEntity.getId());
+        assertNull(deletedKategorie);
     }
 }

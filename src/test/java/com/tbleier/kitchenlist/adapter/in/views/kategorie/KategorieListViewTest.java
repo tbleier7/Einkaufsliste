@@ -104,6 +104,18 @@ class KategorieListViewTest {
         assertThatEditingIs(true);
     }
 
+    @Test
+    public void should_close_form_when_requested() {
+        //Arrange
+        testee.addKategorieButton.click();
+
+        //Act
+        testee.kategorieForm.cancel.click();
+
+        //Assert
+        assertThatEditingIs(false);
+    }
+
 
     private void assertThatEditingIs(boolean editing) {
         var classnames = testee.getClassNames();

@@ -45,10 +45,10 @@ public class KategorieListView extends VerticalLayout {
         configureKategorieForm();
 
         add(getToolbar(), getContent());
-        closeEditor(null);
+        closeEditor();
     }
 
-    private void closeEditor(CloseEvent event) {
+    private void closeEditor() {
         kategorieForm.setKategorieModel(null);
         kategorieForm.setVisible(false);
         removeClassName("editing");
@@ -79,7 +79,7 @@ public class KategorieListView extends VerticalLayout {
 
         kategorieForm = kategorieFormFactory.create(new KategorieModel());
         kategorieForm.addListener(SaveKategorieEvent.class, this::reloadKategorien);
-        kategorieForm.addListener(CloseEvent.class, this::closeEditor);
+        kategorieForm.addListener(CloseEvent.class, e -> closeEditor());
     }
 
     private <T extends ComponentEvent<?>> void reloadKategorien(SaveKategorieEvent event) {
@@ -115,7 +115,7 @@ public class KategorieListView extends VerticalLayout {
     private void editKategorie(KategorieModel kategorieModel) {
 
         if(kategorieModel == null) {
-            closeEditor(null);
+            closeEditor();
             return;
         }
 

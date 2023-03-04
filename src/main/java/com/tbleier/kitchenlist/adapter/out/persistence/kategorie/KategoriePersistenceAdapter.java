@@ -25,13 +25,13 @@ public class KategoriePersistenceAdapter implements KategorieRepository {
     @Override
     public void save(Kategorie kategorie) {
         var jpaEntity = mapper.kategorieToJpaEntity(kategorie);
+
         try {
             kategorieJpaRepository.save(jpaEntity);
         }
         catch(DataIntegrityViolationException dataIntegrityViolationException) {
             throw new NonUniqueException("Kategorie existiert bereits!");
         }
-
     }
 
     @Override

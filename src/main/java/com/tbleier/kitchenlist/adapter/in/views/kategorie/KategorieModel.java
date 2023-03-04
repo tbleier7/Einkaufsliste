@@ -1,10 +1,12 @@
 package com.tbleier.kitchenlist.adapter.in.views.kategorie;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
 public class KategorieModel {
 
-    private String name;
+    @NotEmpty
+    private String name = "";
 
     public String getName() {
         return name;

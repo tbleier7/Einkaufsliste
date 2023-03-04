@@ -2,8 +2,10 @@ package com.tbleier.kitchenlist.adapter.in.views.kategorie;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 @PageTitle("Kitchen List")
 @Route(value = "kategorie", layout = MainLayout.class)
@@ -26,6 +27,7 @@ public class KategorieListView extends VerticalLayout {
 
     private final KategorieFormFactory kategorieFormFactory;
     private final QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
+    private final CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
     private final KategorieModelMapper mapper;
     Grid<KategorieModel> grid = new Grid<>(KategorieModel.class);
     KategorieForm kategorieForm;
@@ -35,9 +37,11 @@ public class KategorieListView extends VerticalLayout {
     @Autowired
     public KategorieListView(KategorieFormFactory kategorieFormFactory,
                              QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService,
+                             CommandService<DeleteKategorieCommand> deleteKategorieCommandService,
                              KategorieModelMapper mapper) {
         this.kategorieFormFactory = kategorieFormFactory;
         this.listAllKategorienQueryService = listAllKategorienQueryService;
+        this.deleteKategorieCommandService = deleteKategorieCommandService;
         this.mapper = mapper;
         kategorieModels = Collections.emptyList();
 
@@ -74,10 +78,6 @@ public class KategorieListView extends VerticalLayout {
         kategorieForm.addListener(SaveKategorieEvent.class, e -> {
             closeEditor();
             addKategorie(e.getModel());
-        });
-        kategorieForm.addListener(DeleteKategorieEvent.class, e -> {
-            closeEditor();
-            removeKategorie(e.getModel());
         });
     }
 
@@ -119,8 +119,23 @@ public class KategorieListView extends VerticalLayout {
         grid.setSizeFull();
         grid.setColumns("name");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        grid.asSingleSelect().addValueChangeListener(e -> editKategorie(e.getValue()));
+
+        this.grid.addComponentColumn(item -> {
+            var deleteButton = new Button("  X  ");
+            deleteButton.addClickListener(event -> deleteKategorie(item));
+            return deleteButton;
+        });
         reloadKategorien();
+    }
+
+    public void deleteKategorie(KategorieModel item) {
+        var kategorie = mapper.modelToKategorie(item);
+        var commandResult = deleteKategorieCommandService.execute(new DeleteKategorieCommand(kategorie));
+
+        if(commandResult.isSuccessful()) {
+            closeEditor();
+            removeKategorie(item);
+        }
     }
 
     private void editKategorie(KategorieModel kategorieModel) {

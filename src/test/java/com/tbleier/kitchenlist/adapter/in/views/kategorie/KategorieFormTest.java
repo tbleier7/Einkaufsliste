@@ -17,8 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class KategorieFormTest {
@@ -34,8 +33,6 @@ class KategorieFormTest {
     @Captor
     ArgumentCaptor<SaveKategorieCommand> saveKategorieCommandCaptor;
 
-    @Captor
-    ArgumentCaptor<DeleteKategorieCommand> deleteKategorieCommandCaptor;
 
     private KategorieForm testee;
     private AtomicBoolean saveEventWasFired;
@@ -60,7 +57,7 @@ class KategorieFormTest {
     }
 
     @Test
-    public void Should_save_kategorie_on_save_click() {
+    public void should_save_kategorie_on_save_click() {
         //Arrange
         givenSaveIs(true);
         var expectedKategorie = new Kategorie("Gemuese");
@@ -76,7 +73,7 @@ class KategorieFormTest {
     }
 
     @Test
-    public void Should_fire_event_when_kategorie_is_saved() {
+    public void should_fire_event_when_kategorie_is_saved() {
         //Arrange
         givenSaveIs(true);
         givenNewKategorie("Gemüse");
@@ -91,7 +88,7 @@ class KategorieFormTest {
     @Test
     public void should_not_send_event_when_save_fails() {
         //Arrange
-        givenSaveIs(false);
+        givenNewKategorie("Gemüse");
 
         //Act
         testee.save.click();
@@ -99,42 +96,18 @@ class KategorieFormTest {
         //Assert
         assertEquals(false, saveEventWasFired.get());
     }
-
+    
     @Test
-    public void should_delete_kategorie_on_delete_click() {
-        givenDeleteIs(true);
-        givenCurrentKategorie("Gemüse");
-
+    public void should_not_save_when_name_is_empty() {
+        //Arrange
+        givenNewKategorie("");
+    
         //Act
-        testee.delete.click();
-
+        testee.save.click();
+    
         //Assert
-        verify(deleteKategorieCommandService).execute(deleteKategorieCommandCaptor.capture());
-        var deleteKategorieCommand = deleteKategorieCommandCaptor.getValue();
-        assertEquals(expectedKategorie, deleteKategorieCommand.getKategorie());
-    }
-
-    @Test
-    public void should_fire_event_when_deleting_a_kategorie() {
-        givenDeleteIs(true);
-        givenCurrentKategorie("Gemüse");
-
-        //Act
-        testee.delete.click();
-
-        //Assert
-        assertEquals(true, deleteEventWasFired.get());
-    }
-
-    @Test
-    public void should_not_fire_event_when_deleting_fails() {
-        givenDeleteIs(false);
-
-        //Act
-        testee.delete.click();
-
-        //Assert
-        assertEquals(false, deleteEventWasFired.get());
+        verifyNoInteractions(saveKategorieCommandService);
+        assertEquals(false, saveEventWasFired.get());
     }
 
     private void givenNewKategorie(String name) {
@@ -142,18 +115,8 @@ class KategorieFormTest {
         testee.name.setValue(expectedKategorie.getName());
     }
 
-    private void givenCurrentKategorie(String name) {
-        var model = new KategorieModel();
-        model.setName(name);
-        expectedKategorie = new Kategorie(model.getName());
-        testee.setKategorieModel(model);
-    }
-
     private void givenSaveIs(boolean successful) {
         when(saveKategorieCommandService.execute(any())).thenReturn(new CommandResult(successful));
     }
 
-    private void givenDeleteIs(boolean successful) {
-        when(deleteKategorieCommandService.execute(any())).thenReturn(new CommandResult(successful));
-    }
 }

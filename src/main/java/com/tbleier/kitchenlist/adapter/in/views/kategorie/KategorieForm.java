@@ -25,7 +25,6 @@ public class KategorieForm extends FormLayout {
     TextField name = new TextField("Name");
 
     Button save = new Button("Speichern");
-    Button delete = new Button("Löschen");
     Button cancel = new Button("Abbrechen");
 
     private KategorieModel kategorieModel;
@@ -52,17 +51,15 @@ public class KategorieForm extends FormLayout {
 
     private Component createButtonLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         save.addClickShortcut(Key.ENTER);
         cancel.addClickShortcut(Key.ESCAPE);
-        
+
         save.addClickListener(event -> validateAndSave());
-        delete.addClickListener(event -> deleteKategorie());
         cancel.addClickListener(event -> closeForm());
 
-        return new HorizontalLayout(save, delete, cancel);
+        return new HorizontalLayout(save, cancel);
     }
 
     public void setKategorieModel(KategorieModel kategorieModel) {
@@ -74,27 +71,18 @@ public class KategorieForm extends FormLayout {
         fireEvent(new CloseEvent(this));
     }
 
-    private void deleteKategorie() {
-        var kategorie = mapModelToKategorie();
-        var commandResult = deleteKategorieCommandService.execute(new DeleteKategorieCommand(kategorie));
-
-        if(commandResult.isSuccessful())
-            fireEvent(new DeleteKategorieEvent(this, kategorieModel));
-    }
-
     private void validateAndSave() {
         try {
             binder.writeBean(kategorieModel);
+            var kategorie = mapModelToKategorie();
+            var commandResult = addKategorieCommandService.execute(new SaveKategorieCommand(kategorie));
+
+            if(commandResult.isSuccessful())
+                fireEvent(new SaveKategorieEvent(this, kategorieModel));
         }
         catch (Exception e) {
             System.out.println("Validation failed");
         }
-
-        var kategorie = mapModelToKategorie();
-        var commandResult = addKategorieCommandService.execute(new SaveKategorieCommand(kategorie));
-
-        if(commandResult.isSuccessful())
-            fireEvent(new SaveKategorieEvent(this, kategorieModel));
     }
 
     private Kategorie mapModelToKategorie() {

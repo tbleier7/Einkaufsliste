@@ -1,5 +1,6 @@
 package com.tbleier.kitchenlist.adapter.in.views.interceptors;
 
+import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.out.NonUniqueException;
 import com.vaadin.flow.component.Text;
@@ -22,12 +23,12 @@ public class CommandExceptionHandler<T> implements CommandService<T> {
     }
 
     @Override
-    public void execute(T command) {
+    public CommandResult execute(T command) {
         var text = new Div(new Text(""));
+        configureNotification(text);
 
         try {
-            decoratee.execute(command);
-
+            return decoratee.execute(command);
         }
         catch (NonUniqueException nonUniqueException) {
             text.setText(nonUniqueException.getMessage());
@@ -36,6 +37,13 @@ public class CommandExceptionHandler<T> implements CommandService<T> {
             text.setText(e.getMessage());
         }
 
+        if(!text.getText().isEmpty())
+            notification.open();
+
+        return new CommandResult(false);
+    }
+
+    private void configureNotification(Div text) {
         notification = new Notification();
         notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         Button closeButton = new Button(new Icon("lumo", "cross"));
@@ -49,8 +57,5 @@ public class CommandExceptionHandler<T> implements CommandService<T> {
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         notification.add(layout);
-
-        if(!text.getText().isEmpty())
-            notification.open();
     }
 }

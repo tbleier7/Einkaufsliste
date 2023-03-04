@@ -5,18 +5,15 @@ import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -24,12 +21,16 @@ import java.util.stream.Stream;
 @Route(value = "kategorie", layout = MainLayout.class)
 public class KategorieListView extends VerticalLayout {
 
+    //TODO: Implementier die Liste als Liste als Lazy, die beim ersten get auf die Collection geladen wird, dann geht das Testen einfacher wahrscheinlich,
+    // dann: implementier das Löschen einfach als remove aus der liste, die hinter der grid liegt, dann spart man sich das neuladen ;)
+
     private final KategorieFormFactory kategorieFormFactory;
     private final QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
     private final KategorieModelMapper mapper;
     Grid<KategorieModel> grid = new Grid<>(KategorieModel.class);
     KategorieForm kategorieForm;
     Button addKategorieButton;
+    private List<KategorieModel> kategorieModels;
 
     @Autowired
     public KategorieListView(KategorieFormFactory kategorieFormFactory,
@@ -38,6 +39,8 @@ public class KategorieListView extends VerticalLayout {
         this.kategorieFormFactory = kategorieFormFactory;
         this.listAllKategorienQueryService = listAllKategorienQueryService;
         this.mapper = mapper;
+        kategorieModels = Collections.emptyList();
+
         addClassName("kategorie-list-view");
         setSizeFull();
 
@@ -54,17 +57,6 @@ public class KategorieListView extends VerticalLayout {
         removeClassName("editing");
     }
 
-    private Stream<KategorieModel> loadKategorien(int offset, int limit) {
-
-        var kategorien = listAllKategorienQueryService.execute(new ListAllKategorienQuery());
-        if(kategorien.isEmpty())
-            return Stream.<KategorieModel>builder().build();
-
-        var models = mapper.kategorieToModel(kategorien);
-
-        return models.stream();
-    }
-
     private Component getContent() {
         HorizontalLayout content = new HorizontalLayout(grid, kategorieForm);
         content.setFlexGrow(2, grid);
@@ -78,16 +70,31 @@ public class KategorieListView extends VerticalLayout {
     private void configureKategorieForm() {
 
         kategorieForm = kategorieFormFactory.create(new KategorieModel());
-        kategorieForm.addListener(SaveKategorieEvent.class, e -> reloadKategorien());
         kategorieForm.addListener(CloseEvent.class, e -> closeEditor());
+        kategorieForm.addListener(SaveKategorieEvent.class, e -> {
+            closeEditor();
+            addKategorie(e.getModel());
+        });
         kategorieForm.addListener(DeleteKategorieEvent.class, e -> {
             closeEditor();
-            reloadKategorien();
+            removeKategorie(e.getModel());
         });
     }
 
-    private <T extends ComponentEvent<?>> void reloadKategorien() {
-        grid.getDataProvider().refreshAll();
+    private void addKategorie(KategorieModel model) {
+        kategorieModels.add(model);
+        grid.setItems(kategorieModels);
+    }
+
+    private void removeKategorie(KategorieModel model) {
+        kategorieModels.remove(model);
+        grid.setItems(kategorieModels);
+    }
+
+    private void reloadKategorien() {
+        var kategorien = listAllKategorienQueryService.execute(new ListAllKategorienQuery());
+        kategorieModels = mapper.kategorieToModel(kategorien);
+        grid.setItems(kategorieModels);
     }
 
     private Component getToolbar() {
@@ -113,7 +120,7 @@ public class KategorieListView extends VerticalLayout {
         grid.setColumns("name");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         grid.asSingleSelect().addValueChangeListener(e -> editKategorie(e.getValue()));
-        grid.setItems(vaadinQuery -> loadKategorien(vaadinQuery.getOffset(), vaadinQuery.getLimit()));
+        reloadKategorien();
     }
 
     private void editKategorie(KategorieModel kategorieModel) {

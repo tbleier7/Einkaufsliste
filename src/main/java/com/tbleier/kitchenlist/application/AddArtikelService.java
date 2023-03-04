@@ -1,5 +1,6 @@
 package com.tbleier.kitchenlist.application;
 
+import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
@@ -17,8 +18,9 @@ public class AddArtikelService implements CommandService<AddArtikelCommand> {
     }
 
     @Override
-    public void execute(AddArtikelCommand command) {
+    public CommandResult execute(AddArtikelCommand command) {
         System.out.println(command.getZutat().getName());
         artikelRepository.save(command.getZutat());
+        return new CommandResult(true);
     }
 }

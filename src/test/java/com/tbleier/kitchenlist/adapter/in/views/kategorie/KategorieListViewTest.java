@@ -37,6 +37,8 @@ class KategorieListViewTest {
     @BeforeEach
     public void setUp() {
 
+        GivenKategorien(List.of(new Kategorie("Gemüse"), new Kategorie("Fleisch")));
+
         var mapper = KategorieModelMapper.INSTANCE;
 
         var formFactory = new KategorieFormFactory(
@@ -52,22 +54,20 @@ class KategorieListViewTest {
     @Test
     public void Should_show_all_kategorien() {
         //Arrange
-        KategorieModel kategorieModel1 = new KategorieModel();
-        kategorieModel1.setName("Gemüse");
+        KategorieModel expectedKategorieModel1 = new KategorieModel();
+        expectedKategorieModel1.setName("Gemüse");
 
-        KategorieModel kategorieModel2 = new KategorieModel();
-        kategorieModel2.setName("Fleisch");
-
-        GivenKategorien(List.of(new Kategorie("Gemüse"), new Kategorie("Fleisch")));
+        KategorieModel expectedKategorieModel2 = new KategorieModel();
+        expectedKategorieModel2.setName("Fleisch");
 
         //Act
         var actual = testee.grid.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
 
         //Assert
         assertThat(actual, hasSize(2));
-        assertThat(actual, hasItems(kategorieModel1, kategorieModel2));
+        assertThat(actual, hasItems(expectedKategorieModel1, expectedKategorieModel2));
     }
-    
+
     @Test
     public void should_not_be_in_editing_mode_initially() {
 

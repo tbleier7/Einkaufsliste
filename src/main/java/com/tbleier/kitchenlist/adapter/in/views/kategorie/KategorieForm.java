@@ -45,7 +45,6 @@ public class KategorieForm extends FormLayout {
         this.setKategorieModel(kategorieModel);
         binder.bindInstanceFields(this);
 
-
         add(name, createButtonLayout());
     }
 
@@ -77,8 +76,10 @@ public class KategorieForm extends FormLayout {
 
     private void deleteKategorie() {
         var kategorie = mapModelToKategorie();
-        deleteKategorieCommandService.execute(new DeleteKategorieCommand(kategorie));
-        fireEvent(new DeleteKategorieEvent(this, kategorieModel));
+        var commandResult = deleteKategorieCommandService.execute(new DeleteKategorieCommand(kategorie));
+
+        if(commandResult.isSuccessful())
+            fireEvent(new DeleteKategorieEvent(this, kategorieModel));
     }
 
     private void validateAndSave() {
@@ -90,8 +91,10 @@ public class KategorieForm extends FormLayout {
         }
 
         var kategorie = mapModelToKategorie();
-        addKategorieCommandService.execute(new SaveKategorieCommand(kategorie));
-        fireEvent(new SaveKategorieEvent(this, kategorieModel));
+        var commandResult = addKategorieCommandService.execute(new SaveKategorieCommand(kategorie));
+
+        if(commandResult.isSuccessful())
+            fireEvent(new SaveKategorieEvent(this, kategorieModel));
     }
 
     private Kategorie mapModelToKategorie() {

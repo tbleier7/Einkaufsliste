@@ -21,6 +21,7 @@ public class KategoriePersistenceAdapter implements KategorieRepository {
         this.mapper = mapper;
     }
 
+    //TODO: Hier brauchts noch einen Test für "wenns dich schon gibt, gibt's ein Update"
     @Override
     public void save(Kategorie kategorie) {
         var jpaEntity = mapper.kategorieToJpaEntity(kategorie);

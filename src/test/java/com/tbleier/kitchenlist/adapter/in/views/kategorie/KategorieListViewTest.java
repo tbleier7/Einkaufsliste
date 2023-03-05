@@ -51,7 +51,6 @@ class KategorieListViewTest {
 
         var formFactory = new KategorieFormFactory(
                 addKategorieCommandService,
-                deleteKategorieCommandService,
                 mapper);
 
         testee = new KategorieListView(formFactory,

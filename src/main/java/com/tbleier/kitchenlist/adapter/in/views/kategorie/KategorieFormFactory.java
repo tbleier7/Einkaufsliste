@@ -11,19 +11,16 @@ import org.springframework.stereotype.Component;
 public class KategorieFormFactory {
 
     private final CommandService<SaveKategorieCommand> addKategorieCommandService;
-    private final CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
     private final KategorieModelMapper mapper;
 
     @Autowired
     public KategorieFormFactory(CommandService<SaveKategorieCommand> addKategorieCommandService,
-                                CommandService<DeleteKategorieCommand> deleteKategorieCommandService,
                                 KategorieModelMapper mapper) {
         this.addKategorieCommandService = addKategorieCommandService;
-        this.deleteKategorieCommandService = deleteKategorieCommandService;
         this.mapper = mapper;
     }
 
     public KategorieForm create(KategorieModel kategorieModel) {
-        return new KategorieForm(kategorieModel, addKategorieCommandService,deleteKategorieCommandService, mapper);
+        return new KategorieForm(kategorieModel, addKategorieCommandService, mapper);
     }
 }

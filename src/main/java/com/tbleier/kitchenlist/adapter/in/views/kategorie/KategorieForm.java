@@ -20,7 +20,6 @@ import com.vaadin.flow.shared.Registration;
 public class KategorieForm extends FormLayout {
     Binder<KategorieModel> binder = new BeanValidationBinder<>(KategorieModel.class);
     private final CommandService<SaveKategorieCommand> addKategorieCommandService;
-    private final CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
     private final KategorieModelMapper mapper;
     TextField name = new TextField("Name");
 
@@ -32,11 +31,9 @@ public class KategorieForm extends FormLayout {
 
     public KategorieForm(KategorieModel kategorieModel,
                          CommandService<SaveKategorieCommand> addKategorieCommandService,
-                         CommandService<DeleteKategorieCommand> deleteKategorieCommandService,
                          KategorieModelMapper mapper) {
 
         this.addKategorieCommandService = addKategorieCommandService;
-        this.deleteKategorieCommandService = deleteKategorieCommandService;
         this.mapper = mapper;
         this.setWidth("25em");
         addClassName("kategorie-form");

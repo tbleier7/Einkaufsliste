@@ -25,9 +25,6 @@ class KategorieFormTest {
     @Mock
     private CommandService<SaveKategorieCommand> saveKategorieCommandService;
 
-    @Mock
-    private CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
-
     private KategorieModelMapper mapper;
 
     @Captor
@@ -43,7 +40,7 @@ class KategorieFormTest {
     @BeforeEach
     public void setUp() {
         mapper = KategorieModelMapper.INSTANCE;
-        testee = new KategorieForm(new KategorieModel(), saveKategorieCommandService, deleteKategorieCommandService, mapper);
+        testee = new KategorieForm(new KategorieModel(), saveKategorieCommandService, mapper);
 
         saveEventWasFired = new AtomicBoolean(false);
         testee.addListener(SaveKategorieEvent.class, e -> {

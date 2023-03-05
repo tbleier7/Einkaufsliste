@@ -23,7 +23,7 @@ public class ArtikelJpaEntity {
     private String name;
     private Einheit einheit;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "kategorie_id", referencedColumnName = "id")
     private KategorieJpaEntity kategorie;
 

@@ -7,6 +7,8 @@ import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ArtikelPersistenceAdapter implements ArtikelRepository {
 
@@ -40,5 +42,10 @@ public class ArtikelPersistenceAdapter implements ArtikelRepository {
         Kategorie kategorie = new Kategorie(artikelJpaEntity.getKategorie().getName());
 
         return new Artikel(artikelJpaEntity.getName(), artikelJpaEntity.getEinheit(), kategorie);
+    }
+
+    @Override
+    public List<Artikel> findAll() {
+        return null;
     }
 }

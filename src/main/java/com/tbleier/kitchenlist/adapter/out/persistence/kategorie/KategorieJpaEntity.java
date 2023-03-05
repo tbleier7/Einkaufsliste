@@ -3,6 +3,10 @@ package com.tbleier.kitchenlist.adapter.out.persistence.kategorie;
 import com.tbleier.kitchenlist.adapter.out.persistence.artikel.ArtikelJpaEntity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "kategorie")
@@ -14,15 +18,15 @@ public class KategorieJpaEntity {
 
     private String name;
 
-    @OneToOne(mappedBy = "kategorie")
-    private ArtikelJpaEntity artikel;
+    @OneToMany(mappedBy = "kategorie")
+    private Set<ArtikelJpaEntity> artikel = new HashSet<>();
 
 
-    public ArtikelJpaEntity getArtikel() {
+    public Set<ArtikelJpaEntity> getArtikel() {
         return artikel;
     }
 
-    public void setArtikel(ArtikelJpaEntity artikel) {
+    public void setArtikel(Set<ArtikelJpaEntity> artikel) {
         this.artikel = artikel;
     }
 

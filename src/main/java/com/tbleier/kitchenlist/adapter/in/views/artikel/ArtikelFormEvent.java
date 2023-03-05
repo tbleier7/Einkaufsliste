@@ -4,14 +4,14 @@ import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.vaadin.flow.component.ComponentEvent;
 
 abstract class ArtikelFormEvent extends ComponentEvent<ArtikelForm> {
-    private final Artikel artikel;
-    public ArtikelFormEvent(ArtikelForm source, Artikel artikel) {
+    private final ArtikelModel artikelModel;
+    public ArtikelFormEvent(ArtikelForm source, ArtikelModel artikelModel) {
         super(source, false);
-        this.artikel = artikel;
+        this.artikelModel = artikelModel;
     }
 
-    public Artikel getArtikel() {
-        return artikel;
+    public ArtikelModel getArtikelModel() {
+        return artikelModel;
     }
 }
 

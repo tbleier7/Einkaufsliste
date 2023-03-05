@@ -60,7 +60,7 @@ class KategorieListViewTest {
     }
 
     @Test
-    public void Should_show_all_kategorien() {
+    public void should_show_all_kategorien() {
         //Arrange
         KategorieModel expectedKategorieModel1 = new KategorieModel();
         expectedKategorieModel1.setName("Gemüse");

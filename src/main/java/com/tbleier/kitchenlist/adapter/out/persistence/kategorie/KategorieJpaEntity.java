@@ -17,6 +17,7 @@ public class KategorieJpaEntity {
     @OneToOne(mappedBy = "kategorie")
     private ArtikelJpaEntity artikel;
 
+
     public ArtikelJpaEntity getArtikel() {
         return artikel;
     }

@@ -18,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -43,7 +45,12 @@ class ArtikelListViewTest {
         var factory = new ArtikelFormFactory(saveArtikelCommandService, listAllKategorienQueryService);
 
         givenTwoArtikel();
+        givenAKategorie();
         testee = new ArtikelListView(factory, listAllArtikelQueryService, mapper);
+    }
+
+    private void givenAKategorie() {
+        when(listAllKategorienQueryService.execute(any())).thenReturn(List.of(new Kategorie("someKategorie")));
     }
 
     @Test
@@ -63,13 +70,52 @@ class ArtikelListViewTest {
     
     @Test
     public void should_show_all_artikel() {
-        //Arrange
-
         //Act
         var actual = testee.grid.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
     
         //Assert
         assertEquals(2, actual.size());
+    }
+    
+    @Test
+    public void should_add_artikel_when_new_artikel_was_saved() {
+        //Arrange
+        var artikelModel = new ArtikelModel("newcomer", Einheit.Stueck, "Gemüse");
+        givenArtikelWasSaved(artikelModel);
+
+        //Act
+        var actual = testee.grid.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
+    
+        //Assert
+        assertThat(actual, hasItem(artikelModel));
+    }
+
+    @Test
+    public void should_close_editor_when_new_artikel_was_saved() {
+        //Arrange
+        var artikelModel = new ArtikelModel("newcomer", Einheit.Stueck, "Gemüse");
+        givenArtikelWasSaved(artikelModel);
+
+        //Assert
+        assertEquals(false,testee.artikelForm.isVisible());
+    }
+
+    @Test
+    public void should_open_selected_artikel_in_editor() {
+        //Arrange
+        var artikelModel = new ArtikelModel("test", Einheit.Stueck, "gemüse");
+
+        //Act
+        testee.grid.select(artikelModel);
+
+        //Assert
+        assertEquals(true,testee.artikelForm.isVisible());
+        assertEquals(artikelModel.getName(), testee.artikelForm.name.getValue());
+    }
+
+    private void givenArtikelWasSaved(ArtikelModel artikelModel) {
+        testee.artikelForm.setArtikelModel(artikelModel);
+        testee.artikelForm.save.click();
     }
 
     private void givenTwoArtikel() {

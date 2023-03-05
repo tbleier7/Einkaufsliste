@@ -1,6 +1,7 @@
 package com.tbleier.kitchenlist.adapter.out.persistence.artikel;
 
 import com.tbleier.kitchenlist.adapter.out.persistence.PersistenceConfig;
+import com.tbleier.kitchenlist.adapter.out.persistence.kategorie.KategorieJpaEntity;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -39,11 +41,18 @@ public class ArtikelPersistenceAdapterTest {
     }
 
     @Autowired
+    private TestEntityManager entityManager;
+
+    @Autowired
     private ArtikelPersistenceAdapter testee;
 
     @Test
     public void should_persist_an_artikel() {
         //Arrange
+        var kategorieJpaEntity = new KategorieJpaEntity();
+        kategorieJpaEntity.setName("SomeKategorie");
+
+        entityManager.persist(kategorieJpaEntity);
         var expectedArtikel = new Artikel("someArtikel", Einheit.Stueck, new Kategorie("SomeKategorie"));
 
         //Act

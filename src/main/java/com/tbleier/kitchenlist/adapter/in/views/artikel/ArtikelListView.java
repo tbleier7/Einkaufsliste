@@ -1,8 +1,6 @@
 package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
-import com.tbleier.kitchenlist.application.domain.Einheit;
-import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListArtikelQuery;
@@ -55,8 +53,8 @@ public class ArtikelListView extends VerticalLayout {
         removeClassName("editing");
     }
 
-    private void openNewArtikelEditor() {
-        artikelForm.setArtikelModel(new ArtikelModel());
+    private void openArtikelEditor(ArtikelModel artikelModel) {
+        artikelForm.setArtikelModel(artikelModel);
         artikelForm.setVisible(true);
         addClassName("editing");
     }
@@ -74,6 +72,15 @@ public class ArtikelListView extends VerticalLayout {
     private void configureRezeptForm() {
 
         artikelForm = artikelFormFactory.create(new ArtikelModel());
+        artikelForm.addListener(SaveArtikelEvent.class, e -> {
+            closeEditor();
+            addArtikel(e.getArtikelModel());
+        });
+    }
+
+    private void addArtikel(ArtikelModel artikelModel) {
+        artikelModels.add(artikelModel);
+        grid.setItems(artikelModels);
     }
 
     private Component getToolbar() {
@@ -82,7 +89,7 @@ public class ArtikelListView extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
         addRezeptButton = new Button("Zutat hinzufügen");
-        addRezeptButton.addClickListener(e -> openNewArtikelEditor());
+        addRezeptButton.addClickListener(e -> openArtikelEditor(new ArtikelModel()));
 
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addRezeptButton);
         toolbar.addClassName("artikel-toolbar");
@@ -99,6 +106,9 @@ public class ArtikelListView extends VerticalLayout {
         var artikel = listArtikelQueryService.execute(new ListArtikelQuery());
         artikelModels = mapper.artikelToModel(artikel);
         grid.setItems(artikelModels);
+
+        grid.asSingleSelect().addValueChangeListener(event ->
+                openArtikelEditor(event.getValue()));
     }
 
 }

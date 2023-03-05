@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class ArtikelForm extends FormLayout {
     Binder<ArtikelModel> binder = new BeanValidationBinder<>(ArtikelModel.class);
-    private final CommandService<SaveArtikelCommand> addZutatCommandCommandService;
+    private final CommandService<SaveArtikelCommand> saveArtikelCommandService;
     private final QueryService<ListAllKategorienQuery, List<Kategorie>> listKategorieQueryService;
     TextField name = new TextField("Name");
     ComboBox<Einheit> einheit = new ComboBox<>("Einheit");
@@ -36,17 +36,17 @@ public class ArtikelForm extends FormLayout {
     Button delete = new Button("Löschen");
     Button cancel = new Button("Abbrechen");
 
-    private ArtikelModel artikel;
+    private ArtikelModel artikelModel;
 
 
-    public ArtikelForm(ArtikelModel artikel,
-                       CommandService<SaveArtikelCommand> addZutatCommandCommandService,
+    public ArtikelForm(ArtikelModel artikelModel,
+                       CommandService<SaveArtikelCommand> SaveArtikelCommandService,
                        QueryService<ListAllKategorienQuery, List<Kategorie>> listKategorieQueryService) {
 
-        this.addZutatCommandCommandService = addZutatCommandCommandService;
+        this.saveArtikelCommandService = SaveArtikelCommandService;
         this.listKategorieQueryService = listKategorieQueryService;
         this.setWidth("25em");
-        this.setArtikelModel(artikel);
+        this.setArtikelModel(artikelModel);
 
 
         binder.bindInstanceFields(this);
@@ -80,12 +80,12 @@ public class ArtikelForm extends FormLayout {
 
     private void validateAndSave() {
         try {
-            binder.writeBean(artikel);
+            binder.writeBean(artikelModel);
         } catch (Exception e) {
             System.out.println("Validation failed");
         }
 
-        addZutatCommandCommandService.execute(new SaveArtikelCommand(
+        saveArtikelCommandService.execute(new SaveArtikelCommand(
                         new Artikel(name.getValue(),
                                 einheit.getValue(),
                                 new Kategorie(kategorie.getValue()
@@ -93,10 +93,12 @@ public class ArtikelForm extends FormLayout {
                         )
                 )
         );
+
+        fireEvent(new SaveArtikelEvent(this, artikelModel));
     }
 
     public void setArtikelModel(ArtikelModel artikel) {
-        this.artikel = artikel;
+        this.artikelModel = artikel;
         binder.readBean(artikel);
     }
 

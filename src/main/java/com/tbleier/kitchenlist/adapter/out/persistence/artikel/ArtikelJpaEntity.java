@@ -23,7 +23,7 @@ public class ArtikelJpaEntity {
     private String name;
     private Einheit einheit;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "kategorie_id", referencedColumnName = "id")
     private KategorieJpaEntity kategorie;
 
@@ -48,7 +48,6 @@ public class ArtikelJpaEntity {
     }
 
     public void setKategorie(KategorieJpaEntity kategorie) {
-        kategorie.setArtikel(this);
         this.kategorie = kategorie;
     }
 }

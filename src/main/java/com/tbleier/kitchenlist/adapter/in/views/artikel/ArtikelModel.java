@@ -57,4 +57,13 @@ public class ArtikelModel {
     public int hashCode() {
         return Objects.hash(name, einheit, kategorie);
     }
+
+    @Override
+    public String toString() {
+        return "ArtikelModel{" +
+                "name='" + name + '\'' +
+                ", einheit=" + einheit +
+                ", kategorie='" + kategorie + '\'' +
+                '}';
+    }
 }

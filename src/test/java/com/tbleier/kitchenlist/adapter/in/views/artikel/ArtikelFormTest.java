@@ -1,5 +1,6 @@
 package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
+import com.tbleier.kitchenlist.adapter.in.views.kategorie.SaveKategorieEvent;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Artikel;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +39,7 @@ class ArtikelFormTest {
     private List<String> kategorieNames;
 
     private ArtikelForm testee;
+    private AtomicBoolean saveEventWasFired;
 
     @BeforeEach
     public void setUp() {
@@ -48,6 +51,11 @@ class ArtikelFormTest {
     private void CreateTestee() {
         testee =  new ArtikelForm(new ArtikelModel(),
                 addRezeptCommandCommandService, listKategorienQueryService);
+
+        saveEventWasFired = new AtomicBoolean(false);
+        testee.addListener(SaveArtikelEvent.class, e -> {
+            saveEventWasFired.set(true);
+        });
     }
 
     @Test
@@ -81,5 +89,7 @@ class ArtikelFormTest {
         verify(addRezeptCommandCommandService).execute(addZutatCommandCaptor.capture());
         var addZutatCommand = addZutatCommandCaptor.getValue();
         assertEquals(expectedArtikel, addZutatCommand.getArtikel());
+
+        assertEquals(true, saveEventWasFired.get());
     }
 }

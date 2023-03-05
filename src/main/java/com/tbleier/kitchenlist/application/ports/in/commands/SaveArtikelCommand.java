@@ -2,11 +2,11 @@ package com.tbleier.kitchenlist.application.ports.in.commands;
 
 import com.tbleier.kitchenlist.application.domain.Artikel;
 
-public class AddArtikelCommand {
+public class SaveArtikelCommand {
 
     private final Artikel artikel;
 
-    public AddArtikelCommand(Artikel artikel) {
+    public SaveArtikelCommand(Artikel artikel) {
         this.artikel = artikel;
     }
 

@@ -4,6 +4,8 @@ import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Artikel;
+import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListArtikelQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -22,13 +24,21 @@ import java.util.List;
 public class ArtikelListView extends VerticalLayout {
 
     private final ArtikelFormFactory artikelFormFactory;
-    Grid<Artikel> grid = new Grid<>(Artikel.class);
+    private final QueryService<ListArtikelQuery, List<Artikel>> listArtikelQueryService;
+    private final ArtikelModelMapper mapper;
+    Grid<ArtikelModel> grid = new Grid<>(ArtikelModel.class);
     TextField filterText = new TextField();
     ArtikelForm artikelForm;
+    Button addRezeptButton;
+    private List<ArtikelModel> artikelModels;
 
     @Autowired
-    public ArtikelListView(ArtikelFormFactory artikelFormFactory) {
+    public ArtikelListView(ArtikelFormFactory artikelFormFactory,
+                           QueryService<ListArtikelQuery, List<Artikel>> listArtikelQueryService,
+                           ArtikelModelMapper mapper) {
         this.artikelFormFactory = artikelFormFactory;
+        this.listArtikelQueryService = listArtikelQueryService;
+        this.mapper = mapper;
         addClassName("artikel-list-view");
         setSizeFull();
 
@@ -36,6 +46,19 @@ public class ArtikelListView extends VerticalLayout {
         configureRezeptForm();
 
         add(getToolbar(), getContent());
+        closeEditor();
+    }
+
+    private void closeEditor() {
+        artikelForm.setArtikelModel(null);
+        artikelForm.setVisible(false);
+        removeClassName("editing");
+    }
+
+    private void openNewArtikelEditor() {
+        artikelForm.setArtikelModel(new ArtikelModel());
+        artikelForm.setVisible(true);
+        addClassName("editing");
     }
 
     private Component getContent() {
@@ -50,8 +73,8 @@ public class ArtikelListView extends VerticalLayout {
 
     private void configureRezeptForm() {
 
-        artikelForm = artikelFormFactory.create(new Artikel("something", Einheit.Gramm, null),
-                List.of(new Kategorie("Gemüse")));
+        artikelForm = artikelFormFactory.create(new ArtikelModel(),
+                List.of("Gemüse"));
     }
 
     private Component getToolbar() {
@@ -59,7 +82,8 @@ public class ArtikelListView extends VerticalLayout {
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
-        Button addRezeptButton = new Button("Zutat hinzufügen");
+        addRezeptButton = new Button("Zutat hinzufügen");
+        addRezeptButton.addClickListener(e -> openNewArtikelEditor());
 
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addRezeptButton);
         toolbar.addClassName("artikel-toolbar");
@@ -72,6 +96,10 @@ public class ArtikelListView extends VerticalLayout {
         grid.setSizeFull();
         grid.setColumns("name", "einheit", "kategorie");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+        var artikel = listArtikelQueryService.execute(new ListArtikelQuery());
+        artikelModels = mapper.artikelToModel(artikel);
+        grid.setItems(artikelModels);
     }
 
 }

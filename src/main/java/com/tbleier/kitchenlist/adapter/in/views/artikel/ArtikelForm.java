@@ -4,7 +4,7 @@ import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
-import com.tbleier.kitchenlist.application.ports.in.commands.AddArtikelCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -20,26 +20,27 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class ArtikelForm extends FormLayout {
-    Binder<Artikel> binder = new BeanValidationBinder<>(Artikel.class);
-    private final CommandService<AddArtikelCommand> addZutatCommandCommandService;
+    Binder<ArtikelModel> binder = new BeanValidationBinder<>(ArtikelModel.class);
+    private final CommandService<SaveArtikelCommand> addZutatCommandCommandService;
     TextField name = new TextField("Name");
     ComboBox<Einheit> einheit = new ComboBox<>("Einheit");
-    ComboBox<Kategorie> kategorie = new ComboBox<>("Kategorie");
+    ComboBox<String> kategorie = new ComboBox<>("Kategorie");
 
     Button save = new Button("Speichern");
     Button delete = new Button("Löschen");
     Button cancel = new Button("Abbrechen");
 
-    private Artikel artikel;
+    private ArtikelModel artikel;
 
 
-    public ArtikelForm(Artikel artikel, List<Kategorie> kategorien, CommandService<AddArtikelCommand> addZutatCommandCommandService) {
+    public ArtikelForm(ArtikelModel artikel, List<String> kategorien, CommandService<SaveArtikelCommand> addZutatCommandCommandService) {
 
         this.addZutatCommandCommandService = addZutatCommandCommandService;
         this.setWidth("25em");
-        this.setZutat(artikel);
+        this.setArtikelModel(artikel);
 
 
         binder.bindInstanceFields(this);
@@ -47,11 +48,10 @@ public class ArtikelForm extends FormLayout {
         addClassName("artikel-form");
         einheit.setItems(Einheit.values());
         kategorie.setItems(kategorien);
-        kategorie.setItemLabelGenerator(Kategorie::getName);
+        kategorie.setLabel("Kategorien");
 
         add(name, einheit, kategorie, createButtonLayout());
     }
-
 
 
     private Component createButtonLayout() {
@@ -61,7 +61,7 @@ public class ArtikelForm extends FormLayout {
 
         save.addClickShortcut(Key.ENTER);
         cancel.addClickShortcut(Key.ESCAPE);
-        
+
         save.addClickListener(event -> validateAndSave());
 
         return new HorizontalLayout(save, delete, cancel);
@@ -70,15 +70,21 @@ public class ArtikelForm extends FormLayout {
     private void validateAndSave() {
         try {
             binder.writeBean(artikel);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Validation failed");
         }
 
-        addZutatCommandCommandService.execute(new AddArtikelCommand(artikel));
+        addZutatCommandCommandService.execute(new SaveArtikelCommand(
+                        new Artikel(name.getValue(),
+                                einheit.getValue(),
+                                new Kategorie(kategorie.getValue()
+                                )
+                        )
+                )
+        );
     }
 
-    public void setZutat(Artikel artikel) {
+    public void setArtikelModel(ArtikelModel artikel) {
         this.artikel = artikel;
         binder.readBean(artikel);
     }

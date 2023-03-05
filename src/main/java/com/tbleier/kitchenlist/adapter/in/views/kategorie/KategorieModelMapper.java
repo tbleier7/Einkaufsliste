@@ -12,5 +12,5 @@ public interface KategorieModelMapper {
 
     Kategorie modelToKategorie(KategorieModel kategorieModel);
 
-    List<KategorieModel> kategorieToModel(List<Kategorie> kategorieModel);
+    List<KategorieModel> kategorieToModel(List<Kategorie> kategorien);
 }

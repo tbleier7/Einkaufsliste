@@ -3,7 +3,7 @@ package com.tbleier.kitchenlist.application;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Artikel;
-import com.tbleier.kitchenlist.application.ports.in.commands.AddArtikelCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class AddArtikelServiceTest {
         var zutat = new Artikel("someName", Einheit.Stueck, new Kategorie("someCategory"));
 
         //Act
-        testee.execute(new AddArtikelCommand(zutat));
+        testee.execute(new SaveArtikelCommand(zutat));
     
         //Assert
         verify(artikelRepository).save(zutat);

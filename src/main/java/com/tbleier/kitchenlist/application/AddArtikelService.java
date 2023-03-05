@@ -2,13 +2,13 @@ package com.tbleier.kitchenlist.application;
 
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
-import com.tbleier.kitchenlist.application.ports.in.commands.AddArtikelCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddArtikelService implements CommandService<AddArtikelCommand> {
+public class AddArtikelService implements CommandService<SaveArtikelCommand> {
 
     private final ArtikelRepository artikelRepository;
 
@@ -18,7 +18,7 @@ public class AddArtikelService implements CommandService<AddArtikelCommand> {
     }
 
     @Override
-    public CommandResult execute(AddArtikelCommand command) {
+    public CommandResult execute(SaveArtikelCommand command) {
         System.out.println(command.getZutat().getName());
         artikelRepository.save(command.getZutat());
         return new CommandResult(true);

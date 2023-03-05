@@ -4,7 +4,8 @@ import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
-import com.tbleier.kitchenlist.application.ports.in.commands.AddArtikelCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
+import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -22,31 +24,42 @@ import static org.mockito.Mockito.verify;
 class ArtikelFormTest {
 
     @Mock
-    private CommandService<AddArtikelCommand> addRezeptCommandCommandService;
+    private CommandService<SaveArtikelCommand> addRezeptCommandCommandService;
     @Captor
-    ArgumentCaptor<AddArtikelCommand> addZutatCommandCaptor;
+    ArgumentCaptor<SaveArtikelCommand> addZutatCommandCaptor;
 
-    private List<Kategorie> kategorien;
+    private List<String> kategorieNames;
 
     private ArtikelForm testee;
 
     @BeforeEach
     public void setUp() {
         Kategorie _gemuese = new Kategorie("Gemüse");
-        kategorien = List.of(new Kategorie("Obst"), _gemuese);
-        testee = new ArtikelForm(new Artikel("", Einheit.Gramm, null),
-                kategorien,
+        kategorieNames = List.of("Obst", "Gemüse", "Fleisch");
+        testee = new ArtikelForm(new ArtikelModel(),
+                kategorieNames,
                 addRezeptCommandCommandService);
     }
 
     @Test
+    public void should_show_all_kategorien_in_comboBox() {
+        //Arrange
+    
+        //Act
+        List<String> actual = testee.kategorie.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
+
+        //Assert
+        assertEquals(kategorieNames, actual);
+    }
+    
+    @Test
     public void should_add_a_new_artikel_on_save_click() {
         //Arrange
-        var expectedArtikel = new Artikel("Zwiebeln", Einheit.Stueck, kategorien.get(1));
+        var expectedArtikel = new Artikel("Zwiebeln", Einheit.Stueck, new Kategorie(kategorieNames.get(1)));
 
         testee.name.setValue(expectedArtikel.getName());
         testee.einheit.setValue(expectedArtikel.getEinheit());
-        testee.kategorie.setValue(expectedArtikel.getKategorie());
+        testee.kategorie.setValue(kategorieNames.get(1));
 
         //Act
         testee.save.click();

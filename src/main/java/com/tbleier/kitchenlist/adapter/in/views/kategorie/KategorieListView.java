@@ -22,9 +22,6 @@ import java.util.List;
 @Route(value = "kategorie", layout = MainLayout.class)
 public class KategorieListView extends VerticalLayout {
 
-    //TODO: Implementier die Liste als Liste als Lazy, die beim ersten get auf die Collection geladen wird, dann geht das Testen einfacher wahrscheinlich,
-    // dann: implementier das Löschen einfach als remove aus der liste, die hinter der grid liegt, dann spart man sich das neuladen ;)
-
     private final KategorieFormFactory kategorieFormFactory;
     private final QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
     private final CommandService<DeleteKategorieCommand> deleteKategorieCommandService;

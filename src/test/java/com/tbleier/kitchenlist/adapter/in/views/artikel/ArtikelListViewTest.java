@@ -6,6 +6,7 @@ import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListArtikelQuery;
 import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,13 +31,16 @@ class ArtikelListViewTest {
     @Mock
     private QueryService<ListArtikelQuery, List<Artikel>> listAllArtikelQueryService;
 
+    @Mock
+    private QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
+
     private ArtikelListView testee;
     private List<Artikel> expectedArtikel;
 
     @BeforeEach
     public void setUp() {
         var mapper = ArtikelModelMapper.INSTANCE;
-        var factory = new ArtikelFormFactory(saveArtikelCommandService);
+        var factory = new ArtikelFormFactory(saveArtikelCommandService, listAllKategorienQueryService);
 
         givenTwoArtikel();
         testee = new ArtikelListView(factory, listAllArtikelQueryService, mapper);

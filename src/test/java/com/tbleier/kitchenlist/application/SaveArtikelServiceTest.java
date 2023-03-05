@@ -14,16 +14,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class AddArtikelServiceTest {
+class SaveArtikelServiceTest {
 
     @Mock
     private ArtikelRepository artikelRepository;
 
-    private AddArtikelService testee;
+    private SaveArtikelService testee;
 
     @BeforeEach
     public void setUp() {
-        testee = new AddArtikelService(artikelRepository);
+        testee = new SaveArtikelService(artikelRepository);
     }
     
     @Test

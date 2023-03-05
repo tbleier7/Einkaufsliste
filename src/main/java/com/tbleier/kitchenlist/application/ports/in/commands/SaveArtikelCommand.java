@@ -10,7 +10,7 @@ public class SaveArtikelCommand {
         this.artikel = artikel;
     }
 
-    public Artikel getZutat() {
+    public Artikel getArtikel() {
         return artikel;
     }
 }

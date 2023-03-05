@@ -8,19 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddArtikelService implements CommandService<SaveArtikelCommand> {
+public class SaveArtikelService implements CommandService<SaveArtikelCommand> {
 
     private final ArtikelRepository artikelRepository;
 
     @Autowired
-    public AddArtikelService(ArtikelRepository artikelRepository) {
+    public SaveArtikelService(ArtikelRepository artikelRepository) {
         this.artikelRepository = artikelRepository;
     }
 
     @Override
     public CommandResult execute(SaveArtikelCommand command) {
-        System.out.println(command.getZutat().getName());
-        artikelRepository.save(command.getZutat());
+        System.out.println(command.getArtikel().getName());
+        artikelRepository.save(command.getArtikel());
         return new CommandResult(true);
     }
 }

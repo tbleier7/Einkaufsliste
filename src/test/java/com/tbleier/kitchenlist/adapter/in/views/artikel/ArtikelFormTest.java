@@ -4,7 +4,9 @@ import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
+import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,13 +20,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ArtikelFormTest {
 
     @Mock
     private CommandService<SaveArtikelCommand> addRezeptCommandCommandService;
+    @Mock
+    private QueryService<ListAllKategorienQuery, List<Kategorie>> listKategorienQueryService;
     @Captor
     ArgumentCaptor<SaveArtikelCommand> addZutatCommandCaptor;
 
@@ -34,24 +40,31 @@ class ArtikelFormTest {
 
     @BeforeEach
     public void setUp() {
-        Kategorie _gemuese = new Kategorie("Gemüse");
-        kategorieNames = List.of("Obst", "Gemüse", "Fleisch");
-        testee = new ArtikelForm(new ArtikelModel(),
-                kategorieNames,
-                addRezeptCommandCommandService);
+
+        givenTwoKategorien();
+        CreateTestee();
+    }
+
+    private void CreateTestee() {
+        testee =  new ArtikelForm(new ArtikelModel(),
+                addRezeptCommandCommandService, listKategorienQueryService);
     }
 
     @Test
     public void should_show_all_kategorien_in_comboBox() {
-        //Arrange
-    
         //Act
         List<String> actual = testee.kategorie.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
 
         //Assert
         assertEquals(kategorieNames, actual);
     }
-    
+
+    private void givenTwoKategorien() {
+        kategorieNames = List.of("Gemüse", "Fleisch");
+        when(listKategorienQueryService.execute(any()))
+                .thenReturn(List.of(new Kategorie("Gemüse"), new Kategorie("Fleisch")));
+    }
+
     @Test
     public void should_add_a_new_artikel_on_save_click() {
         //Arrange
@@ -67,6 +80,6 @@ class ArtikelFormTest {
         //Assert
         verify(addRezeptCommandCommandService).execute(addZutatCommandCaptor.capture());
         var addZutatCommand = addZutatCommandCaptor.getValue();
-        assertEquals(expectedArtikel, addZutatCommand.getZutat());
+        assertEquals(expectedArtikel, addZutatCommand.getArtikel());
     }
 }

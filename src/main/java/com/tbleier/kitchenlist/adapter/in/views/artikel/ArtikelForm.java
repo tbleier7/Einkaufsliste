@@ -4,7 +4,9 @@ import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
+import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -20,11 +22,12 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 public class ArtikelForm extends FormLayout {
     Binder<ArtikelModel> binder = new BeanValidationBinder<>(ArtikelModel.class);
     private final CommandService<SaveArtikelCommand> addZutatCommandCommandService;
+    private final QueryService<ListAllKategorienQuery, List<Kategorie>> listKategorieQueryService;
     TextField name = new TextField("Name");
     ComboBox<Einheit> einheit = new ComboBox<>("Einheit");
     ComboBox<String> kategorie = new ComboBox<>("Kategorie");
@@ -36,9 +39,12 @@ public class ArtikelForm extends FormLayout {
     private ArtikelModel artikel;
 
 
-    public ArtikelForm(ArtikelModel artikel, List<String> kategorien, CommandService<SaveArtikelCommand> addZutatCommandCommandService) {
+    public ArtikelForm(ArtikelModel artikel,
+                       CommandService<SaveArtikelCommand> addZutatCommandCommandService,
+                       QueryService<ListAllKategorienQuery, List<Kategorie>> listKategorieQueryService) {
 
         this.addZutatCommandCommandService = addZutatCommandCommandService;
+        this.listKategorieQueryService = listKategorieQueryService;
         this.setWidth("25em");
         this.setArtikelModel(artikel);
 
@@ -46,8 +52,13 @@ public class ArtikelForm extends FormLayout {
         binder.bindInstanceFields(this);
 
         addClassName("artikel-form");
+
+        var kategorienAusDemService = listKategorieQueryService.execute(new ListAllKategorienQuery());
+
         einheit.setItems(Einheit.values());
-        kategorie.setItems(kategorien);
+        var kategorieNames = kategorienAusDemService.stream().map(Kategorie::getName)
+                .collect(Collectors.toList());
+        kategorie.setItems(kategorieNames);
         kategorie.setLabel("Kategorien");
 
         add(name, einheit, kategorie, createButtonLayout());

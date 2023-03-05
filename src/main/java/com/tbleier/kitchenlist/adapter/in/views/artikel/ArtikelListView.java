@@ -73,8 +73,7 @@ public class ArtikelListView extends VerticalLayout {
 
     private void configureRezeptForm() {
 
-        artikelForm = artikelFormFactory.create(new ArtikelModel(),
-                List.of("Gemüse"));
+        artikelForm = artikelFormFactory.create(new ArtikelModel());
     }
 
     private Component getToolbar() {

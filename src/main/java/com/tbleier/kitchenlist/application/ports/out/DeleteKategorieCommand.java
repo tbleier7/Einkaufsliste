@@ -4,13 +4,13 @@ import com.tbleier.kitchenlist.application.domain.Kategorie;
 
 public class DeleteKategorieCommand {
 
-    private final Kategorie kategorie;
+    private final long id;
 
-    public DeleteKategorieCommand(Kategorie kategorie) {
-        this.kategorie = kategorie;
+    public DeleteKategorieCommand(long id) {
+        this.id = id;
     }
 
-    public Kategorie getKategorie() {
-        return this.kategorie;
+    public long getId() {
+        return id;
     }
 }

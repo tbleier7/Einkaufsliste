@@ -44,8 +44,8 @@ class ListArtikelServiceTest {
     }
 
     private void givenTwoArtikel() {
-        artikel.add(new Artikel("Zwiebeln", Einheit.Stueck, new Kategorie("Gemüse")));
-        artikel.add(new Artikel("Gelbwurst", Einheit.Stueck, new Kategorie("Wurst")));
+        artikel.add(new Artikel(1, "Zwiebeln", Einheit.Stueck, new Kategorie(3, "Gemüse")));
+        artikel.add(new Artikel(2, "Gelbwurst", Einheit.Stueck, new Kategorie(7, "Wurst")));
 
         when(artikelRepository.findAll()).thenReturn(artikel);
     }

@@ -15,7 +15,8 @@ public class DeleteKategorieService implements CommandService<DeleteKategorieCom
 
     @Override
     public CommandResult execute(DeleteKategorieCommand command) {
-        kategorieRepository.delete(command.getKategorie());
+
+        kategorieRepository.delete(command.getId());
         return new CommandResult(true);
     }
 }

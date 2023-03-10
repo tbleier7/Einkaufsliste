@@ -4,11 +4,13 @@ import java.util.Objects;
 
 public class Artikel {
 
+    private long id;
     private String name;
     private Einheit einheit;
     private Kategorie kategorie;
 
-    public Artikel(String name, Einheit einheit, Kategorie kategorie) {
+    public Artikel(long id, String name, Einheit einheit, Kategorie kategorie) {
+        this.id = id;
         this.name = name;
         this.einheit = einheit;
         this.kategorie = kategorie;
@@ -49,6 +51,7 @@ public class Artikel {
         return Objects.hash(name, einheit, kategorie);
     }
 
+
     @Override
     public String toString() {
         return "Artikel{" +
@@ -56,5 +59,9 @@ public class Artikel {
                 ", einheit=" + einheit +
                 ", kategorie=" + kategorie +
                 '}';
+    }
+
+    public long getId() {
+        return id;
     }
 }

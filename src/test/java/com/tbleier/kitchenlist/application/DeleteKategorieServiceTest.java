@@ -1,6 +1,5 @@
 package com.tbleier.kitchenlist.application;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 
@@ -31,9 +30,9 @@ class DeleteKategorieServiceTest {
         //Arrange
     
         //Act
-        testee.execute(new DeleteKategorieCommand(new Kategorie("Gemüse")));
+        testee.execute(new DeleteKategorieCommand(8));
     
         //Assert
-        verify(kategorieRepository).delete(argThat(kategorie -> kategorie.getName().equals("Gemüse")));
+        verify(kategorieRepository).delete(8);
     }
 }

@@ -1,5 +1,6 @@
 package com.tbleier.kitchenlist.application;
 
+import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
@@ -17,7 +18,17 @@ public class SaveKategorieService implements CommandService<SaveKategorieCommand
 
     @Override
     public CommandResult execute(SaveKategorieCommand command) {
-        kategorieRepository.save(command.getKategorie());
+
+        Kategorie kategorie;
+        var kategorieOptional = kategorieRepository.findById(command.getId());
+
+        if(kategorieOptional.isEmpty())
+            kategorie = new Kategorie(0, command.getName());
+        else
+            kategorie = kategorieOptional.get();
+            kategorie.rename(command.getName());
+
+        kategorieRepository.save(kategorie);
         return new CommandResult(true);
     }
 }

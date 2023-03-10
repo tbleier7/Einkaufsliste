@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class KategoriePersistenceAdapter implements KategorieRepository {
@@ -42,6 +43,16 @@ public class KategoriePersistenceAdapter implements KategorieRepository {
     }
 
     @Override
+    public Optional<Kategorie> findById(long id) {
+         var kategorieJpaEntityOptional = kategorieJpaRepository.findById(id);
+
+         if(kategorieJpaEntityOptional.isEmpty())
+             return Optional.empty();
+         else
+             return Optional.of(mapper.jpaEntityToKategorie(kategorieJpaEntityOptional.get()));
+    }
+
+    @Override
     public List<Kategorie> findAll() {
         var jpaEntities = kategorieJpaRepository.findAll();
         var kategorien = mapper.jpaEntityToKategorie(jpaEntities);
@@ -50,8 +61,10 @@ public class KategoriePersistenceAdapter implements KategorieRepository {
     }
 
     @Override
-    public void delete(Kategorie kategorie) {
-        var jpaEntity = kategorieJpaRepository.findByName(kategorie.getName());
-        kategorieJpaRepository.delete(jpaEntity);
+    public void delete(long id) {
+        var jpaEntity = kategorieJpaRepository.findById(id);
+
+        if(!jpaEntity.isEmpty())
+            kategorieJpaRepository.delete(jpaEntity.get());
     }
 }

@@ -34,7 +34,7 @@ class KategorieListViewTest {
     private CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
 
     @Mock
-    private QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
+    private QueryService<ListAllKategorienQuery, List<KategorieModel>> listAllKategorienQueryService;
 
     @Captor
     ArgumentCaptor<DeleteKategorieCommand> deleteKategorieCommandCaptor;
@@ -45,7 +45,7 @@ class KategorieListViewTest {
     @BeforeEach
     public void setUp() {
 
-        givenKategorien(List.of(new Kategorie("Gemüse"), new Kategorie("Fleisch")));
+        givenKategorien(List.of(new KategorieModel(5, "Gemüse"), new KategorieModel(1, "Fleisch")));
 
         var mapper = KategorieModelMapper.INSTANCE;
 
@@ -60,13 +60,18 @@ class KategorieListViewTest {
     }
 
     @Test
-    public void should_show_all_kategorien() {
+    public void should_show_all_kategorien_in_grid() {
         //Arrange
         KategorieModel expectedKategorieModel1 = new KategorieModel();
+        expectedKategorieModel1.setId(1);
         expectedKategorieModel1.setName("Gemüse");
 
         KategorieModel expectedKategorieModel2 = new KategorieModel();
+        expectedKategorieModel2.setId(2);
         expectedKategorieModel2.setName("Fleisch");
+
+        givenKategorien(List.of(expectedKategorieModel1, expectedKategorieModel2));
+        testee.reloadKategorien();
 
         //Act
         var actual = testee.grid.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
@@ -120,6 +125,7 @@ class KategorieListViewTest {
     public void should_delete_kategorie() {
         givenDeleteIs(true);
         var kategorieModel = new KategorieModel();
+        kategorieModel.setId(2);
         kategorieModel.setName("Gemüse");
 
         //Act
@@ -128,7 +134,7 @@ class KategorieListViewTest {
         //Assert
         verify(deleteKategorieCommandService).execute(deleteKategorieCommandCaptor.capture());
         var deleteKategorieCommand = deleteKategorieCommandCaptor.getValue();
-        assertEquals(new Kategorie("Gemüse"), deleteKategorieCommand.getKategorie());
+        assertEquals(2, deleteKategorieCommand.getId());
     }
 
     private void givenDeleteIs(boolean successful) {
@@ -136,7 +142,7 @@ class KategorieListViewTest {
     }
 
 
-    private void givenKategorien(List<Kategorie> kategorien) {
+    private void givenKategorien(List<KategorieModel> kategorien) {
         when(listAllKategorienQueryService.execute(any())).thenReturn(kategorien);
     }
 

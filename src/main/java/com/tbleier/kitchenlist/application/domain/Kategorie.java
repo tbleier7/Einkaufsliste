@@ -4,9 +4,12 @@ import java.util.Objects;
 
 public class Kategorie {
 
-    private final String name;
+    private long id;
 
-    public Kategorie(String name) {
+    private String name;
+
+    public Kategorie(long id, String name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -14,11 +17,12 @@ public class Kategorie {
         return name;
     }
 
-    @Override
-    public String toString() {
-        return "Kategorie{" +
-                "name='" + name + '\'' +
-                '}';
+    public void rename(String newName) {
+        this.name = newName;
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Override
@@ -26,11 +30,19 @@ public class Kategorie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Kategorie kategorie = (Kategorie) o;
-        return name.equals(kategorie.name);
+        return id == kategorie.id && name.equals(kategorie.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return "Kategorie{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

@@ -11,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +29,7 @@ class FindAllKategorienServiceTest {
     @Test
     public void Should_get_all_kategorien_from_repository() {
         //Arrange
-        var expectedKategorien = List.of(new Kategorie("Gemüse"), new Kategorie("Fleisch"));
+        var expectedKategorien = List.of(new Kategorie(5, "Gemüse"), new Kategorie(6, "Fleisch"));
         GivenKategorien(expectedKategorien);
 
         //Act

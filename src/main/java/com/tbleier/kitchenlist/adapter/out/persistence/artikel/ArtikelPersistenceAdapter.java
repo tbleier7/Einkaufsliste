@@ -39,9 +39,10 @@ public class ArtikelPersistenceAdapter implements ArtikelRepository {
     public Artikel findByName(String artikelName) {
         ArtikelJpaEntity artikelJpaEntity = artikelJpaRepository.findByName(artikelName);
 
-        Kategorie kategorie = new Kategorie(artikelJpaEntity.getKategorie().getName());
+        //TODO: überarbeiten
+        Kategorie kategorie = new Kategorie(0, artikelJpaEntity.getKategorie().getName());
 
-        return new Artikel(artikelJpaEntity.getName(), artikelJpaEntity.getEinheit(), kategorie);
+        return new Artikel(0, artikelJpaEntity.getName(), artikelJpaEntity.getEinheit(), kategorie);
     }
 
     @Override

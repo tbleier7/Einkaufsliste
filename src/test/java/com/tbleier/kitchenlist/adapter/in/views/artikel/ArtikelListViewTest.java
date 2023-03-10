@@ -50,7 +50,7 @@ class ArtikelListViewTest {
     }
 
     private void givenAKategorie() {
-        when(listAllKategorienQueryService.execute(any())).thenReturn(List.of(new Kategorie("someKategorie")));
+        when(listAllKategorienQueryService.execute(any())).thenReturn(List.of(new Kategorie(0, "someKategorie")));
     }
 
     @Test
@@ -120,8 +120,8 @@ class ArtikelListViewTest {
 
     private void givenTwoArtikel() {
         expectedArtikel = List.of(
-                new Artikel("Zwiebeln", Einheit.Stueck, new Kategorie("Gemüse")),
-                new Artikel("Schinken", Einheit.Stueck, new Kategorie("Wurst")));
+                new Artikel(1,"Zwiebeln", Einheit.Stueck, new Kategorie(0, "Gemüse")),
+                new Artikel(2, "Schinken", Einheit.Stueck, new Kategorie(1, "Wurst")));
 
         when(listAllArtikelQueryService.execute(any())).thenReturn(expectedArtikel);
     }

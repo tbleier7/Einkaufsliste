@@ -2,11 +2,9 @@ package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.tbleier.kitchenlist.adapter.in.views.kategorie.KategorieModel;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import org.checkerframework.checker.units.qual.K;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +26,7 @@ class ArtikelModelMapperTest {
         var expectedModel = new ArtikelModel("Zwiebeln", Einheit.Stueck, "Gemüse");
 
         //Act
-        var actual = testee.artikelToModel(new Artikel("Zwiebeln", Einheit.Stueck, new Kategorie("Gemüse")));
+        var actual = testee.artikelToModel(new Artikel(2 , "Zwiebeln", Einheit.Stueck, new Kategorie(1, "Gemüse")));
 
         //Assert
         assertEquals(expectedModel.getKategorie(), actual.getKategorie());

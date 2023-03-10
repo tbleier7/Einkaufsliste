@@ -19,11 +19,12 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @DataJpaTest
@@ -51,17 +52,54 @@ class KategoriePersistenceAdapterTest {
     @Autowired
     private KategoriePersistenceAdapter testee;
 
+    @Autowired
+    private KategorieJpaMapper mapper;
+
     @Test
-    public void should_persist_a_kategorie() {
+    public void should_persist_a_new_kategorie() {
         //Arrange
-        var expectedKategorie = new Kategorie("Gemüse");
+        var expectedKategorie = new Kategorie(0, "Gemüse");
 
         //Act
         testee.save(expectedKategorie);
         var actual = testee.findByName("Gemüse");
 
         //Assert
-        assertEquals(expectedKategorie, actual);
+        assertThat(actual.getId(), greaterThan(0L));
+    }
+
+    @Test
+    public void should_update_a_kategorie() {
+        //Arrange
+        var kategorieJpaEntity = new KategorieJpaEntity();
+        kategorieJpaEntity.setName("OldName");
+        entityManager.persist(kategorieJpaEntity);
+
+        var updatedKategorie = mapper.jpaEntityToKategorie(kategorieJpaEntity);
+        updatedKategorie.rename("NewName");
+
+        //Act
+        testee.save(updatedKategorie);
+        var actual = testee.findByName("NewName");
+
+        //Assert
+        assertEquals(updatedKategorie, actual);
+    }
+
+    @Test
+    public void should_find_a_kategorie_by_id() {
+        //Arrange
+        var kategorieJpaEntity = new KategorieJpaEntity();
+        kategorieJpaEntity.setName("OldName");
+        entityManager.persist(kategorieJpaEntity);
+
+        //Act
+        var actual = testee.findById(kategorieJpaEntity.getId());
+
+        //Assert
+        assertNotEquals(actual, Optional.empty());
+        assertEquals(kategorieJpaEntity.getId(), actual.get().getId());
+        assertEquals(kategorieJpaEntity.getName(), actual.get().getName());
     }
 
     @Test
@@ -76,7 +114,8 @@ class KategoriePersistenceAdapterTest {
         entityManager.persist(kategorie1);
         entityManager.persist(kategorie2);
 
-        var expectedKategorien = List.of(new Kategorie("Gemüse"), new Kategorie("Fleisch"));
+        var expectedKategorien = List.of(new Kategorie(kategorie1.getId(), "Gemüse"),
+                new Kategorie(kategorie2.getId(), "Fleisch"));
 
         //Act
         List<Kategorie> actual = testee.findAll();
@@ -93,7 +132,7 @@ class KategoriePersistenceAdapterTest {
 
         entityManager.persist(kategorieJpaEntity);
 
-        var kategorieJpaEntityDoublette = new Kategorie("doublette");
+        var kategorieJpaEntityDoublette = new Kategorie(0, "doublette");
 
         //Act && Assert
         var exception = Assertions.assertThrows(NonUniqueException.class, () -> {
@@ -111,7 +150,7 @@ class KategoriePersistenceAdapterTest {
         entityManager.persist(kategorieJpaEntity);
 
         //Act
-        testee.delete(new Kategorie("toDelete"));
+        testee.delete(kategorieJpaEntity.getId());
 
         //Assert
         var deletedKategorie = entityManager.find(KategorieJpaEntity.class, kategorieJpaEntity.getId());

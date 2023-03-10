@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,13 +27,10 @@ class SaveKategorieServiceTest {
 
     @Test
     public void should_save_kategorie_to_repository() {
-        //Arrange
-        var kategorie = new Kategorie("TestKategorie");
-
         //Act
-        testee.execute(new SaveKategorieCommand(kategorie));
+        testee.execute(new SaveKategorieCommand(0, "myKategorie"));
 
         //Assert
-        verify(kategorieRepository).save(kategorie);
+        verify(kategorieRepository).save(argThat(k -> k.getName().equals("myKategorie")));
     }
 }

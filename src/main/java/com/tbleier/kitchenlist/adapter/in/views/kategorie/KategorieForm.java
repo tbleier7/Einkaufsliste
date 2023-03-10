@@ -71,8 +71,8 @@ public class KategorieForm extends FormLayout {
     private void validateAndSave() {
         try {
             binder.writeBean(kategorieModel);
-            var kategorie = mapModelToKategorie();
-            var commandResult = addKategorieCommandService.execute(new SaveKategorieCommand(kategorie));
+            var commandResult = addKategorieCommandService
+                    .execute(new SaveKategorieCommand(kategorieModel.getId(), kategorieModel.getName()));
 
             if(commandResult.isSuccessful())
                 fireEvent(new SaveKategorieEvent(this, kategorieModel));
@@ -80,10 +80,6 @@ public class KategorieForm extends FormLayout {
         catch (Exception e) {
             System.out.println("Validation failed");
         }
-    }
-
-    private Kategorie mapModelToKategorie() {
-        return mapper.modelToKategorie(kategorieModel);
     }
 
     public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType, ComponentEventListener<T> listener) {

@@ -15,7 +15,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @PageTitle("Kitchen List")
@@ -23,7 +25,7 @@ import java.util.List;
 public class KategorieListView extends VerticalLayout {
 
     private final KategorieFormFactory kategorieFormFactory;
-    private final QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
+    private final QueryService<ListAllKategorienQuery, List<KategorieModel>> listAllKategorienQueryService;
     private final CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
     private final KategorieModelMapper mapper;
     Grid<KategorieModel> grid = new Grid<>(KategorieModel.class);
@@ -33,14 +35,14 @@ public class KategorieListView extends VerticalLayout {
 
     @Autowired
     public KategorieListView(KategorieFormFactory kategorieFormFactory,
-                             QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService,
+                             QueryService<ListAllKategorienQuery, List<KategorieModel>> listAllKategorienQueryService,
                              CommandService<DeleteKategorieCommand> deleteKategorieCommandService,
                              KategorieModelMapper mapper) {
         this.kategorieFormFactory = kategorieFormFactory;
         this.listAllKategorienQueryService = listAllKategorienQueryService;
         this.deleteKategorieCommandService = deleteKategorieCommandService;
         this.mapper = mapper;
-        kategorieModels = Collections.emptyList();
+        kategorieModels = new LinkedList<>();
 
         addClassName("kategorie-list-view");
         setSizeFull();
@@ -88,9 +90,8 @@ public class KategorieListView extends VerticalLayout {
         grid.setItems(kategorieModels);
     }
 
-    private void reloadKategorien() {
-        var kategorien = listAllKategorienQueryService.execute(new ListAllKategorienQuery());
-        kategorieModels = mapper.kategorieToModel(kategorien);
+    public void reloadKategorien() {
+        kategorieModels = new ArrayList<>(listAllKategorienQueryService.execute(new ListAllKategorienQuery()));
         grid.setItems(kategorieModels);
     }
 
@@ -126,8 +127,7 @@ public class KategorieListView extends VerticalLayout {
     }
 
     public void deleteKategorie(KategorieModel item) {
-        var kategorie = mapper.modelToKategorie(item);
-        var commandResult = deleteKategorieCommandService.execute(new DeleteKategorieCommand(kategorie));
+        var commandResult = deleteKategorieCommandService.execute(new DeleteKategorieCommand(item.getId()));
 
         if(commandResult.isSuccessful()) {
             closeEditor();

@@ -29,7 +29,7 @@ class SaveArtikelServiceTest {
     @Test
     public void should_save_new_zutat_to_persistence() {
         //Arrange
-        var zutat = new Artikel("someName", Einheit.Stueck, new Kategorie("someCategory"));
+        var zutat = new Artikel(1, "someName", Einheit.Stueck, new Kategorie(8, "someCategory"));
 
         //Act
         testee.execute(new SaveArtikelCommand(zutat));

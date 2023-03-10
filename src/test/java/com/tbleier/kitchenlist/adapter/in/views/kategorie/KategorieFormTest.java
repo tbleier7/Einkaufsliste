@@ -4,7 +4,6 @@ import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
-import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,8 +56,8 @@ class KategorieFormTest {
     public void should_save_kategorie_on_save_click() {
         //Arrange
         givenSaveIs(true);
-        var expectedKategorie = new Kategorie("Gemuese");
-        testee.name.setValue(expectedKategorie.getName());
+        var expectedKategorieName = "Gemuese";
+        testee.name.setValue(expectedKategorieName);
 
         //Act
         testee.save.click();
@@ -66,7 +65,7 @@ class KategorieFormTest {
         //Assert
         verify(saveKategorieCommandService).execute(saveKategorieCommandCaptor.capture());
         var saveKategorieCommand = saveKategorieCommandCaptor.getValue();
-        assertEquals(expectedKategorie, saveKategorieCommand.getKategorie());
+        assertEquals(expectedKategorieName, saveKategorieCommand.getName());
     }
 
     @Test
@@ -108,7 +107,7 @@ class KategorieFormTest {
     }
 
     private void givenNewKategorie(String name) {
-        expectedKategorie = new Kategorie(name);
+        expectedKategorie = new Kategorie(1, name);
         testee.name.setValue(expectedKategorie.getName());
     }
 

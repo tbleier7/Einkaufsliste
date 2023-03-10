@@ -1,16 +1,19 @@
 package com.tbleier.kitchenlist.application.ports.in.commands;
 
-import com.tbleier.kitchenlist.application.domain.Kategorie;
-
 public class SaveKategorieCommand {
-    private final Kategorie kategorie;
+    private final long id;
+    private final String name;
 
-    public SaveKategorieCommand(Kategorie kategorie) {
-
-        this.kategorie = kategorie;
+    public SaveKategorieCommand(long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public Kategorie getKategorie() {
-        return kategorie;
+    public String getName() {
+        return name;
+    }
+
+    public long getId() {
+        return id;
     }
 }

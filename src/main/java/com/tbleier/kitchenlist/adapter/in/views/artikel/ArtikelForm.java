@@ -85,14 +85,15 @@ public class ArtikelForm extends FormLayout {
             System.out.println("Validation failed");
         }
 
-        saveArtikelCommandService.execute(new SaveArtikelCommand(
-                        new Artikel(name.getValue(),
-                                einheit.getValue(),
-                                new Kategorie(kategorie.getValue()
-                                )
-                        )
-                )
-        );
+        //TODO: überarbeiten, der command passt nicht
+//        saveArtikelCommandService.execute(new SaveArtikelCommand(
+//                        new Artikel(name.getValue(),
+//                                einheit.getValue(),
+//                                new Kategorie(0, kategorie.getValue()
+//                                )
+//                        )
+//                )
+//        );
 
         fireEvent(new SaveArtikelEvent(this, artikelModel));
     }

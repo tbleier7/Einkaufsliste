@@ -82,16 +82,15 @@ public class ArtikelForm extends FormLayout {
             System.out.println("Validation failed");
         }
 
-        //TODO: überarbeiten, der command passt nicht
-//        saveArtikelCommandService.execute(new SaveArtikelCommand(
-//                        new Artikel(name.getValue(),
-//                                einheit.getValue(),
-//                                new Kategorie(0, kategorie.getValue()
-//                                )
-//                        )
-//                )
-//        );
+        var result = saveArtikelCommandService.execute(new SaveArtikelCommand(
+                        artikelDTO.getId(),
+                        name.getValue(),
+                        einheit.getValue(),
+                        kategorie.getValue()
+                )
+        );
 
+        artikelDTO.setId(result.getId());
         fireEvent(new SaveArtikelEvent(this, artikelDTO));
     }
 

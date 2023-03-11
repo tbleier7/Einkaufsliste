@@ -1,5 +1,6 @@
 package com.tbleier.kitchenlist.adapter.out.persistence.artikel;
 
+import com.tbleier.kitchenlist.adapter.out.persistence.kategorie.KategorieJpaEntity;
 import com.tbleier.kitchenlist.adapter.out.persistence.kategorie.KategorieJpaRepository;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
@@ -8,45 +9,47 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ArtikelPersistenceAdapter implements ArtikelRepository {
 
     private final ArtikelJpaRepository artikelJpaRepository;
-    private final KategorieJpaRepository kategorieJpaRepository;
+    private final ArtikelJpaMapper artikelJpaMapper;
 
     @Autowired
     public ArtikelPersistenceAdapter(ArtikelJpaRepository artikelJpaRepository,
-                                     KategorieJpaRepository kategorieJpaRepository) {
+                                     ArtikelJpaMapper artikelJpaMapper) {
         this.artikelJpaRepository = artikelJpaRepository;
-        this.kategorieJpaRepository = kategorieJpaRepository;
+        this.artikelJpaMapper = artikelJpaMapper;
     }
 
     @Override
-    public void save(Artikel artikel) {
-        var kategorieJpaEntity = kategorieJpaRepository.findByName(artikel.getKategorie().getName());
-
-        ArtikelJpaEntity artikelJpaEntity = new ArtikelJpaEntity();
-        artikelJpaEntity.setEinheit(artikel.getEinheit());
-        artikelJpaEntity.setName(artikel.getName());
-        artikelJpaEntity.setKategorie(kategorieJpaEntity);
-
-
-        artikelJpaRepository.save(artikelJpaEntity);
+    public long save(Artikel artikel) {
+        var artikelJpaEntity = artikelJpaMapper.artikelToJpaEntity(artikel);
+        artikelJpaEntity = artikelJpaRepository.save(artikelJpaEntity);
+        return artikelJpaEntity.getId();
     }
 
     @Override
     public Artikel findByName(String artikelName) {
         ArtikelJpaEntity artikelJpaEntity = artikelJpaRepository.findByName(artikelName);
-
-        //TODO: überarbeiten
-        Kategorie kategorie = new Kategorie(0, artikelJpaEntity.getKategorie().getName());
-
-        return new Artikel(0, artikelJpaEntity.getName(), artikelJpaEntity.getEinheit(), kategorie);
+        var mappedArtikel = artikelJpaMapper.jpaEntityToArtikel(artikelJpaEntity);
+        return mappedArtikel;
     }
 
     @Override
     public List<Artikel> findAll() {
-        return null;
+        return artikelJpaMapper.jpaEntityToArtikel(artikelJpaRepository.findAll());
+    }
+
+    @Override
+    public Optional<Artikel> findById(long id) {
+        var optional = artikelJpaRepository.findById(id);
+
+        if(optional.isPresent())
+            return Optional.of(artikelJpaMapper.jpaEntityToArtikel(optional.get()));
+        else
+            return Optional.empty();
     }
 }

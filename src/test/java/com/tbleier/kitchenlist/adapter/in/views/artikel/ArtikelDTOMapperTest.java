@@ -4,6 +4,7 @@ import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
+import org.checkerframework.checker.units.qual.K;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,9 +26,10 @@ class ArtikelDTOMapperTest {
     public void should_map_artikel() {
         //Arrange
         var expectedModel = new ArtikelDTO(2, "Zwiebeln", Einheit.Stueck, "Gemüse");
+        Artikel artikel = new Artikel(2, "Zwiebeln", Einheit.Stueck, new Kategorie(6, "Gemüse"));
 
         //Act
-        var actual = testee.artikelToModel(new Artikel(2 , "Zwiebeln", Einheit.Stueck, new Kategorie(1, "Gemüse")));
+        var actual = testee.artikelToModel(artikel);
 
         //Assert
         assertEquals(expectedModel, actual);

@@ -1,10 +1,12 @@
 package com.tbleier.kitchenlist.adapter.out.persistence.artikel;
 
+import com.tbleier.kitchenlist.adapter.out.persistence.JpaMapperConfig;
 import com.tbleier.kitchenlist.adapter.out.persistence.PersistenceConfig;
 import com.tbleier.kitchenlist.adapter.out.persistence.kategorie.KategorieJpaEntity;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -25,7 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = ArtikelPersistenceAdapterTest.DataSourceInitializer.class,
         classes = {ArtikelPersistenceAdapter.class,
-                PersistenceConfig.class})
+                PersistenceConfig.class,
+                JpaMapperConfig.class})
 public class ArtikelPersistenceAdapterTest {
 
     @Container
@@ -46,21 +49,36 @@ public class ArtikelPersistenceAdapterTest {
     @Autowired
     private ArtikelPersistenceAdapter testee;
 
-    //TODO: fix later on
-//    @Test
-//    public void should_persist_an_artikel() {
-//        //Arrange
-//        var kategorieJpaEntity = new KategorieJpaEntity();
-//        kategorieJpaEntity.setName("SomeKategorie");
-//
-//        entityManager.persist(kategorieJpaEntity);
-//        var expectedArtikel = new Artikel("someArtikel", Einheit.Stueck, new Kategorie(3, "SomeKategorie"));
-//
-//        //Act
-//        testee.save(expectedArtikel);
-//        Artikel actual = testee.findByName("someArtikel");
-//
-//        //Assert
-//        assertEquals(expectedArtikel, actual);
-//    }
+    private Kategorie alreadySavedKategorie;
+
+
+    @BeforeEach
+    public void setUp() {
+        alreadySavedKategorie = null;
+    }
+
+    @Test
+    public void should_persist_an_artikel() {
+        //Arrange
+        givenAKategorie("Gemüse");
+        var expectedArtikel = new Artikel(0, "someArtikel", Einheit.Stueck, alreadySavedKategorie);
+
+        //Act
+        var id = testee.save(expectedArtikel);
+        var actual = testee.findById(id);
+
+        //Assert
+        assertEquals(false, actual.isEmpty());
+        assertEquals(expectedArtikel.getKategorie(), actual.get().getKategorie());
+        assertEquals(expectedArtikel.getEinheit(), actual.get().getEinheit());
+        assertEquals(expectedArtikel.getKategorie(), actual.get().getKategorie());
+    }
+
+    private void givenAKategorie(String name) {
+        var kategorieJpaEntity = new KategorieJpaEntity();
+        kategorieJpaEntity.setName(name);
+        kategorieJpaEntity = entityManager.persist(kategorieJpaEntity);
+
+        alreadySavedKategorie = new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName());
+    }
 }

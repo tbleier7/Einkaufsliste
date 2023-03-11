@@ -48,6 +48,7 @@ public class ArtikelJpaEntity {
     }
 
     public void setKategorie(KategorieJpaEntity kategorie) {
+        kategorie.getArtikel().add(this);
         this.kategorie = kategorie;
     }
 }

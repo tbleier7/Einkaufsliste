@@ -47,8 +47,8 @@ class ListArtikelServiceTest {
     }
 
     private void givenTwoArtikel() {
-        artikel.add(new Artikel(1, "Zwiebeln", Einheit.Stueck, new Kategorie(3, "Gemüse")));
-        artikel.add(new Artikel(2, "Gelbwurst", Einheit.Stueck, new Kategorie(7, "Wurst")));
+        artikel.add(new Artikel(1, "Zwiebeln", Einheit.Stueck,new Kategorie(3, "Gemüse")));
+        artikel.add(new Artikel(2, "Gelbwurst", Einheit.Stueck,new Kategorie(4, "Wurst")));
 
         expectedArtikelDTOs.add(new ArtikelDTO(1, "Zwiebeln", Einheit.Stueck, "Gemüse"));
         expectedArtikelDTOs.add(new ArtikelDTO(2, "Gelbwurst", Einheit.Stueck, "Wurst"));

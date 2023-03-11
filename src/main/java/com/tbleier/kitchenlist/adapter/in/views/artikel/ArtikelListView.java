@@ -80,6 +80,7 @@ public class ArtikelListView extends VerticalLayout {
     }
 
     private void addArtikel(ArtikelDTO artikelDTO) {
+        artikelDTOS.removeIf(m -> m.getId() == artikelDTO.getId());
         artikelDTOS.add(artikelDTO);
         grid.setItems(artikelDTOS);
     }

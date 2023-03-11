@@ -28,13 +28,11 @@ public class Artikel {
         return kategorie;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public long getId() {
+        return id;
     }
 
-    public void setEinheit(Einheit einheit) { this.einheit = einheit; }
-
-    public void setKategorie(Kategorie kategorie) {
+    public void kategorizeWith(Kategorie kategorie) {
         this.kategorie = kategorie;
     }
 
@@ -43,25 +41,29 @@ public class Artikel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Artikel artikel = (Artikel) o;
-        return name.equals(artikel.name) && einheit == artikel.einheit && kategorie.equals(artikel.kategorie);
+        return id == artikel.id && name.equals(artikel.name) && einheit == artikel.einheit && Objects.equals(kategorie, artikel.kategorie);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, einheit, kategorie);
+        return Objects.hash(id, name, einheit, kategorie);
     }
-
 
     @Override
     public String toString() {
         return "Artikel{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", einheit=" + einheit +
                 ", kategorie=" + kategorie +
                 '}';
     }
 
-    public long getId() {
-        return id;
+    public void rename(String name) {
+        this.name = name;
+    }
+
+    public void changeEinheitTo(Einheit einheit) {
+        this.einheit = einheit;
     }
 }

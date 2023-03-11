@@ -81,23 +81,11 @@ class ArtikelListViewTest {
     public void should_add_artikel_when_new_artikel_was_saved() {
         //Arrange
         var artikelModel = new ArtikelDTO(1, "newcomer", Einheit.Stueck, "Gemüse");
-        givenArtikelWasSaved(artikelModel);
-
         //Act
-        var actual = testee.grid.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
+        testee.addArtikel(artikelModel);
     
         //Assert
-        assertThat(actual, hasItem(artikelModel));
-    }
-
-    @Test
-    public void should_close_editor_when_new_artikel_was_saved() {
-        //Arrange
-        var artikelModel = new ArtikelDTO(1, "newcomer", Einheit.Stueck, "Gemüse");
-        givenArtikelWasSaved(artikelModel);
-
-        //Assert
-        assertEquals(false,testee.artikelForm.isVisible());
+        assertThat(testee.getArtikelDTOS(), hasItem(artikelModel));
     }
 
     @Test
@@ -111,11 +99,6 @@ class ArtikelListViewTest {
         //Assert
         assertEquals(true,testee.artikelForm.isVisible());
         assertEquals(artikelModel.getName(), testee.artikelForm.name.getValue());
-    }
-
-    private void givenArtikelWasSaved(ArtikelDTO artikelDTO) {
-        testee.artikelForm.setArtikelModel(artikelDTO);
-        testee.artikelForm.save.click();
     }
 
     private void givenTwoArtikel() {

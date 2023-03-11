@@ -1,7 +1,11 @@
 package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
+import com.tbleier.kitchenlist.application.domain.Artikel;
+import com.tbleier.kitchenlist.application.domain.Einheit;
+import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
 import com.tbleier.kitchenlist.application.ports.KategorieDTO;
+import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
@@ -38,6 +42,7 @@ class ArtikelFormTest {
 
     private ArtikelForm testee;
     private AtomicBoolean saveEventWasFired;
+    private AtomicBoolean cancelEventWasFired;
 
     @BeforeEach
     public void setUp() {
@@ -54,6 +59,13 @@ class ArtikelFormTest {
         testee.addListener(SaveArtikelEvent.class, e -> {
             saveEventWasFired.set(true);
         });
+
+        cancelEventWasFired = new AtomicBoolean(false);
+        testee.addListener(CloseEvent.class, e -> {
+            cancelEventWasFired.set(true);
+        });
+
+
     }
 
     @Test
@@ -71,24 +83,42 @@ class ArtikelFormTest {
                 .thenReturn(List.of(new KategorieDTO(0, "Gemüse"), new KategorieDTO(1, "Fleisch")));
     }
 
-    //TODO: überarbeiten
-//    @Test
-//    public void should_add_a_new_artikel_on_save_click() {
-//        //Arrange
-//        var expectedArtikel = new Artikel("Zwiebeln", Einheit.Stueck, new Kategorie(1, kategorieNames.get(1)));
-//
-//        testee.name.setValue(expectedArtikel.getName());
-//        testee.einheit.setValue(expectedArtikel.getEinheit());
-//        testee.kategorie.setValue(kategorieNames.get(1));
-//
-//        //Act
-//        testee.save.click();
-//
-//        //Assert
-//        verify(addRezeptCommandCommandService).execute(addZutatCommandCaptor.capture());
-//        var addZutatCommand = addZutatCommandCaptor.getValue();
-//        assertEquals(expectedArtikel, addZutatCommand.getArtikel());
-//
-//        assertEquals(true, saveEventWasFired.get());
-//    }
+    @Test
+    public void should_add_a_new_artikel_on_save_click() {
+        //Arrange
+        givenSaveWasSuccessful();
+        var expectedArtikel = new Artikel(0, "Zwiebeln", Einheit.Stueck, new Kategorie(1, kategorieNames.get(1)));
+
+        testee.name.setValue(expectedArtikel.getName());
+        testee.einheit.setValue(expectedArtikel.getEinheit());
+        testee.kategorie.setValue(kategorieNames.get(1));
+
+        //Act
+        testee.save.click();
+
+        //Assert
+        verify(addRezeptCommandCommandService).execute(addZutatCommandCaptor.capture());
+        var addZutatCommand = addZutatCommandCaptor.getValue();
+        assertEquals(expectedArtikel.getId(), addZutatCommand.getId());
+        assertEquals(expectedArtikel.getName(), addZutatCommand.getName());
+        assertEquals(expectedArtikel.getEinheit(), addZutatCommand.getEinheit());
+        assertEquals(expectedArtikel.getKategorie().getName(), addZutatCommand.getKategorie());
+
+        assertEquals(true, saveEventWasFired.get());
+    }
+
+    @Test
+    public void should_send_request_for_closing_the_form() {
+        //Arrange
+
+        //Act
+        testee.cancel.click();
+
+        //Assert
+        assertEquals(true, cancelEventWasFired.get());
+    }
+
+    private void givenSaveWasSuccessful() {
+        when(addRezeptCommandCommandService.execute(any())).thenReturn(new CommandResult(true, 1L));
+    }
 }

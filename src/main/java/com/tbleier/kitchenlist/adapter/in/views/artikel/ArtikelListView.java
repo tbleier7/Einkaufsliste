@@ -29,6 +29,7 @@ public class ArtikelListView extends VerticalLayout {
     TextField filterText = new TextField();
     ArtikelForm artikelForm;
     Button addRezeptButton;
+
     private List<ArtikelDTO> artikelDTOS;
 
     @Autowired
@@ -46,6 +47,16 @@ public class ArtikelListView extends VerticalLayout {
 
         add(getToolbar(), getContent());
         closeEditor();
+    }
+
+    public List<ArtikelDTO> getArtikelDTOS() {
+        return artikelDTOS;
+    }
+
+    public void addArtikel(ArtikelDTO artikelDTO) {
+        artikelDTOS.removeIf(m -> m.getId() == artikelDTO.getId());
+        artikelDTOS.add(artikelDTO);
+        grid.setItems(artikelDTOS);
     }
 
     private void closeEditor() {
@@ -77,12 +88,7 @@ public class ArtikelListView extends VerticalLayout {
             closeEditor();
             addArtikel(e.getArtikelModel());
         });
-    }
-
-    private void addArtikel(ArtikelDTO artikelDTO) {
-        artikelDTOS.removeIf(m -> m.getId() == artikelDTO.getId());
-        artikelDTOS.add(artikelDTO);
-        grid.setItems(artikelDTOS);
+        artikelForm.addListener(CloseEvent.class, e -> closeEditor());
     }
 
     private Component getToolbar() {

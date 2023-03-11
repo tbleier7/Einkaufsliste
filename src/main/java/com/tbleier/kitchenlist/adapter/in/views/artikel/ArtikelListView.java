@@ -1,7 +1,7 @@
 package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
-import com.tbleier.kitchenlist.application.domain.Artikel;
+import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListArtikelQuery;
 import com.vaadin.flow.component.Component;
@@ -15,25 +15,26 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("Kitchen List")
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "artikel", layout = MainLayout.class)
 public class ArtikelListView extends VerticalLayout {
 
     private final ArtikelFormFactory artikelFormFactory;
-    private final QueryService<ListArtikelQuery, List<Artikel>> listArtikelQueryService;
-    private final ArtikelModelMapper mapper;
-    Grid<ArtikelModel> grid = new Grid<>(ArtikelModel.class);
+    private final QueryService<ListArtikelQuery, List<ArtikelDTO>> listArtikelQueryService;
+    private final ArtikelDTOMapper mapper;
+    Grid<ArtikelDTO> grid = new Grid<>(ArtikelDTO.class);
     TextField filterText = new TextField();
     ArtikelForm artikelForm;
     Button addRezeptButton;
-    private List<ArtikelModel> artikelModels;
+    private List<ArtikelDTO> artikelDTOS;
 
     @Autowired
     public ArtikelListView(ArtikelFormFactory artikelFormFactory,
-                           QueryService<ListArtikelQuery, List<Artikel>> listArtikelQueryService,
-                           ArtikelModelMapper mapper) {
+                           QueryService<ListArtikelQuery, List<ArtikelDTO>> listArtikelQueryService,
+                           ArtikelDTOMapper mapper) {
         this.artikelFormFactory = artikelFormFactory;
         this.listArtikelQueryService = listArtikelQueryService;
         this.mapper = mapper;
@@ -53,8 +54,8 @@ public class ArtikelListView extends VerticalLayout {
         removeClassName("editing");
     }
 
-    private void openArtikelEditor(ArtikelModel artikelModel) {
-        artikelForm.setArtikelModel(artikelModel);
+    private void openArtikelEditor(ArtikelDTO artikelDTO) {
+        artikelForm.setArtikelModel(artikelDTO);
         artikelForm.setVisible(true);
         addClassName("editing");
     }
@@ -71,16 +72,16 @@ public class ArtikelListView extends VerticalLayout {
 
     private void configureRezeptForm() {
 
-        artikelForm = artikelFormFactory.create(new ArtikelModel());
+        artikelForm = artikelFormFactory.create(new ArtikelDTO());
         artikelForm.addListener(SaveArtikelEvent.class, e -> {
             closeEditor();
             addArtikel(e.getArtikelModel());
         });
     }
 
-    private void addArtikel(ArtikelModel artikelModel) {
-        artikelModels.add(artikelModel);
-        grid.setItems(artikelModels);
+    private void addArtikel(ArtikelDTO artikelDTO) {
+        artikelDTOS.add(artikelDTO);
+        grid.setItems(artikelDTOS);
     }
 
     private Component getToolbar() {
@@ -89,7 +90,7 @@ public class ArtikelListView extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
         addRezeptButton = new Button("Zutat hinzufügen");
-        addRezeptButton.addClickListener(e -> openArtikelEditor(new ArtikelModel()));
+        addRezeptButton.addClickListener(e -> openArtikelEditor(new ArtikelDTO()));
 
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addRezeptButton);
         toolbar.addClassName("artikel-toolbar");
@@ -103,9 +104,8 @@ public class ArtikelListView extends VerticalLayout {
         grid.setColumns("name", "einheit", "kategorie");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        var artikel = listArtikelQueryService.execute(new ListArtikelQuery());
-        artikelModels = mapper.artikelToModel(artikel);
-        grid.setItems(artikelModels);
+        artikelDTOS = new ArrayList<>(listArtikelQueryService.execute(new ListArtikelQuery()));
+        grid.setItems(artikelDTOS);
 
         grid.asSingleSelect().addValueChangeListener(event ->
                 openArtikelEditor(event.getValue()));

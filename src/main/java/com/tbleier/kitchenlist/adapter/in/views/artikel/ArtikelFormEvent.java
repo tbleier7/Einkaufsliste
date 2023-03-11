@@ -1,17 +1,17 @@
 package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
-import com.tbleier.kitchenlist.application.domain.Artikel;
+import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
 import com.vaadin.flow.component.ComponentEvent;
 
 abstract class ArtikelFormEvent extends ComponentEvent<ArtikelForm> {
-    private final ArtikelModel artikelModel;
-    public ArtikelFormEvent(ArtikelForm source, ArtikelModel artikelModel) {
+    private final ArtikelDTO artikelDTO;
+    public ArtikelFormEvent(ArtikelForm source, ArtikelDTO artikelDTO) {
         super(source, false);
-        this.artikelModel = artikelModel;
+        this.artikelDTO = artikelDTO;
     }
 
-    public ArtikelModel getArtikelModel() {
-        return artikelModel;
+    public ArtikelDTO getArtikelModel() {
+        return artikelDTO;
     }
 }
 

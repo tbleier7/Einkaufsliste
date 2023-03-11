@@ -1,6 +1,6 @@
 package com.tbleier.kitchenlist.adapter.in.views.kategorie;
 
-import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
 import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
@@ -12,15 +12,18 @@ public class KategorieFormFactory {
 
     private final CommandService<SaveKategorieCommand> addKategorieCommandService;
     private final KategorieModelMapper mapper;
+    private final CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
 
     @Autowired
     public KategorieFormFactory(CommandService<SaveKategorieCommand> addKategorieCommandService,
-                                KategorieModelMapper mapper) {
+                                KategorieModelMapper mapper,
+                                CommandService<DeleteKategorieCommand> deleteKategorieCommandService) {
         this.addKategorieCommandService = addKategorieCommandService;
         this.mapper = mapper;
+        this.deleteKategorieCommandService = deleteKategorieCommandService;
     }
 
-    public KategorieForm create(KategorieModel kategorieModel) {
-        return new KategorieForm(kategorieModel, addKategorieCommandService, mapper);
+    public KategorieForm create(KategorieDTO kategorieDTO) {
+        return new KategorieForm(kategorieDTO, addKategorieCommandService, mapper, deleteKategorieCommandService);
     }
 }

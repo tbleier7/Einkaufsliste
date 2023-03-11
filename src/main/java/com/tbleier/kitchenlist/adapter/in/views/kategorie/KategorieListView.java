@@ -1,7 +1,7 @@
 package com.tbleier.kitchenlist.adapter.in.views.kategorie;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
-import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
@@ -16,42 +16,46 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+
 @PageTitle("Kitchen List")
-@Route(value = "kategorie", layout = MainLayout.class)
+@Route(value = "", layout = MainLayout.class)
+
 public class KategorieListView extends VerticalLayout {
 
     private final KategorieFormFactory kategorieFormFactory;
-    private final QueryService<ListAllKategorienQuery, List<KategorieModel>> listAllKategorienQueryService;
+    private final QueryService<ListAllKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
     private final CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
     private final KategorieModelMapper mapper;
-    Grid<KategorieModel> grid = new Grid<>(KategorieModel.class);
+    Grid<KategorieDTO> grid = new Grid<>(KategorieDTO.class);
     KategorieForm kategorieForm;
     Button addKategorieButton;
-    private List<KategorieModel> kategorieModels;
+
+    private List<KategorieDTO> kategorieDTOS;
 
     @Autowired
     public KategorieListView(KategorieFormFactory kategorieFormFactory,
-                             QueryService<ListAllKategorienQuery, List<KategorieModel>> listAllKategorienQueryService,
+                             QueryService<ListAllKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService,
                              CommandService<DeleteKategorieCommand> deleteKategorieCommandService,
                              KategorieModelMapper mapper) {
         this.kategorieFormFactory = kategorieFormFactory;
         this.listAllKategorienQueryService = listAllKategorienQueryService;
         this.deleteKategorieCommandService = deleteKategorieCommandService;
         this.mapper = mapper;
-        kategorieModels = new LinkedList<>();
+        kategorieDTOS = new LinkedList<>();
 
         addClassName("kategorie-list-view");
         setSizeFull();
-
-        configureGrid();
         configureKategorieForm();
+        configureGrid();
 
         add(getToolbar(), getContent());
         closeEditor();
+
+        grid.asSingleSelect().addValueChangeListener(event ->
+                editKategorie(event.getValue()));
     }
 
     private void closeEditor() {
@@ -64,51 +68,55 @@ public class KategorieListView extends VerticalLayout {
         HorizontalLayout content = new HorizontalLayout(grid, kategorieForm);
         content.setFlexGrow(2, grid);
         content.setFlexGrow(1, kategorieForm);
-        content.addClassName("kategorie-content");
+        content.addClassNames("kategorie-content", "gap-m");
         content.setSizeFull();
 
         return content;
     }
 
+    public List<KategorieDTO> getKategorieModels() {
+        return kategorieDTOS;
+    }
+
     private void configureKategorieForm() {
 
-        kategorieForm = kategorieFormFactory.create(new KategorieModel());
+        kategorieForm = kategorieFormFactory.create(new KategorieDTO());
         kategorieForm.addListener(CloseEvent.class, e -> closeEditor());
         kategorieForm.addListener(SaveKategorieEvent.class, e -> {
             closeEditor();
-            addKategorie(e.getModel());
+            updateKategorie(e.getModel());
+        });
+        kategorieForm.addListener(DeleteKategorieEvent.class, e -> {
+            closeEditor();
+            removeKategorie(e.getModel());
         });
     }
 
-    private void addKategorie(KategorieModel model) {
-        kategorieModels.add(model);
-        grid.setItems(kategorieModels);
+    public void updateKategorie(KategorieDTO model) {
+        kategorieDTOS.removeIf(m -> m.getId() == model.getId());
+        kategorieDTOS.add(model);
+        grid.setItems(kategorieDTOS);
     }
 
-    private void removeKategorie(KategorieModel model) {
-        kategorieModels.remove(model);
-        grid.setItems(kategorieModels);
+    public void removeKategorie(KategorieDTO model) {
+        kategorieDTOS.remove(model);
+        grid.setItems(kategorieDTOS);
     }
 
     public void reloadKategorien() {
-        kategorieModels = new ArrayList<>(listAllKategorienQueryService.execute(new ListAllKategorienQuery()));
-        grid.setItems(kategorieModels);
+        kategorieDTOS = new ArrayList<>(listAllKategorienQueryService.execute(new ListAllKategorienQuery()));
+        grid.setItems(kategorieDTOS);
     }
 
     private Component getToolbar() {
 
         addKategorieButton = new Button("Kategorie hinzufügen");
-        addKategorieButton.addClickListener(click -> openKategorieForm());
+        addKategorieButton.addClickListener(click -> editKategorie(new KategorieDTO()));
 
         HorizontalLayout toolbar = new HorizontalLayout(addKategorieButton);
         toolbar.addClassName("kategorie-toolbar");
 
         return toolbar;
-    }
-
-    private void openKategorieForm() {
-        grid.asSingleSelect().clear();
-        editKategorie(new KategorieModel());
     }
 
     private void configureGrid() {
@@ -118,31 +126,18 @@ public class KategorieListView extends VerticalLayout {
         grid.setColumns("name");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        this.grid.addComponentColumn(item -> {
-            var deleteButton = new Button("  X  ");
-            deleteButton.addClickListener(event -> deleteKategorie(item));
-            return deleteButton;
-        });
+
         reloadKategorien();
     }
 
-    public void deleteKategorie(KategorieModel item) {
-        var commandResult = deleteKategorieCommandService.execute(new DeleteKategorieCommand(item.getId()));
+    private void editKategorie(KategorieDTO kategorieDTO) {
 
-        if(commandResult.isSuccessful()) {
-            closeEditor();
-            removeKategorie(item);
-        }
-    }
-
-    private void editKategorie(KategorieModel kategorieModel) {
-
-        if(kategorieModel == null) {
+        if(kategorieDTO == null) {
             closeEditor();
             return;
         }
 
-        kategorieForm.setKategorieModel(kategorieModel);
+        kategorieForm.setKategorieModel(kategorieDTO);
         kategorieForm.setVisible(true);
         addClassName("editing");
     }

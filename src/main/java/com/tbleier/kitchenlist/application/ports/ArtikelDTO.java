@@ -1,21 +1,23 @@
-package com.tbleier.kitchenlist.adapter.in.views.artikel;
+package com.tbleier.kitchenlist.application.ports;
 
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import java.util.Objects;
 
 
-public class ArtikelModel {
+public class ArtikelDTO {
+    private long id;
     private String name;
     private Einheit einheit;
     private String kategorie;
 
-    public ArtikelModel(String name, Einheit einheit, String kategorie) {
+    public ArtikelDTO(long id, String name, Einheit einheit, String kategorie) {
+        this.id = id;
         this.name = name;
         this.einheit = einheit;
         this.kategorie = kategorie;
     }
 
-    public ArtikelModel() {
+    public ArtikelDTO() {
         this.name = "";
         this.einheit = null;
         this.kategorie = "";
@@ -45,25 +47,35 @@ public class ArtikelModel {
         this.kategorie = kategorie;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ArtikelModel that = (ArtikelModel) o;
-        return Objects.equals(name, that.name) && einheit == that.einheit && Objects.equals(kategorie, that.kategorie);
+        ArtikelDTO that = (ArtikelDTO) o;
+        return id == that.id && name.equals(that.name) && einheit == that.einheit && kategorie.equals(that.kategorie);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, einheit, kategorie);
+        return Objects.hash(id, name, einheit, kategorie);
     }
 
     @Override
     public String toString() {
-        return "ArtikelModel{" +
-                "name='" + name + '\'' +
+        return "ArtikelDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", einheit=" + einheit +
                 ", kategorie='" + kategorie + '\'' +
                 '}';
     }
 }
+

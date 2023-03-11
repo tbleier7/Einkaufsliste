@@ -1,7 +1,6 @@
 package com.tbleier.kitchenlist.adapter.in.views.kategorie;
 
-import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.ports.in.CommandResult;
+import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
@@ -11,8 +10,6 @@ import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -22,6 +19,7 @@ import java.util.stream.Collectors;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -34,24 +32,29 @@ class KategorieListViewTest {
     private CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
 
     @Mock
-    private QueryService<ListAllKategorienQuery, List<KategorieModel>> listAllKategorienQueryService;
+    private QueryService<ListAllKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
 
-    @Captor
-    ArgumentCaptor<DeleteKategorieCommand> deleteKategorieCommandCaptor;
+
 
 
     private KategorieListView testee;
+    private KategorieDTO firstKategorie;
+    private KategorieDTO secondKategorie;
 
     @BeforeEach
     public void setUp() {
 
-        givenKategorien(List.of(new KategorieModel(5, "Gemüse"), new KategorieModel(1, "Fleisch")));
+        firstKategorie = new KategorieDTO(5, "Gemüse");
+        secondKategorie = new KategorieDTO(1, "Fleisch");
+
+        givenKategorien(List.of(firstKategorie, secondKategorie));
 
         var mapper = KategorieModelMapper.INSTANCE;
 
         var formFactory = new KategorieFormFactory(
                 addKategorieCommandService,
-                mapper);
+                mapper,
+                deleteKategorieCommandService);
 
         testee = new KategorieListView(formFactory,
                 listAllKategorienQueryService,
@@ -61,24 +64,12 @@ class KategorieListViewTest {
 
     @Test
     public void should_show_all_kategorien_in_grid() {
-        //Arrange
-        KategorieModel expectedKategorieModel1 = new KategorieModel();
-        expectedKategorieModel1.setId(1);
-        expectedKategorieModel1.setName("Gemüse");
-
-        KategorieModel expectedKategorieModel2 = new KategorieModel();
-        expectedKategorieModel2.setId(2);
-        expectedKategorieModel2.setName("Fleisch");
-
-        givenKategorien(List.of(expectedKategorieModel1, expectedKategorieModel2));
-        testee.reloadKategorien();
-
         //Act
         var actual = testee.grid.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
 
         //Assert
         assertThat(actual, hasSize(2));
-        assertThat(actual, hasItems(expectedKategorieModel1, expectedKategorieModel2));
+        assertThat(actual, hasItems(firstKategorie, secondKategorie));
     }
 
     @Test
@@ -91,7 +82,7 @@ class KategorieListViewTest {
     @Test
     public void should_leave_editing_mode_when_unselecting_an_item() {
         //Arrange
-        testee.grid.select(new KategorieModel());
+        testee.grid.select(new KategorieDTO());
 
         //Act
         testee.grid.deselectAll();
@@ -104,6 +95,30 @@ class KategorieListViewTest {
     public void should_open_form_when_new_kategorie_should_be_added() {
         //Act
         testee.addKategorieButton.click();
+
+        //Assert
+        assertThatEditingIs(true);
+    }
+
+    @Test
+    public void should_update_kategorie_list_when_kategorie_was_saved() {
+        //Arrange
+        firstKategorie.setName("someNewName");
+
+        //Act
+        testee.updateKategorie(firstKategorie);
+
+        //Assert
+        assertThatKategorienContain(firstKategorie);
+    }
+
+    @Test
+    public void should_open_kategorie_in_editor() {
+        //Arrange
+        var kategorieModel = new KategorieDTO(1, "test");
+
+        //Act
+        testee.grid.select(kategorieModel);
 
         //Assert
         assertThatEditingIs(true);
@@ -123,26 +138,17 @@ class KategorieListViewTest {
 
     @Test
     public void should_delete_kategorie() {
-        givenDeleteIs(true);
-        var kategorieModel = new KategorieModel();
-        kategorieModel.setId(2);
-        kategorieModel.setName("Gemüse");
-
         //Act
-        testee.deleteKategorie(kategorieModel);
+        testee.removeKategorie(firstKategorie);
 
         //Assert
-        verify(deleteKategorieCommandService).execute(deleteKategorieCommandCaptor.capture());
-        var deleteKategorieCommand = deleteKategorieCommandCaptor.getValue();
-        assertEquals(2, deleteKategorieCommand.getId());
-    }
 
-    private void givenDeleteIs(boolean successful) {
-        when(deleteKategorieCommandService.execute(any())).thenReturn(new CommandResult(successful));
+        assertThatKategorienDoNotContain(firstKategorie);
     }
 
 
-    private void givenKategorien(List<KategorieModel> kategorien) {
+
+    private void givenKategorien(List<KategorieDTO> kategorien) {
         when(listAllKategorienQueryService.execute(any())).thenReturn(kategorien);
     }
 
@@ -154,5 +160,17 @@ class KategorieListViewTest {
             assertThat(classnames, hasItem(editingMode));
         else
             assertThat(classnames, not(hasItem(editingMode)));
+    }
+
+    private void assertThatKategorienContain(KategorieDTO kategorie) {
+        assertEquals(true, testee.getKategorieModels()
+                .stream()
+                .anyMatch(k -> k.getId() == kategorie.getId()));
+    }
+
+    private void assertThatKategorienDoNotContain(KategorieDTO kategorie) {
+        assertEquals(false, testee.getKategorieModels()
+                .stream()
+                .anyMatch(k -> k.getId() == kategorie.getId()));
     }
 }

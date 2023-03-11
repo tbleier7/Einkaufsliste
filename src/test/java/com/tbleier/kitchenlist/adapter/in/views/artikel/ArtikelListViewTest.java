@@ -1,8 +1,8 @@
 package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
-import com.tbleier.kitchenlist.application.domain.Artikel;
+import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
+import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.domain.Einheit;
-import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
@@ -31,17 +31,17 @@ class ArtikelListViewTest {
     private CommandService<SaveArtikelCommand> saveArtikelCommandService;
 
     @Mock
-    private QueryService<ListArtikelQuery, List<Artikel>> listAllArtikelQueryService;
+    private QueryService<ListArtikelQuery, List<ArtikelDTO>> listAllArtikelQueryService;
 
     @Mock
-    private QueryService<ListAllKategorienQuery, List<Kategorie>> listAllKategorienQueryService;
+    private QueryService<ListAllKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
 
     private ArtikelListView testee;
-    private List<Artikel> expectedArtikel;
+    private List<ArtikelDTO> expectedArtikel;
 
     @BeforeEach
     public void setUp() {
-        var mapper = ArtikelModelMapper.INSTANCE;
+        var mapper = ArtikelDTOMapper.INSTANCE;
         var factory = new ArtikelFormFactory(saveArtikelCommandService, listAllKategorienQueryService);
 
         givenTwoArtikel();
@@ -50,7 +50,7 @@ class ArtikelListViewTest {
     }
 
     private void givenAKategorie() {
-        when(listAllKategorienQueryService.execute(any())).thenReturn(List.of(new Kategorie(0, "someKategorie")));
+        when(listAllKategorienQueryService.execute(any())).thenReturn(List.of(new KategorieDTO(0, "someKategorie")));
     }
 
     @Test
@@ -80,7 +80,7 @@ class ArtikelListViewTest {
     @Test
     public void should_add_artikel_when_new_artikel_was_saved() {
         //Arrange
-        var artikelModel = new ArtikelModel("newcomer", Einheit.Stueck, "Gemüse");
+        var artikelModel = new ArtikelDTO(1, "newcomer", Einheit.Stueck, "Gemüse");
         givenArtikelWasSaved(artikelModel);
 
         //Act
@@ -93,7 +93,7 @@ class ArtikelListViewTest {
     @Test
     public void should_close_editor_when_new_artikel_was_saved() {
         //Arrange
-        var artikelModel = new ArtikelModel("newcomer", Einheit.Stueck, "Gemüse");
+        var artikelModel = new ArtikelDTO(1, "newcomer", Einheit.Stueck, "Gemüse");
         givenArtikelWasSaved(artikelModel);
 
         //Assert
@@ -103,7 +103,7 @@ class ArtikelListViewTest {
     @Test
     public void should_open_selected_artikel_in_editor() {
         //Arrange
-        var artikelModel = new ArtikelModel("test", Einheit.Stueck, "gemüse");
+        var artikelModel = new ArtikelDTO(1, "test", Einheit.Stueck, "Gemüse");
 
         //Act
         testee.grid.select(artikelModel);
@@ -113,15 +113,15 @@ class ArtikelListViewTest {
         assertEquals(artikelModel.getName(), testee.artikelForm.name.getValue());
     }
 
-    private void givenArtikelWasSaved(ArtikelModel artikelModel) {
-        testee.artikelForm.setArtikelModel(artikelModel);
+    private void givenArtikelWasSaved(ArtikelDTO artikelDTO) {
+        testee.artikelForm.setArtikelModel(artikelDTO);
         testee.artikelForm.save.click();
     }
 
     private void givenTwoArtikel() {
         expectedArtikel = List.of(
-                new Artikel(1,"Zwiebeln", Einheit.Stueck, new Kategorie(0, "Gemüse")),
-                new Artikel(2, "Schinken", Einheit.Stueck, new Kategorie(1, "Wurst")));
+                new ArtikelDTO(1,"Zwiebeln", Einheit.Stueck, "Gemüse"),
+                new ArtikelDTO(2, "Schinken", Einheit.Stueck, "Gemüse"));
 
         when(listAllArtikelQueryService.execute(any())).thenReturn(expectedArtikel);
     }

@@ -61,11 +61,10 @@ class KategoriePersistenceAdapterTest {
         var expectedKategorie = new Kategorie(0, "Gemüse");
 
         //Act
-        testee.save(expectedKategorie);
-        var actual = testee.findByName("Gemüse");
+        var actual = testee.save(expectedKategorie);
 
         //Assert
-        assertThat(actual.getId(), greaterThan(0L));
+        assertThat(actual, greaterThan(0L));
     }
 
     @Test

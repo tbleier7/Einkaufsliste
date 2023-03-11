@@ -1,16 +1,13 @@
 package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
-import com.tbleier.kitchenlist.application.domain.Artikel;
-import com.tbleier.kitchenlist.application.domain.Einheit;
-import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
+import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.vaadin.flow.data.provider.Query;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -33,7 +30,7 @@ class ArtikelFormTest {
     @Mock
     private CommandService<SaveArtikelCommand> addRezeptCommandCommandService;
     @Mock
-    private QueryService<ListAllKategorienQuery, List<Kategorie>> listKategorienQueryService;
+    private QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorienQueryService;
     @Captor
     ArgumentCaptor<SaveArtikelCommand> addZutatCommandCaptor;
 
@@ -50,7 +47,7 @@ class ArtikelFormTest {
     }
 
     private void CreateTestee() {
-        testee =  new ArtikelForm(new ArtikelModel(),
+        testee =  new ArtikelForm(new ArtikelDTO(),
                 addRezeptCommandCommandService, listKategorienQueryService);
 
         saveEventWasFired = new AtomicBoolean(false);
@@ -71,7 +68,7 @@ class ArtikelFormTest {
     private void givenTwoKategorien() {
         kategorieNames = List.of("Gemüse", "Fleisch");
         when(listKategorienQueryService.execute(any()))
-                .thenReturn(List.of(new Kategorie(0, "Gemüse"), new Kategorie(1, "Fleisch")));
+                .thenReturn(List.of(new KategorieDTO(0, "Gemüse"), new KategorieDTO(1, "Fleisch")));
     }
 
     //TODO: überarbeiten

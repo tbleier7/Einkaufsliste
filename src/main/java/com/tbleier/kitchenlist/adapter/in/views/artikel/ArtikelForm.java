@@ -1,16 +1,13 @@
 package com.tbleier.kitchenlist.adapter.in.views.artikel;
 
+import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
+import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.domain.Einheit;
-import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -25,9 +22,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ArtikelForm extends FormLayout {
-    Binder<ArtikelModel> binder = new BeanValidationBinder<>(ArtikelModel.class);
+    Binder<ArtikelDTO> binder = new BeanValidationBinder<>(ArtikelDTO.class);
     private final CommandService<SaveArtikelCommand> saveArtikelCommandService;
-    private final QueryService<ListAllKategorienQuery, List<Kategorie>> listKategorieQueryService;
+    private final QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorieQueryService;
     TextField name = new TextField("Name");
     ComboBox<Einheit> einheit = new ComboBox<>("Einheit");
     ComboBox<String> kategorie = new ComboBox<>("Kategorie");
@@ -36,17 +33,17 @@ public class ArtikelForm extends FormLayout {
     Button delete = new Button("Löschen");
     Button cancel = new Button("Abbrechen");
 
-    private ArtikelModel artikelModel;
+    private ArtikelDTO artikelDTO;
 
 
-    public ArtikelForm(ArtikelModel artikelModel,
+    public ArtikelForm(ArtikelDTO artikelDTO,
                        CommandService<SaveArtikelCommand> SaveArtikelCommandService,
-                       QueryService<ListAllKategorienQuery, List<Kategorie>> listKategorieQueryService) {
+                       QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorieQueryService) {
 
         this.saveArtikelCommandService = SaveArtikelCommandService;
         this.listKategorieQueryService = listKategorieQueryService;
         this.setWidth("25em");
-        this.setArtikelModel(artikelModel);
+        this.setArtikelModel(artikelDTO);
 
 
         binder.bindInstanceFields(this);
@@ -56,7 +53,7 @@ public class ArtikelForm extends FormLayout {
         var kategorienAusDemService = listKategorieQueryService.execute(new ListAllKategorienQuery());
 
         einheit.setItems(Einheit.values());
-        var kategorieNames = kategorienAusDemService.stream().map(Kategorie::getName)
+        var kategorieNames = kategorienAusDemService.stream().map(KategorieDTO::getName)
                 .collect(Collectors.toList());
         kategorie.setItems(kategorieNames);
         kategorie.setLabel("Kategorien");
@@ -80,7 +77,7 @@ public class ArtikelForm extends FormLayout {
 
     private void validateAndSave() {
         try {
-            binder.writeBean(artikelModel);
+            binder.writeBean(artikelDTO);
         } catch (Exception e) {
             System.out.println("Validation failed");
         }
@@ -95,11 +92,11 @@ public class ArtikelForm extends FormLayout {
 //                )
 //        );
 
-        fireEvent(new SaveArtikelEvent(this, artikelModel));
+        fireEvent(new SaveArtikelEvent(this, artikelDTO));
     }
 
-    public void setArtikelModel(ArtikelModel artikel) {
-        this.artikelModel = artikel;
+    public void setArtikelModel(ArtikelDTO artikel) {
+        this.artikelDTO = artikel;
         binder.readBean(artikel);
     }
 

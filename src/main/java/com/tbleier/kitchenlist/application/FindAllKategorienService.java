@@ -1,27 +1,34 @@
 package com.tbleier.kitchenlist.application;
 
-import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.ports.KategorieDTO;
+import com.tbleier.kitchenlist.adapter.in.views.kategorie.KategorieModelMapper;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.tbleier.kitchenlist.application.ports.out.KategorieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
-@Service
-public class FindAllKategorienService implements QueryService<ListAllKategorienQuery, List<Kategorie>> {
+public class FindAllKategorienService implements QueryService<ListAllKategorienQuery, List<KategorieDTO>> {
+
 
     private final KategorieRepository repository;
+    private final KategorieModelMapper mapper;
 
     @Autowired
-    public FindAllKategorienService(KategorieRepository repository) {
+    public FindAllKategorienService(KategorieRepository repository, KategorieModelMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     @Override
-    public List<Kategorie> execute(ListAllKategorienQuery query) {
+    public List<KategorieDTO> execute(ListAllKategorienQuery query) {
         var kategorien = repository.findAll();
-        return kategorien;
+
+        if(kategorien == null)
+            return Collections.emptyList();
+
+        return mapper.kategorieToModel(kategorien);
     }
 }

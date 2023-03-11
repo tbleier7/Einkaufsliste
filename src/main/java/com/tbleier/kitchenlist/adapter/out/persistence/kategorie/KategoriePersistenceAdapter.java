@@ -6,6 +6,7 @@ import com.tbleier.kitchenlist.application.ports.out.NonUniqueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +24,12 @@ public class KategoriePersistenceAdapter implements KategorieRepository {
     }
 
     @Override
-    public void save(Kategorie kategorie) {
+    public long save(Kategorie kategorie) {
         var jpaEntity = mapper.kategorieToJpaEntity(kategorie);
 
         try {
-            kategorieJpaRepository.save(jpaEntity);
+            jpaEntity = kategorieJpaRepository.save(jpaEntity);
+            return jpaEntity.getId();
         }
         catch(DataIntegrityViolationException dataIntegrityViolationException) {
             throw new NonUniqueException("Kategorie existiert bereits!");

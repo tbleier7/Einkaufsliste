@@ -1,20 +1,20 @@
-package com.tbleier.kitchenlist.adapter.in.views.kategorie;
+package com.tbleier.kitchenlist.application.ports;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
-public class KategorieModel {
+public class KategorieDTO {
     private long id;
 
     @NotEmpty
     private String name = "";
 
-    public KategorieModel(long id, String name) {
+    public KategorieDTO(long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public KategorieModel() {
+    public KategorieDTO() {
     }
 
     public String getName() {
@@ -37,7 +37,7 @@ public class KategorieModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        KategorieModel that = (KategorieModel) o;
+        KategorieDTO that = (KategorieDTO) o;
         return id == that.id && name.equals(that.name);
     }
 

@@ -3,9 +3,11 @@ package com.tbleier.kitchenlist.application;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+import com.tbleier.kitchenlist.adapter.in.views.artikel.ArtikelDTOMapper;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
+import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListArtikelQuery;
 import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,10 +27,11 @@ class ListArtikelServiceTest {
 
     private ListArtikelService testee;
     private List<Artikel> artikel = new LinkedList<>();
+    private List<ArtikelDTO> expectedArtikelDTOs = new LinkedList<>();
 
     @BeforeEach
     public void setUp() {
-        testee = new ListArtikelService(artikelRepository);
+        testee = new ListArtikelService(artikelRepository, ArtikelDTOMapper.INSTANCE);
     }
 
     @Test
@@ -37,15 +40,18 @@ class ListArtikelServiceTest {
         givenTwoArtikel();
 
         //Act
-        List<Artikel> actual = testee.execute(new ListArtikelQuery());
+        List<ArtikelDTO> actual = testee.execute(new ListArtikelQuery());
 
         //Assert
-        assertEquals(2, actual.size());
+        assertEquals(expectedArtikelDTOs, actual);
     }
 
     private void givenTwoArtikel() {
         artikel.add(new Artikel(1, "Zwiebeln", Einheit.Stueck, new Kategorie(3, "Gemüse")));
         artikel.add(new Artikel(2, "Gelbwurst", Einheit.Stueck, new Kategorie(7, "Wurst")));
+
+        expectedArtikelDTOs.add(new ArtikelDTO(1, "Zwiebeln", Einheit.Stueck, "Gemüse"));
+        expectedArtikelDTOs.add(new ArtikelDTO(2, "Gelbwurst", Einheit.Stueck, "Wurst"));
 
         when(artikelRepository.findAll()).thenReturn(artikel);
     }

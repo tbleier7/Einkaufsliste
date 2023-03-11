@@ -7,7 +7,19 @@ public class CommandResult {
 
     private final boolean successful;
 
+    private final long id;
+
+    public CommandResult(boolean successful, long id) {
+        this.successful = successful;
+        this.id = id;
+    }
+
     public CommandResult(boolean successful) {
         this.successful = successful;
+        this.id = 0;
+    }
+
+    public long getId() {
+        return id;
     }
 }

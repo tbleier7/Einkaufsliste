@@ -8,6 +8,7 @@ import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.commands.DeleteArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.vaadin.flow.data.provider.Query;
@@ -32,28 +33,30 @@ import static org.mockito.Mockito.when;
 class ArtikelFormTest {
 
     @Mock
-    private CommandService<SaveArtikelCommand> addRezeptCommandCommandService;
+    private CommandService<SaveArtikelCommand> saveArtikelCommandService;
+    @Mock
+    private CommandService<DeleteArtikelCommand> deleteArtikelCommandService;
     @Mock
     private QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorienQueryService;
     @Captor
-    ArgumentCaptor<SaveArtikelCommand> addZutatCommandCaptor;
+    ArgumentCaptor<SaveArtikelCommand> saveCommandCaptor;
+
+    @Captor
+    ArgumentCaptor<DeleteArtikelCommand> deleteCommandCaptor;
 
     private List<String> kategorieNames;
 
     private ArtikelForm testee;
     private AtomicBoolean saveEventWasFired;
     private AtomicBoolean cancelEventWasFired;
+    private AtomicBoolean deleteEventWasFired;
 
     @BeforeEach
     public void setUp() {
-
         givenTwoKategorien();
-        CreateTestee();
-    }
-
-    private void CreateTestee() {
+        
         testee =  new ArtikelForm(new ArtikelDTO(),
-                addRezeptCommandCommandService, listKategorienQueryService);
+                saveArtikelCommandService, listKategorienQueryService, deleteArtikelCommandService);
 
         saveEventWasFired = new AtomicBoolean(false);
         testee.addListener(SaveArtikelEvent.class, e -> {
@@ -65,9 +68,13 @@ class ArtikelFormTest {
             cancelEventWasFired.set(true);
         });
 
+        deleteEventWasFired = new AtomicBoolean(false);
+        testee.addListener(DeleteArtikelEvent.class, e -> {
+            deleteEventWasFired.set(true);
+        });
 
     }
-
+    
     @Test
     public void should_show_all_kategorien_in_comboBox() {
         //Act
@@ -75,12 +82,6 @@ class ArtikelFormTest {
 
         //Assert
         assertEquals(kategorieNames, actual);
-    }
-
-    private void givenTwoKategorien() {
-        kategorieNames = List.of("Gemüse", "Fleisch");
-        when(listKategorienQueryService.execute(any()))
-                .thenReturn(List.of(new KategorieDTO(0, "Gemüse"), new KategorieDTO(1, "Fleisch")));
     }
 
     @Test
@@ -97,14 +98,20 @@ class ArtikelFormTest {
         testee.save.click();
 
         //Assert
-        verify(addRezeptCommandCommandService).execute(addZutatCommandCaptor.capture());
-        var addZutatCommand = addZutatCommandCaptor.getValue();
+        verify(saveArtikelCommandService).execute(saveCommandCaptor.capture());
+        var addZutatCommand = saveCommandCaptor.getValue();
         assertEquals(expectedArtikel.getId(), addZutatCommand.getId());
         assertEquals(expectedArtikel.getName(), addZutatCommand.getName());
         assertEquals(expectedArtikel.getEinheit(), addZutatCommand.getEinheit());
         assertEquals(expectedArtikel.getKategorie().getName(), addZutatCommand.getKategorie());
 
         assertEquals(true, saveEventWasFired.get());
+    }
+
+    private void givenTwoKategorien() {
+        kategorieNames = List.of("Gemüse", "Fleisch");
+        when(listKategorienQueryService.execute(any()))
+                .thenReturn(List.of(new KategorieDTO(0, "Gemüse"), new KategorieDTO(1, "Fleisch")));
     }
 
     @Test
@@ -117,8 +124,36 @@ class ArtikelFormTest {
         //Assert
         assertEquals(true, cancelEventWasFired.get());
     }
+    
+    @Test
+    public void should_delete_an_artikel() {
+        //Arrange
+        var artikelToDelete = new ArtikelDTO(5, "ArtikelToDelete", Einheit.Stueck, "someKategorie");
+        testee.setArtikelModel(artikelToDelete);
+
+        //Act
+        testee.delete.click();
+    
+        //Assert
+        verify(deleteArtikelCommandService).execute(deleteCommandCaptor.capture());
+        var deleteCommand = deleteCommandCaptor.getValue();
+        assertEquals(artikelToDelete.getId(), deleteCommand.getId());
+    }
+    
+    @Test
+    public void should_fire_delete_event_when_artikel_was_deleted() {
+        //Arrange
+        var artikelToDelete = new ArtikelDTO(5, "ArtikelToDelete", Einheit.Stueck, "someKategorie");
+        testee.setArtikelModel(artikelToDelete);
+
+        //Act
+        testee.delete.click();
+
+        //Assert
+        assertEquals(true, deleteEventWasFired.get());
+    }
 
     private void givenSaveWasSuccessful() {
-        when(addRezeptCommandCommandService.execute(any())).thenReturn(new CommandResult(true, 1L));
+        when(saveArtikelCommandService.execute(any())).thenReturn(new CommandResult(true, 1L));
     }
 }

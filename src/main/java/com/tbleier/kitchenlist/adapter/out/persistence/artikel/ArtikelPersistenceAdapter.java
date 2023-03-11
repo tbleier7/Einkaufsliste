@@ -52,4 +52,9 @@ public class ArtikelPersistenceAdapter implements ArtikelRepository {
         else
             return Optional.empty();
     }
+
+    @Override
+    public void delete(long id) {
+        artikelJpaRepository.deleteById(id);
+    }
 }

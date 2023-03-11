@@ -30,7 +30,7 @@ public class ArtikelListView extends VerticalLayout {
     ArtikelForm artikelForm;
     Button addRezeptButton;
 
-    private List<ArtikelDTO> artikelDTOS;
+    private List<ArtikelDTO> artikelDTOs;
 
     @Autowired
     public ArtikelListView(ArtikelFormFactory artikelFormFactory,
@@ -47,16 +47,18 @@ public class ArtikelListView extends VerticalLayout {
 
         add(getToolbar(), getContent());
         closeEditor();
+        grid.asSingleSelect().addValueChangeListener(event ->
+                openArtikelEditor(event.getValue()));
     }
 
-    public List<ArtikelDTO> getArtikelDTOS() {
-        return artikelDTOS;
+    public List<ArtikelDTO> getArtikelDTOs() {
+        return artikelDTOs;
     }
 
     public void addArtikel(ArtikelDTO artikelDTO) {
-        artikelDTOS.removeIf(m -> m.getId() == artikelDTO.getId());
-        artikelDTOS.add(artikelDTO);
-        grid.setItems(artikelDTOS);
+        artikelDTOs.removeIf(m -> m.getId() == artikelDTO.getId());
+        artikelDTOs.add(artikelDTO);
+        grid.setItems(artikelDTOs);
     }
 
     private void closeEditor() {
@@ -66,6 +68,12 @@ public class ArtikelListView extends VerticalLayout {
     }
 
     private void openArtikelEditor(ArtikelDTO artikelDTO) {
+
+        if(artikelDTO == null) {
+            closeEditor();
+            return;
+        }
+
         artikelForm.setArtikelModel(artikelDTO);
         artikelForm.setVisible(true);
         addClassName("editing");
@@ -87,6 +95,10 @@ public class ArtikelListView extends VerticalLayout {
         artikelForm.addListener(SaveArtikelEvent.class, e -> {
             closeEditor();
             addArtikel(e.getArtikelModel());
+        });
+        artikelForm.addListener(DeleteArtikelEvent.class, e -> {
+            removeArtikel(e.getArtikelModel());
+            closeEditor();
         });
         artikelForm.addListener(CloseEvent.class, e -> closeEditor());
     }
@@ -111,11 +123,12 @@ public class ArtikelListView extends VerticalLayout {
         grid.setColumns("name", "einheit", "kategorie");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        artikelDTOS = new ArrayList<>(listArtikelQueryService.execute(new ListArtikelQuery()));
-        grid.setItems(artikelDTOS);
-
-        grid.asSingleSelect().addValueChangeListener(event ->
-                openArtikelEditor(event.getValue()));
+        artikelDTOs = new ArrayList<>(listArtikelQueryService.execute(new ListArtikelQuery()));
+        grid.setItems(artikelDTOs);
     }
 
+    public void removeArtikel(ArtikelDTO artikelModel) {
+        artikelDTOs.remove(artikelModel);
+        grid.setItems(artikelDTOs);
+    }
 }

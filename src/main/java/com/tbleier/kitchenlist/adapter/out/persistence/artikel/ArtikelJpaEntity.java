@@ -12,6 +12,16 @@ public class ArtikelJpaEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    public ArtikelJpaEntity(Long id, String name, Einheit einheit, KategorieJpaEntity kategorie) {
+        this.id = id;
+        this.name = name;
+        this.einheit = einheit;
+        setKategorie(kategorie);
+    }
+
+    public ArtikelJpaEntity() {
+    }
+
     public Long getId() {
         return id;
     }

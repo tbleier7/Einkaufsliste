@@ -20,7 +20,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @DataJpaTest
@@ -33,6 +33,7 @@ public class ArtikelPersistenceAdapterTest {
 
     @Container
     private static final PostgreSQLContainer<?> database = new PostgreSQLContainer<>("postgres:15.2-alpine");
+
 
 
     public static class DataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -50,6 +51,7 @@ public class ArtikelPersistenceAdapterTest {
     private ArtikelPersistenceAdapter testee;
 
     private Kategorie alreadySavedKategorie;
+    private KategorieJpaEntity kategorieJpaEntity;
 
 
     @BeforeEach
@@ -65,17 +67,32 @@ public class ArtikelPersistenceAdapterTest {
 
         //Act
         var id = testee.save(expectedArtikel);
-        var actual = testee.findById(id);
 
         //Assert
-        assertEquals(false, actual.isEmpty());
-        assertEquals(expectedArtikel.getKategorie(), actual.get().getKategorie());
-        assertEquals(expectedArtikel.getEinheit(), actual.get().getEinheit());
-        assertEquals(expectedArtikel.getKategorie(), actual.get().getKategorie());
+        var actual = entityManager.find(ArtikelJpaEntity.class, id);
+        assertNotNull(actual);
+        assertEquals(expectedArtikel.getKategorie().getId(), actual.getKategorie().getId());
+        assertEquals(expectedArtikel.getEinheit(), actual.getEinheit());
+        assertEquals(expectedArtikel.getName(), actual.getName());
+    }
+
+    @Test
+    public void should_delete_an_artikel() {
+        //Arrange
+        givenAKategorie("Gemüse");
+        var artikel = new ArtikelJpaEntity();
+        artikel.setKategorie(kategorieJpaEntity);
+        artikel = entityManager.persist(artikel);
+
+        //Act
+        testee.delete(artikel.getId());
+
+        //Assert
+        assertNull(entityManager.find(ArtikelJpaEntity.class, artikel.getId()));
     }
 
     private void givenAKategorie(String name) {
-        var kategorieJpaEntity = new KategorieJpaEntity();
+        kategorieJpaEntity = new KategorieJpaEntity();
         kategorieJpaEntity.setName(name);
         kategorieJpaEntity = entityManager.persist(kategorieJpaEntity);
 

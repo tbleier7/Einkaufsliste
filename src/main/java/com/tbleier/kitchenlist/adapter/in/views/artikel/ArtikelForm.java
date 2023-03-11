@@ -5,6 +5,7 @@ import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.commands.DeleteArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.vaadin.flow.component.*;
@@ -25,6 +26,7 @@ public class ArtikelForm extends FormLayout {
     Binder<ArtikelDTO> binder = new BeanValidationBinder<>(ArtikelDTO.class);
     private final CommandService<SaveArtikelCommand> saveArtikelCommandService;
     private final QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorieQueryService;
+    private final CommandService<DeleteArtikelCommand> deleteArtikelCommandService;
     TextField name = new TextField("Name");
     ComboBox<Einheit> einheit = new ComboBox<>("Einheit");
     ComboBox<String> kategorie = new ComboBox<>("Kategorie");
@@ -37,11 +39,13 @@ public class ArtikelForm extends FormLayout {
 
 
     public ArtikelForm(ArtikelDTO artikelDTO,
-                       CommandService<SaveArtikelCommand> SaveArtikelCommandService,
-                       QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorieQueryService) {
+                       CommandService<SaveArtikelCommand> saveArtikelCommandService,
+                       QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorieQueryService,
+                       CommandService<DeleteArtikelCommand> deleteArtikelCommandService) {
 
-        this.saveArtikelCommandService = SaveArtikelCommandService;
+        this.saveArtikelCommandService = saveArtikelCommandService;
         this.listKategorieQueryService = listKategorieQueryService;
+        this.deleteArtikelCommandService = deleteArtikelCommandService;
         this.setWidth("25em");
         this.setArtikelModel(artikelDTO);
 
@@ -64,6 +68,7 @@ public class ArtikelForm extends FormLayout {
 
     private Component createButtonLayout() {
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        delete.addClickListener(event -> deleteArtikel());
 
         save.addClickListener(event -> validateAndSave());
         save.addClickShortcut(Key.ENTER);
@@ -73,6 +78,11 @@ public class ArtikelForm extends FormLayout {
         cancel.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
         return new HorizontalLayout(save, delete, cancel);
+    }
+
+    private void deleteArtikel() {
+        deleteArtikelCommandService.execute(new DeleteArtikelCommand(artikelDTO.getId()));
+        fireEvent(new DeleteArtikelEvent(this, artikelDTO));
     }
 
     private void validateAndSave() {

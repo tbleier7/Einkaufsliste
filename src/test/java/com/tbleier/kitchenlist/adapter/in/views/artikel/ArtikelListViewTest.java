@@ -5,6 +5,7 @@ import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.commands.DeleteArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListArtikelQuery;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -29,6 +30,9 @@ class ArtikelListViewTest {
 
     @Mock
     private CommandService<SaveArtikelCommand> saveArtikelCommandService;
+
+    @Mock
+    private CommandService<DeleteArtikelCommand> deleteArtikelCommandService;
 
     @Mock
     private QueryService<ListArtikelQuery, List<ArtikelDTO>> listAllArtikelQueryService;
@@ -42,7 +46,7 @@ class ArtikelListViewTest {
     @BeforeEach
     public void setUp() {
         var mapper = ArtikelDTOMapper.INSTANCE;
-        var factory = new ArtikelFormFactory(saveArtikelCommandService, listAllKategorienQueryService);
+        var factory = new ArtikelFormFactory(saveArtikelCommandService, listAllKategorienQueryService, deleteArtikelCommandService);
 
         givenTwoArtikel();
         givenAKategorie();
@@ -85,7 +89,7 @@ class ArtikelListViewTest {
         testee.addArtikel(artikelModel);
     
         //Assert
-        assertThat(testee.getArtikelDTOS(), hasItem(artikelModel));
+        assertThat(testee.getArtikelDTOs(), hasItem(artikelModel));
     }
 
     @Test
@@ -101,11 +105,45 @@ class ArtikelListViewTest {
         assertEquals(artikelModel.getName(), testee.artikelForm.name.getValue());
     }
 
+    @Test
+    public void should_remove_artikel_when_deleted() {
+        //Arrange
+        var artikelModel = new ArtikelDTO(1, "test", Einheit.Stueck, "Gemüse");
+
+        //Act
+        testee.removeArtikel(artikelModel);
+
+        //Assert
+        assertThat(testee.getArtikelDTOs(), not(hasItem(artikelModel)));
+    }
+
+    @Test
+    public void should_leave_editing_mode_when_unselecting_an_item() {
+        //Arrange
+        testee.grid.select(new ArtikelDTO());
+
+        //Act
+        testee.grid.deselectAll();
+
+        //Assert
+        assertThatEditingIs(false);
+    }
+
     private void givenTwoArtikel() {
         expectedArtikel = List.of(
                 new ArtikelDTO(1,"Zwiebeln", Einheit.Stueck, "Gemüse"),
                 new ArtikelDTO(2, "Schinken", Einheit.Stueck, "Gemüse"));
 
         when(listAllArtikelQueryService.execute(any())).thenReturn(expectedArtikel);
+    }
+
+    private void assertThatEditingIs(boolean editing) {
+        var classnames = testee.getClassNames();
+        var editingMode = "editing";
+
+        if (editing)
+            assertThat(classnames, hasItem(editingMode));
+        else
+            assertThat(classnames, not(hasItem(editingMode)));
     }
 }

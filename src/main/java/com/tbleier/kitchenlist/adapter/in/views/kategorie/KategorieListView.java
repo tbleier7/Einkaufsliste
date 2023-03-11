@@ -125,8 +125,6 @@ public class KategorieListView extends VerticalLayout {
         grid.setSizeFull();
         grid.setColumns("name");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-
-
         reloadKategorien();
     }
 

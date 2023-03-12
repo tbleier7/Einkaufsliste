@@ -1,6 +1,7 @@
 package com.tbleier.kitchenlist.adapter.in.views;
 
 import com.tbleier.kitchenlist.adapter.in.views.artikel.ArtikelListView;
+import com.tbleier.kitchenlist.adapter.in.views.einkaufsliste.EinkaufslisteListView;
 import com.tbleier.kitchenlist.adapter.in.views.kategorie.KategorieListView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -39,9 +40,13 @@ public class MainLayout extends AppLayout {
         RouterLink kategorieListView = new RouterLink("Kategorien", KategorieListView.class);
         kategorieListView.setHighlightCondition(HighlightConditions.sameLocation());
 
+        RouterLink einkaufsListeListView = new RouterLink("Einkaufsliste", EinkaufslisteListView.class);
+        kategorieListView.setHighlightCondition(HighlightConditions.sameLocation());
+
         addToDrawer(new VerticalLayout(
                 artikelListView,
-                kategorieListView
+                kategorieListView,
+                einkaufsListeListView
         ));
     }
 

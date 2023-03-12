@@ -5,6 +5,10 @@
   .artikel-list-view.editing .artikel-grid {
     display: none;
   }
+  .kategorie-list-view.editing .kategorie-toolbar,
+    .kategorie-list-view.editing .kategorie-grid {
+      display: none;
+    }
 }
 
 a[highlight] {

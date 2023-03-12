@@ -26,7 +26,6 @@ public class ArtikelListView extends VerticalLayout {
     private final QueryService<ListArtikelQuery, List<ArtikelDTO>> listArtikelQueryService;
     private final ArtikelDTOMapper mapper;
     Grid<ArtikelDTO> grid = new Grid<>(ArtikelDTO.class);
-    TextField filterText = new TextField();
     ArtikelForm artikelForm;
     Button addRezeptButton;
 
@@ -104,14 +103,11 @@ public class ArtikelListView extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Artikel nach Namen filtern...");
-        filterText.setClearButtonVisible(true);
-        filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
-        addRezeptButton = new Button("Zutat hinzufügen");
+        addRezeptButton = new Button("Artikel hinzufügen");
         addRezeptButton.addClickListener(e -> openArtikelEditor(new ArtikelDTO()));
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterText, addRezeptButton);
+        HorizontalLayout toolbar = new HorizontalLayout(addRezeptButton);
         toolbar.addClassName("artikel-toolbar");
 
         return toolbar;

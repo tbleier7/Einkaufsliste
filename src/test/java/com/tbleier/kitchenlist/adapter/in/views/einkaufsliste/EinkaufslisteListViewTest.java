@@ -21,18 +21,32 @@ class EinkaufslisteListViewTest {
     @Mock
     private QueryService<ListEinkaufslisteQuery, List<EinkaufslistenPositionDTO>> einkaufsListeQueryService;
 
+    @Mock
+    private AddArtikelDialog addArtikelDialog;
+
     private EinkaufslisteListView testee;
 
     @BeforeEach
     public void setUp() {
         givenTwoEntriesForEinkaufsliste();
-        testee = new EinkaufslisteListView(einkaufsListeQueryService);
+        testee = new EinkaufslisteListView(einkaufsListeQueryService, addArtikelDialog);
     }
 
     @Test
     public void should_show_all_einkaufslistenpositionen() {
         //Assert
         assertEquals(2, testee.getPositionDTOs().size());
+    }
+    
+    @Test
+    public void should_open_a_dialog_for_adding_an_artikel() {
+        //Arrange
+    
+        //Act
+        testee.addArtikelButton.click();
+    
+        //Assert
+        testee.addArtikelDialog.isOpened();
     }
 
     private void givenTwoEntriesForEinkaufsliste() {

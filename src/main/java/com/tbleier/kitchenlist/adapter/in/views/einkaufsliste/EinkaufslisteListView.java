@@ -28,9 +28,14 @@ public class EinkaufslisteListView extends VerticalLayout {
     private List<EinkaufslistenPositionDTO> positionDTOs = new ArrayList<>();
     Button addArtikelButton;
 
+    final AddArtikelDialog addArtikelDialog;
+
     @Autowired
-    public EinkaufslisteListView(QueryService<ListEinkaufslisteQuery, List<EinkaufslistenPositionDTO>> einkaufsListeQueryService) {
+    public EinkaufslisteListView(QueryService<ListEinkaufslisteQuery,
+            List<EinkaufslistenPositionDTO>> einkaufsListeQueryService,
+            AddArtikelDialog addArtikelDialog) {
         this.einkaufsListeQueryService = einkaufsListeQueryService;
+        this.addArtikelDialog = addArtikelDialog;
         addClassName("einkaufsliste-list-view");
         setSizeFull();
         configureGrid();
@@ -40,6 +45,7 @@ public class EinkaufslisteListView extends VerticalLayout {
     private Component getToolbar() {
 
         addArtikelButton = new Button("Eintrag hinzufügen");
+        addArtikelButton.addClickListener(event -> addArtikelDialog.open());
 
         HorizontalLayout toolbar = new HorizontalLayout(addArtikelButton);
         toolbar.addClassName("einkaufsliste-toolbar");

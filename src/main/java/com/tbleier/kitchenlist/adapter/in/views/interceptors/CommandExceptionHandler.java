@@ -54,6 +54,7 @@ public class CommandExceptionHandler<T> implements CommandService<T> {
         });
 
         HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setSizeFull();
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         notification.add(layout);

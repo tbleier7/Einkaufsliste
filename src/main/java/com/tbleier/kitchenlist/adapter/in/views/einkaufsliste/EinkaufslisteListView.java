@@ -6,10 +6,10 @@ import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListEinkaufslisteQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class EinkaufslisteListView extends VerticalLayout {
 
         addArtikelButton = new Button("Eintrag hinzufügen");
 
-        HorizontalLayout toolbar = new HorizontalLayout( addArtikelButton);
+        HorizontalLayout toolbar = new HorizontalLayout(addArtikelButton);
         toolbar.addClassName("einkaufsliste-toolbar");
 
         return toolbar;
@@ -50,8 +50,26 @@ public class EinkaufslisteListView extends VerticalLayout {
         grid.addClassName("artikel-grid");
         grid.setSizeFull();
 
-        grid.setColumns("artikelName", "amount");
+        var decrecementButtonColumn = grid.addComponentColumn(item -> {
+            var decrementAmountButton = new Button("-");
+            return decrementAmountButton;
+        });
+
+        var increcementButtonColumn = grid.addComponentColumn(item -> {
+            var incrementAmountButton = new Button("+");
+            return incrementAmountButton;
+        });
+
+        var artikelNameColumn = grid.getColumnByKey("artikelName");
+        var amountColumn = grid.getColumnByKey("amount");
+        amountColumn.setTextAlign(ColumnTextAlign.CENTER);
+
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+        grid.setColumnOrder(artikelNameColumn,
+        decrecementButtonColumn,
+        amountColumn,
+        increcementButtonColumn);
 
         positionDTOs = einkaufsListeQueryService.execute(new ListEinkaufslisteQuery());
         grid.setItems(positionDTOs);

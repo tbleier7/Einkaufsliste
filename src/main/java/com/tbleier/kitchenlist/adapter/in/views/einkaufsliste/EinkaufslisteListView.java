@@ -6,6 +6,7 @@ import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListEinkaufslisteQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -50,6 +51,12 @@ public class EinkaufslisteListView extends VerticalLayout {
         grid.addClassName("artikel-grid");
         grid.setSizeFull();
 
+
+        var checkBoxColumn = grid.addComponentColumn(item -> {
+            Checkbox checkbox = new Checkbox();
+            return checkbox;
+        });
+
         var decrecementButtonColumn = grid.addComponentColumn(item -> {
             var decrementAmountButton = new Button("-");
             return decrementAmountButton;
@@ -66,10 +73,12 @@ public class EinkaufslisteListView extends VerticalLayout {
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        grid.setColumnOrder(artikelNameColumn,
-        decrecementButtonColumn,
-        amountColumn,
-        increcementButtonColumn);
+        grid.setColumnOrder(
+                checkBoxColumn,
+                artikelNameColumn,
+                decrecementButtonColumn,
+                amountColumn,
+                increcementButtonColumn);
 
         positionDTOs = einkaufsListeQueryService.execute(new ListEinkaufslisteQuery());
         grid.setItems(positionDTOs);

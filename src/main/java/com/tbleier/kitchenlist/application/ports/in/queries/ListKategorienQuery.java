@@ -1,4 +1,4 @@
 package com.tbleier.kitchenlist.application.ports.in.queries;
 
-public class ListAllKategorienQuery {
+public class ListKategorienQuery {
 }

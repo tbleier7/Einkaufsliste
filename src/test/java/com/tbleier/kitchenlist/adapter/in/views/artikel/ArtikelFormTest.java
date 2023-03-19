@@ -10,7 +10,7 @@ import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.DeleteArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListKategorienQuery;
 import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class ArtikelFormTest {
     @Mock
     private CommandService<DeleteArtikelCommand> deleteArtikelCommandService;
     @Mock
-    private QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorienQueryService;
+    private QueryService<ListKategorienQuery, List<KategorieDTO>> listKategorienQueryService;
     @Captor
     ArgumentCaptor<SaveArtikelCommand> saveCommandCaptor;
 
@@ -99,11 +99,11 @@ class ArtikelFormTest {
 
         //Assert
         verify(saveArtikelCommandService).execute(saveCommandCaptor.capture());
-        var addZutatCommand = saveCommandCaptor.getValue();
-        assertEquals(expectedArtikel.getId(), addZutatCommand.getId());
-        assertEquals(expectedArtikel.getName(), addZutatCommand.getName());
-        assertEquals(expectedArtikel.getEinheit(), addZutatCommand.getEinheit());
-        assertEquals(expectedArtikel.getKategorie().getName(), addZutatCommand.getKategorie());
+        var saveArtikelCommand = saveCommandCaptor.getValue();
+        assertEquals(expectedArtikel.getId(), saveArtikelCommand.getId());
+        assertEquals(expectedArtikel.getName(), saveArtikelCommand.getName());
+        assertEquals(expectedArtikel.getEinheit(), saveArtikelCommand.getEinheit());
+        assertEquals(expectedArtikel.getKategorie().getName(), saveArtikelCommand.getKategorie());
 
         assertEquals(true, saveEventWasFired.get());
     }

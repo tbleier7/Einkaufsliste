@@ -4,8 +4,8 @@ import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
-import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.in.commands.DeleteKategorieCommand;
 import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class KategorieListViewTest {
     private CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
 
     @Mock
-    private QueryService<ListAllKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
+    private QueryService<ListKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
 
 
 

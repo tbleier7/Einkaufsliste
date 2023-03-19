@@ -4,8 +4,8 @@ import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
 import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
-import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.in.commands.DeleteKategorieCommand;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -26,7 +26,7 @@ import java.util.List;
 public class KategorieListView extends VerticalLayout {
 
     private final KategorieFormFactory kategorieFormFactory;
-    private final QueryService<ListAllKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
+    private final QueryService<ListKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
     private final CommandService<DeleteKategorieCommand> deleteKategorieCommandService;
     private final KategorieModelMapper mapper;
     Grid<KategorieDTO> grid = new Grid<>(KategorieDTO.class);
@@ -37,7 +37,7 @@ public class KategorieListView extends VerticalLayout {
 
     @Autowired
     public KategorieListView(KategorieFormFactory kategorieFormFactory,
-                             QueryService<ListAllKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService,
+                             QueryService<ListKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService,
                              CommandService<DeleteKategorieCommand> deleteKategorieCommandService,
                              KategorieModelMapper mapper) {
         this.kategorieFormFactory = kategorieFormFactory;
@@ -104,7 +104,7 @@ public class KategorieListView extends VerticalLayout {
     }
 
     public void reloadKategorien() {
-        kategorieDTOS = new ArrayList<>(listAllKategorienQueryService.execute(new ListAllKategorienQuery()));
+        kategorieDTOS = new ArrayList<>(listAllKategorienQueryService.execute(new ListKategorienQuery()));
         grid.setItems(kategorieDTOS);
     }
 

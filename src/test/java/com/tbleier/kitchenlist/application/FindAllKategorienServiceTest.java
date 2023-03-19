@@ -3,7 +3,7 @@ package com.tbleier.kitchenlist.application;
 import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.adapter.in.views.kategorie.KategorieModelMapper;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListKategorienQuery;
 import com.tbleier.kitchenlist.application.ports.out.KategorieRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class FindAllKategorienServiceTest {
         var expectedKategorien = List.of(new KategorieDTO(5, "Gemüse"), new KategorieDTO(6, "Fleisch"));
 
         //Act
-        var actual = testee.execute(new ListAllKategorienQuery());
+        var actual = testee.execute(new ListKategorienQuery());
 
         //Assert
         assertEquals(expectedKategorien, actual);

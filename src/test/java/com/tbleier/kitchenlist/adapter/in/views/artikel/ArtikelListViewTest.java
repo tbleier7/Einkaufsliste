@@ -7,7 +7,7 @@ import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.DeleteArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListKategorienQuery;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListArtikelQuery;
 import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ class ArtikelListViewTest {
     private QueryService<ListArtikelQuery, List<ArtikelDTO>> listAllArtikelQueryService;
 
     @Mock
-    private QueryService<ListAllKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
+    private QueryService<ListKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
 
     private ArtikelListView testee;
     private List<ArtikelDTO> expectedArtikel;

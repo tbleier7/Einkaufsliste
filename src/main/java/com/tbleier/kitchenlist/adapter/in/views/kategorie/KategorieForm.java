@@ -4,7 +4,7 @@ import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
-import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.DeleteKategorieCommand;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;

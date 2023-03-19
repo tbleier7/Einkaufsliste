@@ -3,14 +3,14 @@ package com.tbleier.kitchenlist.application;
 import com.tbleier.kitchenlist.application.ports.KategorieDTO;
 import com.tbleier.kitchenlist.adapter.in.views.kategorie.KategorieModelMapper;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListKategorienQuery;
 import com.tbleier.kitchenlist.application.ports.out.KategorieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
 
-public class FindAllKategorienService implements QueryService<ListAllKategorienQuery, List<KategorieDTO>> {
+public class FindAllKategorienService implements QueryService<ListKategorienQuery, List<KategorieDTO>> {
 
 
     private final KategorieRepository repository;
@@ -23,7 +23,7 @@ public class FindAllKategorienService implements QueryService<ListAllKategorienQ
     }
 
     @Override
-    public List<KategorieDTO> execute(ListAllKategorienQuery query) {
+    public List<KategorieDTO> execute(ListKategorienQuery query) {
         var kategorien = repository.findAll();
 
         if(kategorien == null)

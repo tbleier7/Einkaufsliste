@@ -1,10 +1,8 @@
 package com.tbleier.kitchenlist.application;
 
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 
-import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.DeleteKategorieCommand;
 import com.tbleier.kitchenlist.application.ports.out.KategorieRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -2,7 +2,7 @@ package com.tbleier.kitchenlist.application;
 
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
-import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.DeleteKategorieCommand;
 import com.tbleier.kitchenlist.application.ports.out.KategorieRepository;
 
 public class DeleteKategorieService implements CommandService<DeleteKategorieCommand> {

@@ -6,7 +6,7 @@ import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.DeleteArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListKategorienQuery;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,11 +15,11 @@ import java.util.List;
 public class ArtikelFormFactory {
 
     private final CommandService<SaveArtikelCommand> addZutatCommandCommandService;
-    private final QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorieQueryService;
+    private final QueryService<ListKategorienQuery, List<KategorieDTO>> listKategorieQueryService;
     private final CommandService<DeleteArtikelCommand> deleteArtikelCommandService;
 
     public ArtikelFormFactory(CommandService<SaveArtikelCommand> addZutatCommandCommandService,
-                              QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorieQueryService,
+                              QueryService<ListKategorienQuery, List<KategorieDTO>> listKategorieQueryService,
                               CommandService<DeleteArtikelCommand> deleteArtikelCommandService) {
         this.addZutatCommandCommandService = addZutatCommandCommandService;
         this.listKategorieQueryService = listKategorieQueryService;

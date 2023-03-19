@@ -1,6 +1,4 @@
-package com.tbleier.kitchenlist.application.ports.out;
-
-import com.tbleier.kitchenlist.application.domain.Kategorie;
+package com.tbleier.kitchenlist.application.ports.in.commands;
 
 public class DeleteKategorieCommand {
 

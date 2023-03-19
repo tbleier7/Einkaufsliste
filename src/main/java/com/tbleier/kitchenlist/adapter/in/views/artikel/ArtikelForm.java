@@ -7,7 +7,7 @@ import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.DeleteArtikelCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveArtikelCommand;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListKategorienQuery;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class ArtikelForm extends FormLayout {
     Binder<ArtikelDTO> binder = new BeanValidationBinder<>(ArtikelDTO.class);
     private final CommandService<SaveArtikelCommand> saveArtikelCommandService;
-    private final QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorieQueryService;
+    private final QueryService<ListKategorienQuery, List<KategorieDTO>> listKategorieQueryService;
     private final CommandService<DeleteArtikelCommand> deleteArtikelCommandService;
     TextField name = new TextField("Name");
     ComboBox<Einheit> einheit = new ComboBox<>("Einheit");
@@ -40,7 +40,7 @@ public class ArtikelForm extends FormLayout {
 
     public ArtikelForm(ArtikelDTO artikelDTO,
                        CommandService<SaveArtikelCommand> saveArtikelCommandService,
-                       QueryService<ListAllKategorienQuery, List<KategorieDTO>> listKategorieQueryService,
+                       QueryService<ListKategorienQuery, List<KategorieDTO>> listKategorieQueryService,
                        CommandService<DeleteArtikelCommand> deleteArtikelCommandService) {
 
         this.saveArtikelCommandService = saveArtikelCommandService;
@@ -54,7 +54,7 @@ public class ArtikelForm extends FormLayout {
 
         addClassName("artikel-form");
 
-        var kategorienAusDemService = listKategorieQueryService.execute(new ListAllKategorienQuery());
+        var kategorienAusDemService = listKategorieQueryService.execute(new ListKategorienQuery());
 
         einheit.setItems(Einheit.values());
         var kategorieNames = kategorienAusDemService.stream().map(KategorieDTO::getName)

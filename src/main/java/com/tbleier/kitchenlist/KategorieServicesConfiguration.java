@@ -9,8 +9,8 @@ import com.tbleier.kitchenlist.application.SaveKategorieService;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.SaveKategorieCommand;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListAllKategorienQuery;
-import com.tbleier.kitchenlist.application.ports.out.DeleteKategorieCommand;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListKategorienQuery;
+import com.tbleier.kitchenlist.application.ports.in.commands.DeleteKategorieCommand;
 import com.tbleier.kitchenlist.application.ports.out.KategorieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +41,7 @@ public class KategorieServicesConfiguration {
     }
 
     @Bean
-    QueryService<ListAllKategorienQuery, List<KategorieDTO>> resolveListKategorienQueryService() {
+    QueryService<ListKategorienQuery, List<KategorieDTO>> resolveListKategorienQueryService() {
         return new FindAllKategorienService(kategorieRepository, kategorieModelMapper);
     }
 }

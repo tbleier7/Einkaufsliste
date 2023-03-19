@@ -1,7 +1,7 @@
 package com.tbleier.kitchenlist.application.ports.out;
 
-import com.tbleier.kitchenlist.application.domain.ListenEintrag;
+import com.tbleier.kitchenlist.application.domain.Einkaufslistenposition;
 
 public interface EinkaufslisteRepository {
-    void saveListenEintrag(ListenEintrag listenEintrag);
+    void save(Einkaufslistenposition einkaufslistenposition);
 }

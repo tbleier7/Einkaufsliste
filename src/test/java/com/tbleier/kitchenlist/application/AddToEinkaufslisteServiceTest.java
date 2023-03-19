@@ -3,7 +3,7 @@ package com.tbleier.kitchenlist.application;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.domain.ListenEintrag;
+import com.tbleier.kitchenlist.application.domain.Einkaufslistenposition;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
 import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
@@ -31,7 +31,7 @@ class AddToEinkaufslisteServiceTest {
     EinkaufslisteRepository einkaufslisteRepository;
 
     @Captor
-    ArgumentCaptor<ListenEintrag> repositorySaveCaptor;
+    ArgumentCaptor<Einkaufslistenposition> repositorySaveCaptor;
 
     private AddToEinkaufsListeCommand command;
     private AddToEinkaufslisteService testee;
@@ -81,7 +81,7 @@ class AddToEinkaufslisteServiceTest {
     }
 
     private void AssertThatListenEintragWasSuccessfullySaved(CommandResult actual) {
-        verify(einkaufslisteRepository).saveListenEintrag(repositorySaveCaptor.capture());
+        verify(einkaufslisteRepository).save(repositorySaveCaptor.capture());
         var addedListenEintrag = repositorySaveCaptor.getValue();
 
         assertEquals(command.getMenge(), addedListenEintrag.getMenge());

@@ -1,6 +1,6 @@
 package com.tbleier.kitchenlist.application;
 
-import com.tbleier.kitchenlist.application.domain.ListenEintrag;
+import com.tbleier.kitchenlist.application.domain.Einkaufslistenposition;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
@@ -24,7 +24,7 @@ public class AddToEinkaufslisteService implements CommandService<AddToEinkaufsLi
         if(artikel.isEmpty())
             return new CommandResult(false);
 
-        repository.saveListenEintrag(new ListenEintrag(artikel.get(), command.getMenge()));
+        repository.save(new Einkaufslistenposition(artikel.get(), command.getMenge()));
 
         return new CommandResult(true);
     }

@@ -13,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,6 +49,18 @@ class EinkaufslisteListViewTest {
     
         //Assert
         testee.addArtikelDialog.isOpened();
+    }
+
+    @Test
+    public void should_add_new_einkaufslistenposition() {
+        //Arrange
+        var listenposition = new EinkaufslistenPositionDTO("irgendeinArtikel", 2);
+
+        //Act
+        testee.addEinkaufslistenposition(listenposition);
+
+        //Assert
+        assertThat(testee.getPositionDTOs(), hasItem(listenposition));
     }
 
     private void givenTwoEntriesForEinkaufsliste() {

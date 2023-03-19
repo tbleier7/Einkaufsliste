@@ -1,10 +1,10 @@
 package com.tbleier.kitchenlist.application.domain;
 
-public class ListenEintrag {
+public class Einkaufslistenposition {
     private final Artikel artikel;
     private int menge;
 
-    public ListenEintrag(Artikel artikel, int menge) {
+    public Einkaufslistenposition(Artikel artikel, int menge) {
         this.artikel = artikel;
         this.menge = menge;
     }

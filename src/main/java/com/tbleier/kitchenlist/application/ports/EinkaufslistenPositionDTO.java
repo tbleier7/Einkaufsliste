@@ -2,21 +2,21 @@ package com.tbleier.kitchenlist.application.ports;
 
 public class EinkaufslistenPositionDTO {
     private String artikelName;
-    private int amount;
+    private int menge;
 
     public EinkaufslistenPositionDTO() {
     }
 
-    public EinkaufslistenPositionDTO(String artikelName, int amount) {
+    public EinkaufslistenPositionDTO(String artikelName, int menge) {
         this.artikelName = artikelName;
-        this.amount = amount;
+        this.menge = menge;
     }
 
     public String getArtikelName() {
         return artikelName;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getMenge() {
+        return menge;
     }
 }

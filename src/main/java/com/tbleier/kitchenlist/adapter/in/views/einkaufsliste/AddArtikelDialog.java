@@ -1,7 +1,7 @@
 package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
 
 import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
-import com.tbleier.kitchenlist.application.ports.ListenEintragDTO;
+import com.tbleier.kitchenlist.application.ports.EinkaufslistenPositionDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
@@ -73,10 +73,11 @@ public class AddArtikelDialog extends Dialog {
         addToEinkaufsListeCommandService
                 .execute(new AddToEinkaufsListeCommand(artikelDTOComboBox.getValue().getId(), mengenIntegerField.getValue()));
 
-        fireEvent(new SaveListeneintragEvent(this, new ListenEintragDTO(artikelDTOComboBox.getValue().getName(),
-                mengenIntegerField.getValue(),
-                artikelDTOComboBox.getValue().getKategorie()
+        fireEvent(new SaveListeneintragEvent(this, new EinkaufslistenPositionDTO(artikelDTOComboBox.getValue().getName(),
+                mengenIntegerField.getValue()
                 )));
+
+        this.close();
     }
 
     public List<ArtikelDTO> getArtikelDTOs() {

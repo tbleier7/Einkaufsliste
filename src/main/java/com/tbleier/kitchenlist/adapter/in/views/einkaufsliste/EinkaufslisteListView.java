@@ -33,13 +33,18 @@ public class EinkaufslisteListView extends VerticalLayout {
     @Autowired
     public EinkaufslisteListView(QueryService<ListEinkaufslisteQuery,
             List<EinkaufslistenPositionDTO>> einkaufsListeQueryService,
-            AddArtikelDialog addArtikelDialog) {
+                                 AddArtikelDialog addArtikelDialog) {
         this.einkaufsListeQueryService = einkaufsListeQueryService;
         this.addArtikelDialog = addArtikelDialog;
         addClassName("einkaufsliste-list-view");
         setSizeFull();
         configureGrid();
+
         add(getToolbar(), grid);
+
+        this.addArtikelDialog.addListener(SaveListeneintragEvent.class, e -> {
+            addEinkaufslistenposition(e.getModel());
+        });
     }
 
     private Component getToolbar() {
@@ -74,8 +79,8 @@ public class EinkaufslisteListView extends VerticalLayout {
         });
 
         var artikelNameColumn = grid.getColumnByKey("artikelName");
-        var amountColumn = grid.getColumnByKey("amount");
-        amountColumn.setTextAlign(ColumnTextAlign.CENTER);
+        var mengeColumn = grid.getColumnByKey("menge");
+        mengeColumn.setTextAlign(ColumnTextAlign.CENTER);
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
@@ -83,15 +88,20 @@ public class EinkaufslisteListView extends VerticalLayout {
                 checkBoxColumn,
                 artikelNameColumn,
                 decrecementButtonColumn,
-                amountColumn,
+                mengeColumn,
                 increcementButtonColumn);
 
-        positionDTOs = einkaufsListeQueryService.execute(new ListEinkaufslisteQuery());
+        positionDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListEinkaufslisteQuery()));
         grid.setItems(positionDTOs);
     }
 
     public List<EinkaufslistenPositionDTO> getPositionDTOs() {
         return positionDTOs;
+    }
+
+    public void addEinkaufslistenposition(EinkaufslistenPositionDTO listenposition) {
+        positionDTOs.add(listenposition);
+        grid.setItems(positionDTOs);
     }
 }
 

@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-zutat-20230324
+      author: tobias
+      changes:
+        - createTable:
+            tableName: zutat
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: menge
+                  type: int
+              - column:
+                  name: artikel_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_zutat_artikel
+                    references: artikel(id)
+
+  - changeSet:
+      id: create-unique-constraints-for-table-zutat-20230324
+      author: tobias
+      changes:
+        - addUniqueConstraint:
+            columnNames: artikel_id
+            tableName: zutat

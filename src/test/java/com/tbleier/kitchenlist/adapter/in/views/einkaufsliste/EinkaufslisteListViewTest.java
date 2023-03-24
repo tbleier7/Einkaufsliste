@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.tbleier.kitchenlist.application.ports.EinkaufslistenPositionDTO;
+import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListEinkaufslisteQuery;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ import java.util.List;
 class EinkaufslisteListViewTest {
 
     @Mock
-    private QueryService<ListEinkaufslisteQuery, List<EinkaufslistenPositionDTO>> einkaufsListeQueryService;
+    private QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService;
 
     @Mock
     private AddArtikelDialog addArtikelDialog;
@@ -54,7 +54,7 @@ class EinkaufslisteListViewTest {
     @Test
     public void should_add_new_einkaufslistenposition() {
         //Arrange
-        var listenposition = new EinkaufslistenPositionDTO("irgendeinArtikel", 2);
+        var listenposition = new ZutatDTO("irgendeinArtikel", 2);
 
         //Act
         testee.addEinkaufslistenposition(listenposition);
@@ -63,8 +63,10 @@ class EinkaufslisteListViewTest {
         assertThat(testee.getPositionDTOs(), hasItem(listenposition));
     }
 
+
+
     private void givenTwoEntriesForEinkaufsliste() {
-        when(einkaufsListeQueryService.execute(any())).thenReturn(List.of(new EinkaufslistenPositionDTO(),
-                new EinkaufslistenPositionDTO()));
+        when(einkaufsListeQueryService.execute(any())).thenReturn(List.of(new ZutatDTO(),
+                new ZutatDTO()));
     }
 }

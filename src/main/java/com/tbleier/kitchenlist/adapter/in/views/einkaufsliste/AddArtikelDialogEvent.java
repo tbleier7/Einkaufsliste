@@ -1,16 +1,16 @@
 package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
 
-import com.tbleier.kitchenlist.application.ports.EinkaufslistenPositionDTO;
+import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.vaadin.flow.component.ComponentEvent;
 
 public abstract class AddArtikelDialogEvent extends ComponentEvent<AddArtikelDialog> {
-    private final EinkaufslistenPositionDTO model;
-    public AddArtikelDialogEvent(AddArtikelDialog source, EinkaufslistenPositionDTO model) {
+    private final ZutatDTO model;
+    public AddArtikelDialogEvent(AddArtikelDialog source, ZutatDTO model) {
         super(source, false);
         this.model = model;
     }
 
-    public EinkaufslistenPositionDTO getModel() {
+    public ZutatDTO getModel() {
         return model;
     }
 }

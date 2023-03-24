@@ -1,7 +1,7 @@
 package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
 
 import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
-import com.tbleier.kitchenlist.application.ports.EinkaufslistenPositionDTO;
+import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
@@ -17,6 +17,7 @@ import com.vaadin.flow.shared.Registration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -27,7 +28,7 @@ public class AddArtikelDialog extends Dialog {
     Button cancelButton = new Button("Abbrechen");
     Button addButton = new Button("Hinzufügen");
 
-    private List<ArtikelDTO> artikelDTOs;
+    private List<ArtikelDTO> artikelDTOs = new ArrayList<>();
 
     ComboBox<ArtikelDTO> artikelDTOComboBox;
     IntegerField mengenIntegerField;
@@ -57,8 +58,6 @@ public class AddArtikelDialog extends Dialog {
     private void configureComboBox() {
         artikelDTOComboBox = new ComboBox<>("Artikel");
         artikelDTOComboBox.setItemLabelGenerator(ArtikelDTO::getName);
-        artikelDTOs = listArtikelQueryService.execute(new ListArtikelQuery());
-        artikelDTOComboBox.setItems(artikelDTOs);
         artikelDTOComboBox.addValueChangeListener(event -> {
             enableButton();
         });
@@ -73,7 +72,7 @@ public class AddArtikelDialog extends Dialog {
         addToEinkaufsListeCommandService
                 .execute(new AddToEinkaufsListeCommand(artikelDTOComboBox.getValue().getId(), mengenIntegerField.getValue()));
 
-        fireEvent(new SaveListeneintragEvent(this, new EinkaufslistenPositionDTO(artikelDTOComboBox.getValue().getName(),
+        fireEvent(new SaveListeneintragEvent(this, new ZutatDTO(artikelDTOComboBox.getValue().getName(),
                 mengenIntegerField.getValue()
                 )));
 
@@ -82,6 +81,11 @@ public class AddArtikelDialog extends Dialog {
 
     public List<ArtikelDTO> getArtikelDTOs() {
         return artikelDTOs;
+    }
+
+    public void initialize() {
+        artikelDTOs = listArtikelQueryService.execute(new ListArtikelQuery());
+        artikelDTOComboBox.setItems(artikelDTOs);
     }
 
     public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType, ComponentEventListener<T> listener) {

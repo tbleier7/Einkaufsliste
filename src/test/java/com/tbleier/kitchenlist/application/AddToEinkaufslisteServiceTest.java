@@ -3,11 +3,12 @@ package com.tbleier.kitchenlist.application;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.domain.Einkaufslistenposition;
+import com.tbleier.kitchenlist.application.domain.Zutat;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
 import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
 import com.tbleier.kitchenlist.application.ports.out.EinkaufslisteRepository;
+import com.tbleier.kitchenlist.application.ports.out.NonUniqueException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -31,7 +33,7 @@ class AddToEinkaufslisteServiceTest {
     EinkaufslisteRepository einkaufslisteRepository;
 
     @Captor
-    ArgumentCaptor<Einkaufslistenposition> repositorySaveCaptor;
+    ArgumentCaptor<Zutat> repositorySaveCaptor;
 
     private AddToEinkaufsListeCommand command;
     private AddToEinkaufslisteService testee;
@@ -66,6 +68,23 @@ class AddToEinkaufslisteServiceTest {
         AssertThatCommandFailed(actual);
     }
 
+    @Test
+    public void should_throw_NonUnique_exception_when_same_artikel_is_added_twice() {
+        //Arrange
+        givenArtikelFromCommand();
+        givenZutatIsAlreadyInEinkaufsliste();
+
+        //Act && Assert
+        assertThatThrownBy(() -> testee.execute(new AddToEinkaufsListeCommand(1L, 21))).isInstanceOf(NonUniqueException.class);
+    }
+
+    private void givenZutatIsAlreadyInEinkaufsliste() {
+        when(einkaufslisteRepository.findByArtikelId(anyLong()))
+                .thenReturn(Optional.of(new Zutat(
+                        new Artikel(12L, "Test", Einheit.Stueck, new Kategorie(13L, "something")),
+                        1)));
+    }
+
     private void givenArtikelWasNotFound() {
         when(artikelRepository.findById(anyLong())).thenReturn(Optional.empty());
     }
@@ -87,7 +106,7 @@ class AddToEinkaufslisteServiceTest {
         assertEquals(command.getMenge(), addedListenEintrag.getMenge());
         assertEquals(command.getArtikelId(), addedListenEintrag.getArtikel().getId());
 
-        assertTrue( actual.isSuccessful());
+        assertTrue(actual.isSuccessful());
     }
 
     private void AssertThatCommandFailed(CommandResult actual) {

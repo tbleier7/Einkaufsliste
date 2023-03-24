@@ -1,13 +1,49 @@
 package com.tbleier.kitchenlist.adapter.out.persistence.einkaufsliste;
 
-import com.tbleier.kitchenlist.application.domain.Einkaufslistenposition;
+import com.tbleier.kitchenlist.application.domain.Zutat;
 import com.tbleier.kitchenlist.application.ports.out.EinkaufslisteRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class EinkaufslistePersistenceAdapter implements EinkaufslisteRepository {
-    @Override
-    public void save(Einkaufslistenposition einkaufslistenposition) {
 
+    private final ZutatJpaRepository zutatJpaRepository;
+    private final ZutatJpaMapper zutatJpaMapper;
+
+    public EinkaufslistePersistenceAdapter(ZutatJpaRepository zutatJpaRepository, ZutatJpaMapper zutatJpaMapper) {
+        this.zutatJpaRepository = zutatJpaRepository;
+        this.zutatJpaMapper = zutatJpaMapper;
+    }
+
+    @Override
+    public long save(Zutat zutat) {
+
+        var jpaEntity = zutatJpaMapper.zutatToJpaEntity(zutat);
+
+        jpaEntity = zutatJpaRepository.save(jpaEntity);
+
+        return jpaEntity.getId();
+    }
+
+    @Override
+    public List<Zutat> listZutaten() {
+
+        var jpaEntities = zutatJpaRepository.findAll();
+        var zutaten = zutatJpaMapper.jpaEntityToZutat(jpaEntities);
+
+        return zutaten;
+    }
+
+    @Override
+    public Optional<Zutat> findByArtikelId(long artikelId) {
+
+        var jpaEntity = zutatJpaRepository.findByArtikelId(artikelId);
+        if(jpaEntity.isEmpty())
+            return Optional.empty();
+        else
+            return Optional.of(zutatJpaMapper.jpaEntityToZutat(jpaEntity.get()));
     }
 }

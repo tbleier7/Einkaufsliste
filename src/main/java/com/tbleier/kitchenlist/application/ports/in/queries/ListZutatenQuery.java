@@ -1,4 +1,4 @@
 package com.tbleier.kitchenlist.application.ports.in.queries;
 
-public class ListEinkaufslisteQuery {
+public class ListZutatenQuery {
 }

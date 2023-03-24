@@ -1,9 +1,9 @@
 package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
-import com.tbleier.kitchenlist.application.ports.EinkaufslistenPositionDTO;
+import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
-import com.tbleier.kitchenlist.application.ports.in.queries.ListEinkaufslisteQuery;
+import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -22,17 +22,17 @@ import java.util.List;
 @Route(value = "einkaufsliste", layout = MainLayout.class)
 public class EinkaufslisteListView extends VerticalLayout {
 
-    private final QueryService<ListEinkaufslisteQuery, List<EinkaufslistenPositionDTO>> einkaufsListeQueryService;
-    Grid<EinkaufslistenPositionDTO> grid = new Grid<>(EinkaufslistenPositionDTO.class);
+    private final QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService;
+    Grid<ZutatDTO> grid = new Grid<>(ZutatDTO.class);
 
-    private List<EinkaufslistenPositionDTO> positionDTOs = new ArrayList<>();
+    private List<ZutatDTO> positionDTOs = new ArrayList<>();
     Button addArtikelButton;
 
     final AddArtikelDialog addArtikelDialog;
 
     @Autowired
-    public EinkaufslisteListView(QueryService<ListEinkaufslisteQuery,
-            List<EinkaufslistenPositionDTO>> einkaufsListeQueryService,
+    public EinkaufslisteListView(QueryService<ListZutatenQuery,
+            List<ZutatDTO>> einkaufsListeQueryService,
                                  AddArtikelDialog addArtikelDialog) {
         this.einkaufsListeQueryService = einkaufsListeQueryService;
         this.addArtikelDialog = addArtikelDialog;
@@ -50,12 +50,17 @@ public class EinkaufslisteListView extends VerticalLayout {
     private Component getToolbar() {
 
         addArtikelButton = new Button("Eintrag hinzufügen");
-        addArtikelButton.addClickListener(event -> addArtikelDialog.open());
+        addArtikelButton.addClickListener(event -> openDialog());
 
         HorizontalLayout toolbar = new HorizontalLayout(addArtikelButton);
         toolbar.addClassName("einkaufsliste-toolbar");
 
         return toolbar;
+    }
+
+    private void openDialog() {
+        addArtikelDialog.initialize();
+        addArtikelDialog.open();
     }
 
     private void configureGrid() {
@@ -91,15 +96,15 @@ public class EinkaufslisteListView extends VerticalLayout {
                 mengeColumn,
                 increcementButtonColumn);
 
-        positionDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListEinkaufslisteQuery()));
+        positionDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListZutatenQuery()));
         grid.setItems(positionDTOs);
     }
 
-    public List<EinkaufslistenPositionDTO> getPositionDTOs() {
+    public List<ZutatDTO> getPositionDTOs() {
         return positionDTOs;
     }
 
-    public void addEinkaufslistenposition(EinkaufslistenPositionDTO listenposition) {
+    public void addEinkaufslistenposition(ZutatDTO listenposition) {
         positionDTOs.add(listenposition);
         grid.setItems(positionDTOs);
     }

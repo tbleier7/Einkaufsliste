@@ -1,7 +1,14 @@
 package com.tbleier.kitchenlist.application.ports.out;
 
-import com.tbleier.kitchenlist.application.domain.Einkaufslistenposition;
+import com.tbleier.kitchenlist.application.domain.Zutat;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface EinkaufslisteRepository {
-    void save(Einkaufslistenposition einkaufslistenposition);
+    long save(Zutat zutat);
+
+    List<Zutat> listZutaten();
+
+    Optional<Zutat> findByArtikelId(long artikelId);
 }

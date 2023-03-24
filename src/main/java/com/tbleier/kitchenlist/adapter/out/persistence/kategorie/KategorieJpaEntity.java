@@ -4,8 +4,6 @@ import com.tbleier.kitchenlist.adapter.out.persistence.artikel.ArtikelJpaEntity;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,6 +13,14 @@ public class KategorieJpaEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+
+    public KategorieJpaEntity(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public KategorieJpaEntity() {
+    }
 
     private String name;
 

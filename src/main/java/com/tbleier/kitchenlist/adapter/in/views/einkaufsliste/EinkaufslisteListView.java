@@ -23,28 +23,24 @@ import java.util.List;
 public class EinkaufslisteListView extends VerticalLayout {
 
     private final QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService;
+    private final AddArtikelDialogFactory addArtikelDialogFactory;
     Grid<ZutatDTO> grid = new Grid<>(ZutatDTO.class);
 
     private List<ZutatDTO> positionDTOs = new ArrayList<>();
     Button addArtikelButton;
 
-    final AddArtikelDialog addArtikelDialog;
 
     @Autowired
     public EinkaufslisteListView(QueryService<ListZutatenQuery,
             List<ZutatDTO>> einkaufsListeQueryService,
-                                 AddArtikelDialog addArtikelDialog) {
+                                 AddArtikelDialogFactory addArtikelDialogFactory) {
         this.einkaufsListeQueryService = einkaufsListeQueryService;
-        this.addArtikelDialog = addArtikelDialog;
+        this.addArtikelDialogFactory = addArtikelDialogFactory;
         addClassName("einkaufsliste-list-view");
         setSizeFull();
         configureGrid();
 
         add(getToolbar(), grid);
-
-        this.addArtikelDialog.addListener(SaveListeneintragEvent.class, e -> {
-            addEinkaufslistenposition(e.getModel());
-        });
     }
 
     private Component getToolbar() {
@@ -59,8 +55,14 @@ public class EinkaufslisteListView extends VerticalLayout {
     }
 
     private void openDialog() {
-        addArtikelDialog.initialize();
-        addArtikelDialog.open();
+
+        var dialog = addArtikelDialogFactory.CreateDialog();
+
+        dialog.addListener(SaveListeneintragEvent.class, e -> {
+            addEinkaufslistenposition(e.getModel());
+        });
+
+        dialog.open();
     }
 
     private void configureGrid() {

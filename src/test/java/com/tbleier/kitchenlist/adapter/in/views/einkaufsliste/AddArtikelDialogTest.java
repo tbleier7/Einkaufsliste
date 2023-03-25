@@ -37,26 +37,16 @@ class AddArtikelDialogTest {
     @BeforeEach
     public void setUp() {
 
+        givenTwoArtikel();
+
         testee = new AddArtikelDialog(listArtikelQueryService, addToEinkaufslisteCommandService);
         testee.addListener(SaveListeneintragEvent.class, e -> {
             saveEventWasFired.set(true);
         });
     }
-
-    @Test
-    public void should_not_query_artikel_until_instantiating() {
-        //Act
-        List<ArtikelDTO> artikelDTOs = testee.getArtikelDTOs();
-        assertEquals(0, artikelDTOs.size());
-    }
     
     @Test
-    public void should_show_all_artikel_after_initializing() {
-        //Arrange
-        givenTwoArtikel();
-
-        //Act
-        testee.initialize();
+    public void should_show_all_artikel() {
 
         //Assert
         List<ArtikelDTO> artikelDTOs = testee.getArtikelDTOs();
@@ -82,7 +72,6 @@ class AddArtikelDialogTest {
     @Test
     public void should_add_selected_artikel_to_einkaufsliste() {
         //Arrange
-        givenTwoArtikel();
         var selectedArtikel = artikelDTOs.get(0);
         givenArtikelWasSelected(selectedArtikel);
 
@@ -116,10 +105,8 @@ class AddArtikelDialogTest {
     @Test
     public void should_send_event_when_adding_to_the_einkaufsliste() {
         //Arrange
-        givenTwoArtikel();
         var selectedArtikel = artikelDTOs.get(0);
         givenArtikelWasSelected(selectedArtikel);
-
 
         //Act
         testee.addButton.click();
@@ -129,7 +116,6 @@ class AddArtikelDialogTest {
     }
 
     private void givenArtikelWasSelected(ArtikelDTO artikelDTO) {
-        testee.initialize();
         testee.artikelDTOComboBox.setValue(artikelDTO);
     }
 

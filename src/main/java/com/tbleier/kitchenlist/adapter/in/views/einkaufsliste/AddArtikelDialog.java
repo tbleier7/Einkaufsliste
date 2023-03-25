@@ -20,8 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class AddArtikelDialog extends Dialog {
+class AddArtikelDialog extends Dialog {
 
     private final QueryService<ListArtikelQuery, List<ArtikelDTO>> listArtikelQueryService;
     private final CommandService<AddToEinkaufsListeCommand> addToEinkaufsListeCommandService;
@@ -53,6 +52,8 @@ public class AddArtikelDialog extends Dialog {
 
         cancelButton.addClickListener(event -> this.close());
         add(horizontalLayout, addButton, cancelButton);
+
+        initialize();
     }
 
     private void configureComboBox() {
@@ -83,7 +84,7 @@ public class AddArtikelDialog extends Dialog {
         return artikelDTOs;
     }
 
-    public void initialize() {
+    private void initialize() {
         artikelDTOs = listArtikelQueryService.execute(new ListArtikelQuery());
         artikelDTOComboBox.setItems(artikelDTOs);
     }

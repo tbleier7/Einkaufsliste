@@ -2,6 +2,7 @@ package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
@@ -26,12 +27,15 @@ class EinkaufslisteListViewTest {
     @Mock
     private AddArtikelDialog addArtikelDialog;
 
+    @Mock
+    private AddArtikelDialogFactory addArtikelDialogFactory;
+
     private EinkaufslisteListView testee;
 
     @BeforeEach
     public void setUp() {
         givenTwoEntriesForEinkaufsliste();
-        testee = new EinkaufslisteListView(einkaufsListeQueryService, addArtikelDialog);
+        testee = new EinkaufslisteListView(einkaufsListeQueryService, addArtikelDialogFactory);
     }
 
     @Test
@@ -43,12 +47,13 @@ class EinkaufslisteListViewTest {
     @Test
     public void should_open_a_dialog_for_adding_an_artikel() {
         //Arrange
+        when(addArtikelDialogFactory.CreateDialog()).thenReturn(addArtikelDialog);
     
         //Act
         testee.addArtikelButton.click();
     
         //Assert
-        testee.addArtikelDialog.isOpened();
+        verify(addArtikelDialog).open();
     }
 
     @Test

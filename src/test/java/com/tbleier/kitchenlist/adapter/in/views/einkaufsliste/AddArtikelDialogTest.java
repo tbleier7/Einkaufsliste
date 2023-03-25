@@ -41,7 +41,7 @@ class AddArtikelDialogTest {
         givenTwoArtikel();
 
         testee = new AddArtikelDialog(listArtikelQueryService, addToEinkaufslisteCommandService);
-        testee.addListener(SaveListeneintragEvent.class, e -> {
+        testee.addListener(AddZutatEvent.class, e -> {
             saveEventWasFired.set(true);
         });
     }

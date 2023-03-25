@@ -21,7 +21,7 @@ import java.util.List;
 
 
 @PageTitle("Kitchen List")
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "kategorie", layout = MainLayout.class)
 
 public class KategorieListView extends VerticalLayout {
 

@@ -93,7 +93,6 @@ class EinkaufslistePersistenceAdapterTest {
     public void should_find_a_zutat_by_its_artikel() {
         //Arrange
         ArtikelJpaEntity artikel1 = CreateArtikel("SomeArtikel", kategorieJpaEntity);
-
         entityManager.persist(new ZutatJpaEntity(artikel1, 2));
 
         //Act
@@ -101,6 +100,23 @@ class EinkaufslistePersistenceAdapterTest {
     
         //Assert
         assertTrue(actual.isPresent());
+    }
+
+    @Test
+    public void should_remove_a_zutat() {
+        //Arrange
+        ArtikelJpaEntity artikel1 = CreateArtikel("SomeArtikel", kategorieJpaEntity);
+        var zutatJpaEntity = entityManager.persist(new ZutatJpaEntity(artikel1, 2));
+
+        //Act
+        testee.removeZutat(new Zutat(
+                new Artikel(artikel1.getId(), artikel1.getName(), artikel1.getEinheit(),
+                    new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 2)
+        );
+
+        //Assert
+        var actual = entityManager.find(ZutatJpaEntity.class, zutatJpaEntity.getId());
+        assertNull(actual);
     }
 
     private ArtikelJpaEntity CreateArtikel(String someArtikel, KategorieJpaEntity kategorie) {

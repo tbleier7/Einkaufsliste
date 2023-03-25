@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface ZutatJpaRepository extends JpaRepository<ZutatJpaEntity, Long> {
     Optional<ZutatJpaEntity> findByArtikelId(long artikelId);
+    void deleteByArtikelId(long artikelId);
 }

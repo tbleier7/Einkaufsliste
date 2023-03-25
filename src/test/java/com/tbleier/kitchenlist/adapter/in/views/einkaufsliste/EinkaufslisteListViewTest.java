@@ -2,11 +2,13 @@ package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.argThat;
 
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
+import com.tbleier.kitchenlist.application.ports.in.CommandResult;
+import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
+
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,23 +29,29 @@ class EinkaufslisteListViewTest {
     private QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService;
 
     @Mock
+    private CommandService<RemoveZutatCommand> removeZutatCommandService;
+
+    @Mock
     private AddArtikelDialog addArtikelDialog;
 
     @Mock
     private AddArtikelDialogFactory addArtikelDialogFactory;
 
     private EinkaufslisteListView testee;
+    private List<ZutatDTO> zutaten;
 
     @BeforeEach
     public void setUp() {
+        zutaten = List.of(new ZutatDTO(1L, "Eier", 2),
+                new ZutatDTO(12L, "Wurst", 3));
         givenTwoEntriesForEinkaufsliste();
-        testee = new EinkaufslisteListView(einkaufsListeQueryService, addArtikelDialogFactory);
+        testee = new EinkaufslisteListView(einkaufsListeQueryService, addArtikelDialogFactory, removeZutatCommandService);
     }
 
     @Test
     public void should_show_all_einkaufslistenpositionen() {
         //Assert
-        assertEquals(2, testee.getPositionDTOs().size());
+        assertEquals(2, testee.getZutatDTOs().size());
     }
     
     @Test
@@ -59,17 +69,47 @@ class EinkaufslisteListViewTest {
     @Test
     public void should_add_new_einkaufslistenposition() {
         //Arrange
-        var listenposition = new ZutatDTO("irgendeinArtikel", 2);
+        var listenposition = new ZutatDTO(515L, "irgendeinArtikel", 2);
 
         //Act
         testee.addEinkaufslistenposition(listenposition);
 
         //Assert
-        assertThat(testee.getPositionDTOs(), hasItem(listenposition));
+        assertThat(testee.getZutatDTOs(), hasItem(listenposition));
+    }
+    
+    @Test
+    public void should_remove_zutat() {
+        //Arrange
+        var checkedZutat = zutaten.get(0);
+        givenRemoveZutatCommandIs(true);
+
+        //Act
+        testee.removeZutat(checkedZutat);
+    
+        //Assert
+        verify(removeZutatCommandService).execute(argThat(command -> command.getArtikelId() == checkedZutat.getArtikelId()));
+        assertThat(testee.getZutatDTOs(), not(hasItem(checkedZutat)));
+    }
+
+    @Test
+    public void should_not_remove_zutat_when_command_failed() {
+        //Arrange
+        var checkedZutat = zutaten.get(0);
+        givenRemoveZutatCommandIs(false);
+
+        //Act
+        testee.removeZutat(checkedZutat);
+
+        //Assert
+        assertThat(testee.getZutatDTOs(), hasItem(checkedZutat));
+    }
+
+    private void givenRemoveZutatCommandIs(boolean successful) {
+        when(removeZutatCommandService.execute(any())).thenReturn(new CommandResult(successful, 1L));
     }
 
     private void givenTwoEntriesForEinkaufsliste() {
-        when(einkaufsListeQueryService.execute(any())).thenReturn(List.of(new ZutatDTO(),
-                new ZutatDTO()));
+        when(einkaufsListeQueryService.execute(any())).thenReturn(zutaten);
     }
 }

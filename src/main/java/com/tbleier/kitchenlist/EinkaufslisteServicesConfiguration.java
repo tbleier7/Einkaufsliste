@@ -3,11 +3,13 @@ package com.tbleier.kitchenlist;
 import com.tbleier.kitchenlist.adapter.in.views.interceptors.CommandExceptionHandler;
 import com.tbleier.kitchenlist.application.AddToEinkaufslisteService;
 import com.tbleier.kitchenlist.application.ListZutatenService;
+import com.tbleier.kitchenlist.application.RemoveZutatService;
 import com.tbleier.kitchenlist.application.ZutatenDTOMapper;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
 import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
 import com.tbleier.kitchenlist.application.ports.out.EinkaufslisteRepository;
@@ -41,5 +43,10 @@ public class EinkaufslisteServicesConfiguration {
     @Bean
     public CommandService<AddToEinkaufsListeCommand> resolveAddToEinkaufslisteCommandService() {
         return new CommandExceptionHandler<>(new AddToEinkaufslisteService(einkaufslisteRepository, artikelRepository));
+    }
+
+    @Bean
+    public CommandService<RemoveZutatCommand> resolveRemoveZutatCommandService() {
+        return new CommandExceptionHandler<>(new RemoveZutatService(einkaufslisteRepository));
     }
 }

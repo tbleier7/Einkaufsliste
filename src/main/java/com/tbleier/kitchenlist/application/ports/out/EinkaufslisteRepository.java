@@ -11,4 +11,6 @@ public interface EinkaufslisteRepository {
     List<Zutat> listZutaten();
 
     Optional<Zutat> findByArtikelId(long artikelId);
+
+    void removeZutat(Zutat zutat);
 }

@@ -13,6 +13,7 @@ public interface ZutatenDTOMapper {
     ZutatenDTOMapper INSTANCE = Mappers.getMapper(ZutatenDTOMapper.class );
 
     @Mapping(source = "artikel.name", target = "artikelName")
+    @Mapping(source = "artikel.id", target = "artikelId")
     ZutatDTO zutatToDTO(Zutat zutat);
     List<ZutatDTO> zutatToDTO(List<Zutat> zutaten);
 }

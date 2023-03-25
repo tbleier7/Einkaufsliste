@@ -15,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.shared.Registration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +73,7 @@ class AddArtikelDialog extends Dialog {
                 .execute(new AddToEinkaufsListeCommand(artikelDTOComboBox.getValue().getId(), mengenIntegerField.getValue()));
 
         if(result.isSuccessful()) {
-            fireEvent(new SaveListeneintragEvent(this, new ZutatDTO(artikelDTOComboBox.getValue().getName(),
+            fireEvent(new AddZutatEvent(this, new ZutatDTO(artikelDTOComboBox.getValue().getId(), artikelDTOComboBox.getValue().getName(),
                     mengenIntegerField.getValue()
             )));
 

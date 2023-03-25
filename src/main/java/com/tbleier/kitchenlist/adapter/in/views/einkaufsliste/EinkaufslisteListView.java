@@ -2,13 +2,16 @@ package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
+import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridMultiSelectionModel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -19,23 +22,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("Einkaufsliste")
-@Route(value = "einkaufsliste", layout = MainLayout.class)
+@Route(value = "", layout = MainLayout.class)
 public class EinkaufslisteListView extends VerticalLayout {
 
     private final QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService;
     private final AddArtikelDialogFactory addArtikelDialogFactory;
-    Grid<ZutatDTO> grid = new Grid<>(ZutatDTO.class);
+    private final CommandService<RemoveZutatCommand> removeZutatCommandService;
+    Grid<ZutatDTO> grid = new Grid<>(ZutatDTO.class, false);
 
     private List<ZutatDTO> positionDTOs = new ArrayList<>();
     Button addArtikelButton;
 
 
     @Autowired
-    public EinkaufslisteListView(QueryService<ListZutatenQuery,
-            List<ZutatDTO>> einkaufsListeQueryService,
-                                 AddArtikelDialogFactory addArtikelDialogFactory) {
+    public EinkaufslisteListView(QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService,
+                                 AddArtikelDialogFactory addArtikelDialogFactory,
+                                 CommandService<RemoveZutatCommand> removeZutatCommandService) {
         this.einkaufsListeQueryService = einkaufsListeQueryService;
         this.addArtikelDialogFactory = addArtikelDialogFactory;
+        this.removeZutatCommandService = removeZutatCommandService;
+
         addClassName("einkaufsliste-list-view");
         setSizeFull();
         configureGrid();
@@ -58,7 +64,7 @@ public class EinkaufslisteListView extends VerticalLayout {
 
         var dialog = addArtikelDialogFactory.CreateDialog();
 
-        dialog.addListener(SaveListeneintragEvent.class, e -> {
+        dialog.addListener(AddZutatEvent.class, e -> {
             addEinkaufslistenposition(e.getModel());
         });
 
@@ -69,46 +75,55 @@ public class EinkaufslisteListView extends VerticalLayout {
         grid.addClassName("artikel-grid");
         grid.setSizeFull();
 
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        ((GridMultiSelectionModel<?>) grid.getSelectionModel())
+                .setSelectAllCheckboxVisibility(
+                        GridMultiSelectionModel.SelectAllCheckboxVisibility.HIDDEN
+                );
 
-        var checkBoxColumn = grid.addComponentColumn(item -> {
-            Checkbox checkbox = new Checkbox();
-            return checkbox;
+        grid.addSelectionListener(selection -> {
+            if(selection.getFirstSelectedItem().isPresent()) {
+                removeZutat(selection.getFirstSelectedItem().get());
+            }
         });
 
-        var decrecementButtonColumn = grid.addComponentColumn(item -> {
+        grid.addColumn(ZutatDTO::getArtikelName).setHeader("Artikel");
+
+        grid.addComponentColumn(item -> {
             var decrementAmountButton = new Button("-");
             return decrementAmountButton;
         });
 
-        var increcementButtonColumn = grid.addComponentColumn(item -> {
+        var mengeColumn = grid.addColumn(ZutatDTO::getMenge).setHeader("Menge");
+        mengeColumn.setTextAlign(ColumnTextAlign.CENTER);
+
+        grid.addComponentColumn(item -> {
             var incrementAmountButton = new Button("+");
             return incrementAmountButton;
         });
 
-        var artikelNameColumn = grid.getColumnByKey("artikelName");
-        var mengeColumn = grid.getColumnByKey("menge");
-        mengeColumn.setTextAlign(ColumnTextAlign.CENTER);
-
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-
-        grid.setColumnOrder(
-                checkBoxColumn,
-                artikelNameColumn,
-                decrecementButtonColumn,
-                mengeColumn,
-                increcementButtonColumn);
 
         positionDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListZutatenQuery()));
         grid.setItems(positionDTOs);
     }
 
-    public List<ZutatDTO> getPositionDTOs() {
+    public List<ZutatDTO> getZutatDTOs() {
         return positionDTOs;
     }
 
     public void addEinkaufslistenposition(ZutatDTO listenposition) {
         positionDTOs.add(listenposition);
         grid.setItems(positionDTOs);
+    }
+
+    public void removeZutat(ZutatDTO zutatDTO) {
+        var result = removeZutatCommandService.execute(new RemoveZutatCommand(zutatDTO.getArtikelId()));
+
+        if(result.isSuccessful()) {
+            positionDTOs.remove(zutatDTO);
+            grid.setItems(positionDTOs);
+        }
     }
 }
 

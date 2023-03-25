@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.ports.ArtikelDTO;
+import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
@@ -44,7 +45,11 @@ class AddArtikelDialogTest {
             saveEventWasFired.set(true);
         });
     }
-    
+
+    private void givenAddCommandIs(boolean successful) {
+        when(addToEinkaufslisteCommandService.execute(any())).thenReturn(new CommandResult(successful, 1L));
+    }
+
     @Test
     public void should_show_all_artikel() {
 
@@ -74,7 +79,7 @@ class AddArtikelDialogTest {
         //Arrange
         var selectedArtikel = artikelDTOs.get(0);
         givenArtikelWasSelected(selectedArtikel);
-
+        givenAddCommandIs(true);
 
         //Act
         testee.addButton.click();
@@ -107,12 +112,27 @@ class AddArtikelDialogTest {
         //Arrange
         var selectedArtikel = artikelDTOs.get(0);
         givenArtikelWasSelected(selectedArtikel);
+        givenAddCommandIs(true);
 
         //Act
         testee.addButton.click();
 
         //Assert
         assertEquals(true, saveEventWasFired.get());
+    }
+
+    @Test
+    public void should_not_send_event_when_add_failed() {
+        //Arrange
+        var selectedArtikel = artikelDTOs.get(0);
+        givenArtikelWasSelected(selectedArtikel);
+        givenAddCommandIs(false);
+
+        //Act
+        testee.addButton.click();
+
+        //Assert
+        assertEquals(false, saveEventWasFired.get());
     }
 
     private void givenArtikelWasSelected(ArtikelDTO artikelDTO) {

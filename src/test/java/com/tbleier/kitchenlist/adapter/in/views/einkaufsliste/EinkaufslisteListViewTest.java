@@ -68,8 +68,6 @@ class EinkaufslisteListViewTest {
         assertThat(testee.getPositionDTOs(), hasItem(listenposition));
     }
 
-
-
     private void givenTwoEntriesForEinkaufsliste() {
         when(einkaufsListeQueryService.execute(any())).thenReturn(List.of(new ZutatDTO(),
                 new ZutatDTO()));

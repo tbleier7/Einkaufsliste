@@ -70,14 +70,16 @@ class AddArtikelDialog extends Dialog {
     }
 
     private void addSelectedToEinkaufsliste() {
-        addToEinkaufsListeCommandService
+        var result = addToEinkaufsListeCommandService
                 .execute(new AddToEinkaufsListeCommand(artikelDTOComboBox.getValue().getId(), mengenIntegerField.getValue()));
 
-        fireEvent(new SaveListeneintragEvent(this, new ZutatDTO(artikelDTOComboBox.getValue().getName(),
-                mengenIntegerField.getValue()
-                )));
+        if(result.isSuccessful()) {
+            fireEvent(new SaveListeneintragEvent(this, new ZutatDTO(artikelDTOComboBox.getValue().getName(),
+                    mengenIntegerField.getValue()
+            )));
 
-        this.close();
+            this.close();
+        }
     }
 
     public List<ArtikelDTO> getArtikelDTOs() {

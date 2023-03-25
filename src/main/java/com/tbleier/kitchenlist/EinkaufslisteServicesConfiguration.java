@@ -1,5 +1,6 @@
 package com.tbleier.kitchenlist;
 
+import com.tbleier.kitchenlist.adapter.in.views.interceptors.CommandExceptionHandler;
 import com.tbleier.kitchenlist.application.AddToEinkaufslisteService;
 import com.tbleier.kitchenlist.application.ListZutatenService;
 import com.tbleier.kitchenlist.application.ZutatenDTOMapper;
@@ -39,6 +40,6 @@ public class EinkaufslisteServicesConfiguration {
 
     @Bean
     public CommandService<AddToEinkaufsListeCommand> resolveAddToEinkaufslisteCommandService() {
-        return new AddToEinkaufslisteService(einkaufslisteRepository, artikelRepository);
+        return new CommandExceptionHandler<>(new AddToEinkaufslisteService(einkaufslisteRepository, artikelRepository));
     }
 }

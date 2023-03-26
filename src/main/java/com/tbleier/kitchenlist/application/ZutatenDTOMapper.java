@@ -1,6 +1,6 @@
 package com.tbleier.kitchenlist.application;
 
-import com.tbleier.kitchenlist.application.domain.Zutat;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

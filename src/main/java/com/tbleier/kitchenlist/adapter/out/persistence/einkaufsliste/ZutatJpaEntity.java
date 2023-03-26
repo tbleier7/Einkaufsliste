@@ -17,9 +17,12 @@ public class ZutatJpaEntity {
     private ArtikelJpaEntity artikel;
     private int menge;
 
-    public ZutatJpaEntity(ArtikelJpaEntity artikel, int menge) {
+    private int einkaufslisteIndex;
+
+    public ZutatJpaEntity(ArtikelJpaEntity artikel, int menge, int einkaufslisteIndex) {
         this.artikel = artikel;
         this.menge = menge;
+        this.einkaufslisteIndex = einkaufslisteIndex;
     }
 
     public ZutatJpaEntity() {
@@ -47,5 +50,13 @@ public class ZutatJpaEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getEinkaufslisteIndex() {
+        return einkaufslisteIndex;
+    }
+
+    public void setEinkaufslisteIndex(int einkaufslisteIndex) {
+        this.einkaufslisteIndex = einkaufslisteIndex;
     }
 }

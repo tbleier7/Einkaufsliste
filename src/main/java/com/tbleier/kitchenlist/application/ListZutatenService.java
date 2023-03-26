@@ -1,5 +1,6 @@
 package com.tbleier.kitchenlist.application;
 
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Einkaufsliste;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
@@ -22,7 +23,9 @@ public class ListZutatenService implements QueryService<ListZutatenQuery, List<Z
     @Override
     public List<ZutatDTO> execute(ListZutatenQuery query) {
 
-        var zutaten = einkaufslisteRepository.listZutaten();
+        var einkaufsliste = einkaufslisteRepository.getEinkaufsliste();
+        var zutaten = einkaufsliste.getZutaten();
+
         return zutatenDTOMapper.zutatToDTO(zutaten);
     }
 }

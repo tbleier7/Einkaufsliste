@@ -3,7 +3,8 @@ package com.tbleier.kitchenlist.application;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.domain.Zutat;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Einkaufsliste;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
 import com.tbleier.kitchenlist.application.ports.out.EinkaufslisteRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,8 +44,12 @@ class ListZutatenServiceTest {
     }
 
     private void givenTwoZutatenInEinkaufsliste() {
-        when(einkaufslisteRepository.listZutaten())
-                .thenReturn(List.of(new Zutat(new Artikel(12L, "Gelbwurst", Einheit.Gramm, new Kategorie(323L, "Wurst")), 1),
-                        new Zutat(new Artikel(14L, "Paprikawurst", Einheit.Gramm, new Kategorie(323L, "Wurst")), 1)));
+
+        var einkaufsliste = new Einkaufsliste();
+        einkaufsliste.addZutat(new Artikel(12L, "Gelbwurst", Einheit.Gramm, new Kategorie(323L, "Wurst")), 2);
+        einkaufsliste.addZutat(new Artikel(12L, "Paprikawurst", Einheit.Gramm, new Kategorie(323L, "Wurst")), 4);
+
+        when(einkaufslisteRepository.getEinkaufsliste())
+                .thenReturn(einkaufsliste);
     }
 }

@@ -1,6 +1,6 @@
 package com.tbleier.kitchenlist.application;
 
-import com.tbleier.kitchenlist.application.domain.Zutat;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
@@ -25,10 +25,9 @@ public class AddToEinkaufslisteService implements CommandService<AddToEinkaufsLi
         if(artikel.isEmpty())
             return new CommandResult(false);
 
-        if(repository.findByArtikelId(artikel.get().getId()).isPresent())
-            throw new NonUniqueException("Artikel ist bereits auf der Einkaufsliste!");
-
-        repository.save(new Zutat(artikel.get(), command.getMenge()));
+        var einkaufsliste = repository.getEinkaufsliste();
+        einkaufsliste.addZutat(artikel.get(), command.getMenge());
+        repository.save(einkaufsliste);
 
         return new CommandResult(true);
     }

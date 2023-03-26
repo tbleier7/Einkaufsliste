@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-index-column-for-table-zutat-20230326
+      author: tobias
+      changes:
+        - addColumn:
+            tableName: zutat
+            columns:
+              - column:
+                  name: einkaufsliste_index
+                  type: int
+                  defaultValue: 0
+        - addUniqueConstraint:
+            columnNames: einkaufsliste_index
+            tableName: zutat

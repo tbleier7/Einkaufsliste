@@ -7,7 +7,8 @@ import com.tbleier.kitchenlist.adapter.out.persistence.kategorie.KategorieJpaEnt
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.domain.Zutat;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Einkaufsliste;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,7 +69,7 @@ class EinkaufslistePersistenceAdapterTest {
 
         //Act
         var savedId = testee.save(new Zutat(new Artikel(artikel.getId(), artikel.getName(),
-                artikel.getEinheit(), new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 1));
+                artikel.getEinheit(), new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 1, 1));
     
         //Assert
         var actual = entityManager.find(ZutatJpaEntity.class, savedId);
@@ -79,8 +82,8 @@ class EinkaufslistePersistenceAdapterTest {
         ArtikelJpaEntity artikel1 = CreateArtikel("SomeArtikel", kategorieJpaEntity);
         ArtikelJpaEntity artikel2 = CreateArtikel("SomeOtherArtikel", kategorieJpaEntity);
 
-        entityManager.persist(new ZutatJpaEntity(artikel1, 2));
-        entityManager.persist(new ZutatJpaEntity(artikel2, 1));
+        entityManager.persist(new ZutatJpaEntity(artikel1, 2, 1));
+        entityManager.persist(new ZutatJpaEntity(artikel2, 1, 2));
 
         //Act
         var actual = testee.listZutaten();
@@ -88,12 +91,21 @@ class EinkaufslistePersistenceAdapterTest {
         //Assert
         assertEquals(actual.size(), 2);
     }
+
+    @Test
+    public void should_return_an_empty_list_when_einkaufsliste_is_empty() {
+        //Act
+        var actual = testee.getEinkaufsliste();
+
+        //Assert
+        assertEquals(actual.getZutaten(), Collections.emptyList());
+    }
     
     @Test
     public void should_find_a_zutat_by_its_artikel() {
         //Arrange
         ArtikelJpaEntity artikel1 = CreateArtikel("SomeArtikel", kategorieJpaEntity);
-        entityManager.persist(new ZutatJpaEntity(artikel1, 2));
+        entityManager.persist(new ZutatJpaEntity(artikel1, 2, 1));
 
         //Act
         var actual = testee.findByArtikelId(artikel1.getId());
@@ -106,17 +118,33 @@ class EinkaufslistePersistenceAdapterTest {
     public void should_remove_a_zutat() {
         //Arrange
         ArtikelJpaEntity artikel1 = CreateArtikel("SomeArtikel", kategorieJpaEntity);
-        var zutatJpaEntity = entityManager.persist(new ZutatJpaEntity(artikel1, 2));
+        var zutatJpaEntity = entityManager.persist(new ZutatJpaEntity(artikel1, 2, 1));
 
         //Act
         testee.removeZutat(new Zutat(
                 new Artikel(artikel1.getId(), artikel1.getName(), artikel1.getEinheit(),
-                    new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 2)
+                    new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 2, 1)
         );
 
         //Assert
         var actual = entityManager.find(ZutatJpaEntity.class, zutatJpaEntity.getId());
         assertNull(actual);
+    }
+    
+    @Test
+    public void should_save_einkaufsliste() {
+        //Arrange
+        var einkaufsliste = new Einkaufsliste();
+        ArtikelJpaEntity artikel1 = CreateArtikel("SomeArtikel", kategorieJpaEntity);
+
+        einkaufsliste.addZutat(new Artikel(artikel1.getId(), artikel1.getName(), artikel1.getEinheit(),
+        new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 2);
+
+        //Act
+        testee.save(einkaufsliste);
+    
+        //Assert
+        assertEquals(1, testee.getEinkaufsliste().getZutaten().size());
     }
 
     private ArtikelJpaEntity CreateArtikel(String someArtikel, KategorieJpaEntity kategorie) {

@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
-import com.tbleier.kitchenlist.application.domain.Zutat;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.out.EinkaufslisteRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ class RemoveZutatServiceTest {
     @Test
     public void should_remove_zutat_from_repository() {
         //Arrange
-        var zutat = new Zutat(new Artikel(23L, "Wurst", Einheit.Stueck, new Kategorie(324L, "Fleischwaren")), 3);
+        var zutat = new Zutat(new Artikel(23L, "Wurst", Einheit.Stueck, new Kategorie(324L, "Fleischwaren")), 3, 1);
         givenZutatExists(zutat);
 
         //Act

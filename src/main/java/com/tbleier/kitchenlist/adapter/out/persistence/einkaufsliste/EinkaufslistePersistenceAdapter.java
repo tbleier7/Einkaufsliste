@@ -1,6 +1,7 @@
 package com.tbleier.kitchenlist.adapter.out.persistence.einkaufsliste;
 
-import com.tbleier.kitchenlist.application.domain.Zutat;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Einkaufsliste;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.out.EinkaufslisteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,6 @@ public class EinkaufslistePersistenceAdapter implements EinkaufslisteRepository 
     public long save(Zutat zutat) {
 
         var jpaEntity = zutatJpaMapper.zutatToJpaEntity(zutat);
-
         jpaEntity = zutatJpaRepository.save(jpaEntity);
 
         return jpaEntity.getId();
@@ -54,5 +54,23 @@ public class EinkaufslistePersistenceAdapter implements EinkaufslisteRepository 
     @Transactional
     public void removeZutat(Zutat zutat) {
         zutatJpaRepository.deleteByArtikelId(zutat.getArtikel().getId());
+    }
+
+    @Override
+    public void save(Einkaufsliste einkaufsliste) {
+
+        var zutaten = einkaufsliste.getZutaten();
+        //TODO: die Zutat hat keine Id, deswegen kommt hier auch nix gscheites bei raus
+        var jpaEntities = zutatJpaMapper.zutatToJpaEntity(zutaten);
+        zutatJpaRepository.saveAll(jpaEntities);
+    }
+
+    @Override
+    public Einkaufsliste getEinkaufsliste() {
+        var jpaEntities = zutatJpaRepository.findAll();
+
+        var zutaten = zutatJpaMapper.jpaEntityToZutat(jpaEntities);
+
+        return Einkaufsliste.CreateWithZutaten(zutaten);
     }
 }

@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: drop-index-column-for-table-zutat-20230401
+      author: tobias
+      changes:
+        - dropUniqueConstraint:
+            constraintName:  zutat_einkaufsliste_index_key
+            tableName: zutat

@@ -5,7 +5,9 @@ import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 
 public interface EinkaufslisteRepository {
 
-    long save(Zutat zutat);
+    long saveZutat(Zutat zutat);
+
+    void save(Einkaufsliste einkaufsliste);
 
     void removeZutat(Zutat zutat);
 

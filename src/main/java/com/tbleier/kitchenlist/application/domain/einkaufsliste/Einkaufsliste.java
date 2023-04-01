@@ -2,10 +2,7 @@ package com.tbleier.kitchenlist.application.domain.einkaufsliste;
 
 import com.tbleier.kitchenlist.application.domain.Artikel;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Einkaufsliste {
 
@@ -38,11 +35,14 @@ public class Einkaufsliste {
         return zutaten;
     }
 
-    public void moveZutatToIndex(long artikelId, int index) {
-        var zutatToMove= zutaten.stream().filter(zutat -> zutat.getArtikel().getId() == artikelId ).findFirst();
+    public void moveZutatToIndex(long zutatId, int index) {
+        var zutatToMove= zutaten.stream().filter(zutat -> zutat.getId() == zutatId).findFirst();
         zutaten.remove(zutatToMove.get());
-
         zutaten.add(index, zutatToMove.get());
+
+        for (int i = 0; i < zutaten.size(); i++) {
+            zutaten.get(i).moveToIndex(i);
+        }
     }
 
     public static Einkaufsliste CreateWithZutaten(List<Zutat> zutaten) {

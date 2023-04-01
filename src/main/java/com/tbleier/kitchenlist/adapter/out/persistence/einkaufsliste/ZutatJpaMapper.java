@@ -15,4 +15,5 @@ public interface ZutatJpaMapper {
     ZutatJpaMapper INSTANCE = Mappers.getMapper(ZutatJpaMapper.class );
 
     ZutatJpaEntity zutatToJpaEntity(Zutat zutat);
+    List<ZutatJpaEntity> zutatToJpaEntity(List<Zutat> zutat);
 }

@@ -5,10 +5,12 @@ import com.tbleier.kitchenlist.application.AddToEinkaufslisteService;
 import com.tbleier.kitchenlist.application.ListZutatenService;
 import com.tbleier.kitchenlist.application.RemoveZutatService;
 import com.tbleier.kitchenlist.application.ZutatenDTOMapper;
+import com.tbleier.kitchenlist.application.ports.MoveZutatService;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
+import com.tbleier.kitchenlist.application.ports.in.commands.MoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
 import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
@@ -48,5 +50,10 @@ public class EinkaufslisteServicesConfiguration {
     @Bean
     public CommandService<RemoveZutatCommand> resolveRemoveZutatCommandService() {
         return new CommandExceptionHandler<>(new RemoveZutatService(einkaufslisteRepository));
+    }
+
+    @Bean
+    public CommandService<MoveZutatCommand> resolveMoveZutatCommandService() {
+        return new CommandExceptionHandler<>(new MoveZutatService(einkaufslisteRepository));
     }
 }

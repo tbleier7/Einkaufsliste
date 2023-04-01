@@ -1,18 +1,18 @@
 package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
-import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.commands.MoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridMultiSelectionModel;
+import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -31,9 +31,10 @@ public class EinkaufslisteListView extends VerticalLayout {
     private final QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService;
     private final AddArtikelDialogFactory addArtikelDialogFactory;
     private final CommandService<RemoveZutatCommand> removeZutatCommandService;
+    private final CommandService<MoveZutatCommand> moveZutatCommandService;
     Grid<ZutatDTO> grid = new Grid<>(ZutatDTO.class, false);
 
-    private List<ZutatDTO> positionDTOs = new ArrayList<>();
+    private List<ZutatDTO> zutatenDTOs = new ArrayList<>();
     Button addArtikelButton;
 
     ZutatDTO draggedItem;
@@ -41,16 +42,19 @@ public class EinkaufslisteListView extends VerticalLayout {
     @Autowired
     public EinkaufslisteListView(QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService,
                                  AddArtikelDialogFactory addArtikelDialogFactory,
-                                 CommandService<RemoveZutatCommand> removeZutatCommandService) {
+                                 CommandService<RemoveZutatCommand> removeZutatCommandService,
+                                 CommandService<MoveZutatCommand> moveZutatCommandService) {
         this.einkaufsListeQueryService = einkaufsListeQueryService;
         this.addArtikelDialogFactory = addArtikelDialogFactory;
         this.removeZutatCommandService = removeZutatCommandService;
+        this.moveZutatCommandService = moveZutatCommandService;
 
         addClassName("einkaufsliste-list-view");
         setSizeFull();
         configureGrid();
 
         add(getToolbar(), grid);
+
     }
 
     private Component getToolbar() {
@@ -130,36 +134,35 @@ public class EinkaufslisteListView extends VerticalLayout {
                     ZutatDTO dropOverItem = event.getDropTargetItem().get();
                     if (!dropOverItem.equals(draggedItem)) {
                         // reorder dragged item the backing gridItems container
-                        positionDTOs.remove(draggedItem);
+                        zutatenDTOs.remove(draggedItem);
                         // calculate drop index based on the dropOverItem
-                        int dropIndex =
-                                positionDTOs.indexOf(dropOverItem) + (event.getDropLocation() == GridDropLocation.BELOW ? 1 : 0);
-                        positionDTOs.add(dropIndex, draggedItem);
-//                        System.out.println("dragged " + draggedItem.getArtikelName() + " dragIndex " + + " behind " + dropOverItem.getArtikelName() + " dropindex " + dropIndex);
+                        int dropIndex = zutatenDTOs.indexOf(dropOverItem) + (event.getDropLocation() == GridDropLocation.BELOW ? 1 : 0);
+                        zutatenDTOs.add(dropIndex, draggedItem);
+                        moveZutatCommandService.execute(new MoveZutatCommand(draggedItem.getId(), dropIndex));
                         grid.getDataProvider().refreshAll();
                     }
                 }
         );
 
-        positionDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListZutatenQuery()));
-        grid.setItems(positionDTOs);
+        zutatenDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListZutatenQuery()));
+        grid.setItems(zutatenDTOs);
     }
 
     public List<ZutatDTO> getZutatDTOs() {
-        return positionDTOs;
+        return zutatenDTOs;
     }
 
     public void addEinkaufslistenposition(ZutatDTO listenposition) {
-        positionDTOs.add(listenposition);
-        grid.setItems(positionDTOs);
+        zutatenDTOs.add(listenposition);
+        grid.setItems(zutatenDTOs);
     }
 
     public void removeZutat(ZutatDTO zutatDTO) {
         var result = removeZutatCommandService.execute(new RemoveZutatCommand(zutatDTO.getId()));
 
         if(result.isSuccessful()) {
-            positionDTOs.remove(zutatDTO);
-            grid.setItems(positionDTOs);
+            zutatenDTOs.remove(zutatDTO);
+            grid.setItems(zutatenDTOs);
         }
     }
 }

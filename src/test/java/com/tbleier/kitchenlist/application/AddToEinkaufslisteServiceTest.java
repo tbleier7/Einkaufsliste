@@ -57,7 +57,7 @@ class AddToEinkaufslisteServiceTest {
     }
 
     private void givenZutatWasSavedWithId(long zutatId) {
-        when(einkaufslisteRepository.save(any())).thenReturn(zutatId);
+        when(einkaufslisteRepository.saveZutat(any())).thenReturn(zutatId);
     }
 
     @Test

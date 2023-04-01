@@ -39,21 +39,61 @@ class EinkaufslisteTest {
     @Test
     public void should_move_zutaten() {
         //Arrange
-        Artikel suppengemuese = CreateArtikel("Suppengemüse", "SomeKategorie");
-        Artikel kartoffeln = CreateArtikel("Kartoffeln", "SomeOtherKategorie");
-        Artikel zwiebeln = CreateArtikel("Zwiebeln", "SomeOtherKategorie");
+        Artikel suppengemueseArtikel = CreateArtikel("Suppengemüse", "SomeKategorie");
+        Artikel kartoffelnArtikel = CreateArtikel("Kartoffeln", "SomeOtherKategorie");
+        Artikel zwiebelnArtikel = CreateArtikel("Zwiebeln", "SomeOtherKategorie");
+        Artikel wurstArtikel = CreateArtikel("Wurst", "SomeOtherKategorie");
 
-        testee.addZutat(suppengemuese, 3);
-        testee.addZutat(kartoffeln, 4);
-        testee.addZutat(zwiebeln, 2);
+        var suppengemueseZutat = testee.addExistingZutat(14L, suppengemueseArtikel, 3);
+        var kartoffelnZutat = testee.addExistingZutat(56L, kartoffelnArtikel, 4);
+        var zwiebelnZutat = testee.addExistingZutat(70L, zwiebelnArtikel, 2);
+        var wurstZutat = testee.addExistingZutat(99L, wurstArtikel, 6);
 
         //Act
-        testee.moveZutatToIndex(zwiebeln.getId(), 0);
-        testee.getZutaten();
+        testee.moveZutatToIndex(suppengemueseZutat.getId(), 2);
 
         //Assert
-        assertEquals(zwiebeln.getId(), testee.getZutaten().get(0).getArtikel().getId());
-        assertEquals(suppengemuese.getId(), testee.getZutaten().get(1).getArtikel().getId());
+        assertEquals(kartoffelnZutat.getId(), testee.getZutaten().get(0).getId());
+        assertEquals(0, testee.getZutaten().get(0).getEinkaufslisteIndex());
+
+        assertEquals(zwiebelnZutat.getId(), testee.getZutaten().get(1).getId());
+        assertEquals(1, testee.getZutaten().get(1).getEinkaufslisteIndex());
+
+        assertEquals(suppengemueseZutat.getId(), testee.getZutaten().get(2).getId());
+        assertEquals(2, testee.getZutaten().get(2).getEinkaufslisteIndex());
+
+        assertEquals(wurstZutat.getId(), testee.getZutaten().get(3).getId());
+        assertEquals(3, testee.getZutaten().get(3).getEinkaufslisteIndex());
+    }
+
+    @Test
+    public void should_move_second_to_third_zutaten() {
+        //Arrange
+        Artikel suppengemueseArtikel = CreateArtikel("Suppengemüse", "SomeKategorie");
+        Artikel kartoffelnArtikel = CreateArtikel("Kartoffeln", "SomeOtherKategorie");
+        Artikel zwiebelnArtikel = CreateArtikel("Zwiebeln", "SomeOtherKategorie");
+        Artikel wurstArtikel = CreateArtikel("Wurst", "SomeOtherKategorie");
+
+        var suppengemueseZutat = testee.addExistingZutat(14L, suppengemueseArtikel, 3);
+        var kartoffelnZutat = testee.addExistingZutat(56L, kartoffelnArtikel, 4);
+        var zwiebelnZutat = testee.addExistingZutat(70L, zwiebelnArtikel, 2);
+        var wurstZutat = testee.addExistingZutat(99L, wurstArtikel, 6);
+
+        //Act
+        testee.moveZutatToIndex(kartoffelnZutat.getId(), 2);
+
+        //Assert
+        assertEquals(suppengemueseZutat.getId(), testee.getZutaten().get(0).getId());
+        assertEquals(0, testee.getZutaten().get(0).getEinkaufslisteIndex());
+
+        assertEquals(zwiebelnZutat.getId(), testee.getZutaten().get(1).getId());
+        assertEquals(1, testee.getZutaten().get(1).getEinkaufslisteIndex());
+
+        assertEquals(kartoffelnZutat.getId(), testee.getZutaten().get(2).getId());
+        assertEquals(2, testee.getZutaten().get(2).getEinkaufslisteIndex());
+
+        assertEquals(wurstZutat.getId(), testee.getZutaten().get(3).getId());
+        assertEquals(3, testee.getZutaten().get(3).getEinkaufslisteIndex());
     }
 
     private Artikel CreateArtikel(String artikelName, String kategorieName) {

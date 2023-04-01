@@ -23,12 +23,18 @@ public class EinkaufslistePersistenceAdapter implements EinkaufslisteRepository 
     }
 
     @Override
-    public long save(Zutat zutat) {
+    public long saveZutat(Zutat zutat) {
 
         var jpaEntity = zutatJpaMapper.zutatToJpaEntity(zutat);
         jpaEntity = zutatJpaRepository.save(jpaEntity);
 
         return jpaEntity.getId();
+    }
+
+    @Override
+    public void save(Einkaufsliste einkaufsliste) {
+        var jpaEntities = zutatJpaMapper.zutatToJpaEntity(einkaufsliste.getZutaten());
+        zutatJpaRepository.saveAll(jpaEntities);
     }
 
     @Override
@@ -39,7 +45,7 @@ public class EinkaufslistePersistenceAdapter implements EinkaufslisteRepository 
 
     @Override
     public Einkaufsliste getEinkaufsliste() {
-        var jpaEntities = zutatJpaRepository.findAll();
+        var jpaEntities = zutatJpaRepository.findAllByOrderByEinkaufslisteIndexAsc();
 
         var einkaufsListe = Einkaufsliste.CreateEmpty();
         for (var jpaZutat: jpaEntities) {

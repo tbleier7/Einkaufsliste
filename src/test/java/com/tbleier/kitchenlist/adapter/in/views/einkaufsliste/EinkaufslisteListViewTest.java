@@ -8,6 +8,7 @@ import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.commands.MoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,9 @@ class EinkaufslisteListViewTest {
     private CommandService<RemoveZutatCommand> removeZutatCommandService;
 
     @Mock
+    private CommandService<MoveZutatCommand> moveZutatCommandService;
+
+    @Mock
     private AddArtikelDialog addArtikelDialog;
 
     @Mock
@@ -45,7 +49,10 @@ class EinkaufslisteListViewTest {
         zutaten = List.of(new ZutatDTO(15L, 1L, "Eier", 2),
                 new ZutatDTO(23L, 12L, "Wurst", 3));
         givenTwoEntriesForEinkaufsliste();
-        testee = new EinkaufslisteListView(einkaufsListeQueryService, addArtikelDialogFactory, removeZutatCommandService);
+        testee = new EinkaufslisteListView(einkaufsListeQueryService,
+                addArtikelDialogFactory,
+                removeZutatCommandService,
+                moveZutatCommandService);
     }
 
     @Test

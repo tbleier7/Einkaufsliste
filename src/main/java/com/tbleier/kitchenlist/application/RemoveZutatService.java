@@ -15,8 +15,11 @@ public class RemoveZutatService implements CommandService<RemoveZutatCommand> {
     @Override
     public CommandResult execute(RemoveZutatCommand command) {
 
-        var zutat = einkaufslisteRepository.findByArtikelId(command.getArtikelId());
-        einkaufslisteRepository.removeZutat(zutat.get());
+        var einkaufsliste = einkaufslisteRepository.getEinkaufsliste();
+
+        var zutat = einkaufsliste.getZutat(command.getZutatId());
+        if(zutat.isPresent())
+            einkaufslisteRepository.removeZutat(zutat.get());
 
         return new CommandResult(true);
     }

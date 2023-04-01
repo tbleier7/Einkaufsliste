@@ -26,9 +26,9 @@ public class AddToEinkaufslisteService implements CommandService<AddToEinkaufsLi
             return new CommandResult(false);
 
         var einkaufsliste = repository.getEinkaufsliste();
-        einkaufsliste.addZutat(artikel.get(), command.getMenge());
-        repository.save(einkaufsliste);
+        var zutat = einkaufsliste.addZutat(artikel.get(), command.getMenge());
+        var zutatId = repository.save(zutat);
 
-        return new CommandResult(true);
+        return new CommandResult(true, zutatId);
     }
 }

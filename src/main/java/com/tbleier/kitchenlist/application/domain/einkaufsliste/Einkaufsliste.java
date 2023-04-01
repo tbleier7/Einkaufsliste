@@ -2,8 +2,10 @@ package com.tbleier.kitchenlist.application.domain.einkaufsliste;
 
 import com.tbleier.kitchenlist.application.domain.Artikel;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class Einkaufsliste {
 
@@ -13,14 +15,23 @@ public class Einkaufsliste {
         this.zutaten = zutaten;
     }
 
-    public Einkaufsliste() {
+    Einkaufsliste() {
     }
 
-    public void addZutat(Artikel artikel, int menge) {
+    public Zutat addZutat(Artikel artikel, int menge) {
         var highestIndex = zutaten.size();
 
-        var newZutat = new Zutat(artikel, menge, highestIndex);
+        var newZutat = Zutat.CreateWithoutId(artikel, menge, highestIndex);
         zutaten.add(newZutat);
+        return newZutat;
+    }
+
+    public Zutat addExistingZutat(long id, Artikel artikel, int menge) {
+        var highestIndex = zutaten.size();
+
+        var newZutat = Zutat.CreateWithId(id, artikel, menge, highestIndex);
+        zutaten.add(newZutat);
+        return newZutat;
     }
 
     public List<Zutat> getZutaten() {
@@ -38,5 +49,13 @@ public class Einkaufsliste {
 
         zutaten = new LinkedList<>(zutaten);
         return new Einkaufsliste(zutaten);
+    }
+
+    public static Einkaufsliste CreateEmpty() {
+        return new Einkaufsliste(new LinkedList<>());
+    }
+
+    public Optional<Zutat> getZutat(long zutatId) {
+        return zutaten.stream().filter(zutat -> zutat.getId() == zutatId).findFirst();
     }
 }

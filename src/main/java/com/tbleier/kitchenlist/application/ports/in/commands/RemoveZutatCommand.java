@@ -2,13 +2,13 @@ package com.tbleier.kitchenlist.application.ports.in.commands;
 
 public class RemoveZutatCommand {
 
-    private final long artikelId;
+    private final long zutatId;
 
-    public RemoveZutatCommand(long artikelId) {
-        this.artikelId = artikelId;
+    public RemoveZutatCommand(long zutatId) {
+        this.zutatId = zutatId;
     }
 
-    public long getArtikelId() {
-        return artikelId;
+    public long getZutatId() {
+        return zutatId;
     }
 }

@@ -4,6 +4,7 @@ import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.einkaufsliste.Einkaufsliste;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.commands.AddToEinkaufsListeCommand;
 import com.tbleier.kitchenlist.application.ports.out.ArtikelRepository;
@@ -16,9 +17,9 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -30,9 +31,6 @@ class AddToEinkaufslisteServiceTest {
 
     @Mock
     EinkaufslisteRepository einkaufslisteRepository;
-
-    @Captor
-    ArgumentCaptor<Einkaufsliste> repositorySaveCaptor;
 
     private AddToEinkaufsListeCommand command;
     private AddToEinkaufslisteService testee;
@@ -46,14 +44,20 @@ class AddToEinkaufslisteServiceTest {
     @Test
     public void should_add_artikel_to_einkaufsliste() {
         //Arrange
+        var expectedZutatId = 5L;
         givenArtikelFromCommand();
         givenEmptyEinkaufsliste();
+        givenZutatWasSavedWithId(expectedZutatId);
 
         //Act
         var actual = testee.execute(command);
 
         //Assert
-        AssertThatListenEintragWasSuccessfullySaved(actual);
+        AssertThatZutatWasSuccessfullySaved(actual,expectedZutatId);
+    }
+
+    private void givenZutatWasSavedWithId(long zutatId) {
+        when(einkaufslisteRepository.save(any())).thenReturn(zutatId);
     }
 
     @Test
@@ -69,7 +73,7 @@ class AddToEinkaufslisteServiceTest {
     }
 
     private void givenEmptyEinkaufsliste() {
-        when(einkaufslisteRepository.getEinkaufsliste()).thenReturn(new Einkaufsliste());
+        when(einkaufslisteRepository.getEinkaufsliste()).thenReturn(Einkaufsliste.CreateWithZutaten(Collections.emptyList()));
     }
 
     private void givenArtikelWasNotFound() {
@@ -85,12 +89,10 @@ class AddToEinkaufslisteServiceTest {
                 ));
     }
 
-    private void AssertThatListenEintragWasSuccessfullySaved(CommandResult actual) {
-        verify(einkaufslisteRepository).save(repositorySaveCaptor.capture());
-        var einkaufsliste = repositorySaveCaptor.getValue();
-
-        assertEquals(einkaufsliste.getZutaten().get(0).getArtikel().getId(), command.getArtikelId());
+    private void AssertThatZutatWasSuccessfullySaved(CommandResult actual, long expectedZutatId) {
+        assertNotEquals(0, actual.getId());
         assertTrue(actual.isSuccessful());
+        assertEquals(expectedZutatId, actual.getId());
     }
 
     private void AssertThatCommandFailed(CommandResult actual) {

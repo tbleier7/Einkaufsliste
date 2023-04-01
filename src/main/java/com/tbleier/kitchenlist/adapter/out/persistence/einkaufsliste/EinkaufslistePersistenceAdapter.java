@@ -1,5 +1,6 @@
 package com.tbleier.kitchenlist.adapter.out.persistence.einkaufsliste;
 
+import com.tbleier.kitchenlist.adapter.out.persistence.artikel.ArtikelJpaMapper;
 import com.tbleier.kitchenlist.application.domain.einkaufsliste.Einkaufsliste;
 import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.out.EinkaufslisteRepository;
@@ -7,19 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 @Component
 public class EinkaufslistePersistenceAdapter implements EinkaufslisteRepository {
 
     private final ZutatJpaRepository zutatJpaRepository;
     private final ZutatJpaMapper zutatJpaMapper;
+    private final ArtikelJpaMapper artikelJpaMapper;
 
     @Autowired
-    public EinkaufslistePersistenceAdapter(ZutatJpaRepository zutatJpaRepository, ZutatJpaMapper zutatJpaMapper) {
+    public EinkaufslistePersistenceAdapter(ZutatJpaRepository zutatJpaRepository, ZutatJpaMapper zutatJpaMapper, ArtikelJpaMapper artikelJpaMapper) {
         this.zutatJpaRepository = zutatJpaRepository;
         this.zutatJpaMapper = zutatJpaMapper;
+        this.artikelJpaMapper = artikelJpaMapper;
     }
 
     @Override
@@ -32,45 +32,20 @@ public class EinkaufslistePersistenceAdapter implements EinkaufslisteRepository 
     }
 
     @Override
-    public List<Zutat> listZutaten() {
-
-        var jpaEntities = zutatJpaRepository.findAll();
-        var zutaten = zutatJpaMapper.jpaEntityToZutat(jpaEntities);
-
-        return zutaten;
-    }
-
-    @Override
-    public Optional<Zutat> findByArtikelId(long artikelId) {
-
-        var jpaEntity = zutatJpaRepository.findByArtikelId(artikelId);
-        if(jpaEntity.isEmpty())
-            return Optional.empty();
-        else
-            return Optional.of(zutatJpaMapper.jpaEntityToZutat(jpaEntity.get()));
-    }
-
-    @Override
     @Transactional
     public void removeZutat(Zutat zutat) {
-        zutatJpaRepository.deleteByArtikelId(zutat.getArtikel().getId());
-    }
-
-    @Override
-    public void save(Einkaufsliste einkaufsliste) {
-
-        var zutaten = einkaufsliste.getZutaten();
-        //TODO: die Zutat hat keine Id, deswegen kommt hier auch nix gscheites bei raus
-        var jpaEntities = zutatJpaMapper.zutatToJpaEntity(zutaten);
-        zutatJpaRepository.saveAll(jpaEntities);
+        zutatJpaRepository.deleteById(zutat.getId());
     }
 
     @Override
     public Einkaufsliste getEinkaufsliste() {
         var jpaEntities = zutatJpaRepository.findAll();
 
-        var zutaten = zutatJpaMapper.jpaEntityToZutat(jpaEntities);
+        var einkaufsListe = Einkaufsliste.CreateEmpty();
+        for (var jpaZutat: jpaEntities) {
+            einkaufsListe.addExistingZutat(jpaZutat.getId(), artikelJpaMapper.jpaEntityToArtikel(jpaZutat.getArtikel()), jpaZutat.getMenge());
+        }
 
-        return Einkaufsliste.CreateWithZutaten(zutaten);
+        return einkaufsListe;
     }
 }

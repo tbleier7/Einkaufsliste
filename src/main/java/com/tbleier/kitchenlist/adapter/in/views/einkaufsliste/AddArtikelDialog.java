@@ -73,7 +73,7 @@ class AddArtikelDialog extends Dialog {
                 .execute(new AddToEinkaufsListeCommand(artikelDTOComboBox.getValue().getId(), mengenIntegerField.getValue()));
 
         if(result.isSuccessful()) {
-            fireEvent(new AddZutatEvent(this, new ZutatDTO(artikelDTOComboBox.getValue().getId(), artikelDTOComboBox.getValue().getName(),
+            fireEvent(new AddZutatEvent(this, new ZutatDTO(result.getId(), artikelDTOComboBox.getValue().getId(), artikelDTOComboBox.getValue().getName(),
                     mengenIntegerField.getValue()
             )));
 

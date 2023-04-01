@@ -42,8 +42,8 @@ class EinkaufslisteListViewTest {
 
     @BeforeEach
     public void setUp() {
-        zutaten = List.of(new ZutatDTO(1L, "Eier", 2),
-                new ZutatDTO(12L, "Wurst", 3));
+        zutaten = List.of(new ZutatDTO(15L, 1L, "Eier", 2),
+                new ZutatDTO(23L, 12L, "Wurst", 3));
         givenTwoEntriesForEinkaufsliste();
         testee = new EinkaufslisteListView(einkaufsListeQueryService, addArtikelDialogFactory, removeZutatCommandService);
     }
@@ -69,7 +69,7 @@ class EinkaufslisteListViewTest {
     @Test
     public void should_add_new_einkaufslistenposition() {
         //Arrange
-        var listenposition = new ZutatDTO(515L, "irgendeinArtikel", 2);
+        var listenposition = new ZutatDTO(0L, 515L, "irgendeinArtikel", 2);
 
         //Act
         testee.addEinkaufslistenposition(listenposition);
@@ -88,7 +88,7 @@ class EinkaufslisteListViewTest {
         testee.removeZutat(checkedZutat);
     
         //Assert
-        verify(removeZutatCommandService).execute(argThat(command -> command.getArtikelId() == checkedZutat.getArtikelId()));
+        verify(removeZutatCommandService).execute(argThat(command -> command.getZutatId() == checkedZutat.getId()));
         assertThat(testee.getZutatDTOs(), not(hasItem(checkedZutat)));
     }
 

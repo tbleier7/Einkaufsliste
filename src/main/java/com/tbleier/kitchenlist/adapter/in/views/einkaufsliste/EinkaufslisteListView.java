@@ -118,7 +118,7 @@ public class EinkaufslisteListView extends VerticalLayout {
     }
 
     public void removeZutat(ZutatDTO zutatDTO) {
-        var result = removeZutatCommandService.execute(new RemoveZutatCommand(zutatDTO.getArtikelId()));
+        var result = removeZutatCommandService.execute(new RemoveZutatCommand(zutatDTO.getId()));
 
         if(result.isSuccessful()) {
             positionDTOs.remove(zutatDTO);

@@ -38,7 +38,7 @@ class EinkaufslistePersistenceAdapterTest {
 
     @Container
     private static final PostgreSQLContainer<?> database = new PostgreSQLContainer<>("postgres:15.2-alpine");
-    
+
     public static class DataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         @Override
@@ -66,11 +66,15 @@ class EinkaufslistePersistenceAdapterTest {
     public void should_save_a_zutat() {
         //Arrange
         ArtikelJpaEntity artikel = CreateArtikel("SomeArtikel", kategorieJpaEntity);
+        var einkaufsliste = Einkaufsliste.CreateWithZutaten(Collections.emptyList());
 
         //Act
-        var savedId = testee.save(new Zutat(new Artikel(artikel.getId(), artikel.getName(),
-                artikel.getEinheit(), new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 1, 1));
-    
+        var savedId = testee.save(einkaufsliste.addZutat(new Artikel(artikel.getId(),
+                artikel.getName(),
+                artikel.getEinheit(),
+                new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())),
+                1));
+
         //Assert
         var actual = entityManager.find(ZutatJpaEntity.class, savedId);
         assertNotNull(actual);
@@ -86,10 +90,10 @@ class EinkaufslistePersistenceAdapterTest {
         entityManager.persist(new ZutatJpaEntity(artikel2, 1, 2));
 
         //Act
-        var actual = testee.listZutaten();
+        var actual = testee.getEinkaufsliste();
 
         //Assert
-        assertEquals(actual.size(), 2);
+        assertEquals(actual.getZutaten().size(), 2);
     }
 
     @Test
@@ -100,19 +104,6 @@ class EinkaufslistePersistenceAdapterTest {
         //Assert
         assertEquals(actual.getZutaten(), Collections.emptyList());
     }
-    
-    @Test
-    public void should_find_a_zutat_by_its_artikel() {
-        //Arrange
-        ArtikelJpaEntity artikel1 = CreateArtikel("SomeArtikel", kategorieJpaEntity);
-        entityManager.persist(new ZutatJpaEntity(artikel1, 2, 1));
-
-        //Act
-        var actual = testee.findByArtikelId(artikel1.getId());
-    
-        //Assert
-        assertTrue(actual.isPresent());
-    }
 
     @Test
     public void should_remove_a_zutat() {
@@ -121,30 +112,13 @@ class EinkaufslistePersistenceAdapterTest {
         var zutatJpaEntity = entityManager.persist(new ZutatJpaEntity(artikel1, 2, 1));
 
         //Act
-        testee.removeZutat(new Zutat(
+        testee.removeZutat(Einkaufsliste.CreateEmpty().addExistingZutat(zutatJpaEntity.getId(),
                 new Artikel(artikel1.getId(), artikel1.getName(), artikel1.getEinheit(),
-                    new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 2, 1)
-        );
+                        new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 2));
 
         //Assert
         var actual = entityManager.find(ZutatJpaEntity.class, zutatJpaEntity.getId());
         assertNull(actual);
-    }
-    
-    @Test
-    public void should_save_einkaufsliste() {
-        //Arrange
-        var einkaufsliste = new Einkaufsliste();
-        ArtikelJpaEntity artikel1 = CreateArtikel("SomeArtikel", kategorieJpaEntity);
-
-        einkaufsliste.addZutat(new Artikel(artikel1.getId(), artikel1.getName(), artikel1.getEinheit(),
-        new Kategorie(kategorieJpaEntity.getId(), kategorieJpaEntity.getName())), 2);
-
-        //Act
-        testee.save(einkaufsliste);
-    
-        //Assert
-        assertEquals(1, testee.getEinkaufsliste().getZutaten().size());
     }
 
     private ArtikelJpaEntity CreateArtikel(String someArtikel, KategorieJpaEntity kategorie) {

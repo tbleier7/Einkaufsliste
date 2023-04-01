@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testng.Assert;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -45,7 +46,7 @@ class ListZutatenServiceTest {
 
     private void givenTwoZutatenInEinkaufsliste() {
 
-        var einkaufsliste = new Einkaufsliste();
+        var einkaufsliste = Einkaufsliste.CreateWithZutaten(Collections.emptyList());
         einkaufsliste.addZutat(new Artikel(12L, "Gelbwurst", Einheit.Gramm, new Kategorie(323L, "Wurst")), 2);
         einkaufsliste.addZutat(new Artikel(12L, "Paprikawurst", Einheit.Gramm, new Kategorie(323L, "Wurst")), 4);
 

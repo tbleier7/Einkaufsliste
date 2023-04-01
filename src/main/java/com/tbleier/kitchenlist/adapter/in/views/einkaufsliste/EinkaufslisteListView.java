@@ -1,6 +1,7 @@
 package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
+import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
@@ -12,6 +13,8 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridMultiSelectionModel;
+import com.vaadin.flow.component.grid.dnd.GridDropLocation;
+import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -33,6 +36,7 @@ public class EinkaufslisteListView extends VerticalLayout {
     private List<ZutatDTO> positionDTOs = new ArrayList<>();
     Button addArtikelButton;
 
+    ZutatDTO draggedItem;
 
     @Autowired
     public EinkaufslisteListView(QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService,
@@ -104,6 +108,38 @@ public class EinkaufslisteListView extends VerticalLayout {
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         grid.setRowsDraggable(true);
+        grid.addDragStartListener(
+                event -> {
+                    // store current dragged item so we know what to drop
+                    draggedItem = event.getDraggedItems().get(0);
+                    grid.setDropMode(GridDropMode.BETWEEN);
+                }
+        );
+
+        grid.addDragEndListener(
+                event -> {
+                    draggedItem = null;
+                    // Once dragging has ended, disable drop mode so that
+                    // it won't look like other dragged items can be dropped
+                    grid.setDropMode(null);
+                }
+        );
+
+        grid.addDropListener(
+                event -> {
+                    ZutatDTO dropOverItem = event.getDropTargetItem().get();
+                    if (!dropOverItem.equals(draggedItem)) {
+                        // reorder dragged item the backing gridItems container
+                        positionDTOs.remove(draggedItem);
+                        // calculate drop index based on the dropOverItem
+                        int dropIndex =
+                                positionDTOs.indexOf(dropOverItem) + (event.getDropLocation() == GridDropLocation.BELOW ? 1 : 0);
+                        positionDTOs.add(dropIndex, draggedItem);
+//                        System.out.println("dragged " + draggedItem.getArtikelName() + " dragIndex " + + " behind " + dropOverItem.getArtikelName() + " dropindex " + dropIndex);
+                        grid.getDataProvider().refreshAll();
+                    }
+                }
+        );
 
         positionDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListZutatenQuery()));
         grid.setItems(positionDTOs);

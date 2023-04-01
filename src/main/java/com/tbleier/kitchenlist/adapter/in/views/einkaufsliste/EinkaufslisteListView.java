@@ -103,6 +103,7 @@ public class EinkaufslisteListView extends VerticalLayout {
         });
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        grid.setRowsDraggable(true);
 
         positionDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListZutatenQuery()));
         grid.setItems(positionDTOs);

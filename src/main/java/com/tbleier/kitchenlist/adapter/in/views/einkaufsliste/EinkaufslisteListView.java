@@ -91,19 +91,12 @@ public class EinkaufslisteListView extends VerticalLayout {
         grid.addClassName("artikel-grid");
         grid.setSizeFull();
 
-        grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        ((GridMultiSelectionModel<?>) grid.getSelectionModel())
-                .setSelectAllCheckboxVisibility(
-                        GridMultiSelectionModel.SelectAllCheckboxVisibility.HIDDEN
-                );
-
-        grid.addSelectionListener(selection -> {
-            if(selection.getFirstSelectedItem().isPresent()) {
-                removeZutat(selection.getFirstSelectedItem().get());
-            }
-        });
+        configureCheckBoxColumn();
 
         grid.addColumn(ZutatDTO::getArtikelName).setHeader("Artikel");
+
+        var mengeColumn = grid.addColumn(ZutatDTO::getMenge).setHeader("Menge");
+        mengeColumn.setTextAlign(ColumnTextAlign.CENTER);
 
         grid.addComponentColumn(item -> {
             var decrementAmountButton = new Button("-");
@@ -113,8 +106,6 @@ public class EinkaufslisteListView extends VerticalLayout {
             return decrementAmountButton;
         });
 
-        var mengeColumn = grid.addColumn(ZutatDTO::getMenge).setHeader("Menge");
-        mengeColumn.setTextAlign(ColumnTextAlign.CENTER);
 
         grid.addComponentColumn(item -> {
             var incrementAmountButton = new Button("+");
@@ -124,7 +115,7 @@ public class EinkaufslisteListView extends VerticalLayout {
             return incrementAmountButton;
         });
 
-        grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
         grid.setRowsDraggable(true);
         grid.addDragStartListener(
                 event -> {
@@ -161,9 +152,24 @@ public class EinkaufslisteListView extends VerticalLayout {
         refreshGrid();
     }
 
+    private void configureCheckBoxColumn() {
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        ((GridMultiSelectionModel<?>) grid.getSelectionModel())
+                .setSelectAllCheckboxVisibility(
+                        GridMultiSelectionModel.SelectAllCheckboxVisibility.HIDDEN
+                );
+
+        grid.addSelectionListener(selection -> {
+            if(selection.getFirstSelectedItem().isPresent()) {
+                removeZutat(selection.getFirstSelectedItem().get());
+            }
+        });
+    }
+
     private void refreshGrid() {
         zutatenDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListZutatenQuery()));
         grid.setItems(zutatenDTOs);
+        grid.getColumns().forEach(col -> col.setAutoWidth(true));
     }
 
     private void incrementZutat(ZutatDTO zutatDTO) {

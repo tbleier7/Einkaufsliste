@@ -20,7 +20,7 @@ public class MainLayout extends AppLayout {
     }
 
     private void createHeader() {
-        H1 logo = new H1("Kitchenlist");
+        H1 logo = new H1("Einkaufsliste");
         logo.addClassNames("text-l","m-m");
 
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo);

@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-@PageTitle("Kitchen List")
+@PageTitle("Kategorien")
 @Route(value = "kategorie", layout = MainLayout.class)
 
 public class KategorieListView extends VerticalLayout {

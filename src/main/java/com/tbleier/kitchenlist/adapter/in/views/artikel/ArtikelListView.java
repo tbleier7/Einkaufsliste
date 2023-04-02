@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-@PageTitle("Kitchen List")
+@PageTitle("Artikel")
 @Route(value = "artikel", layout = MainLayout.class)
 public class ArtikelListView extends VerticalLayout {
 

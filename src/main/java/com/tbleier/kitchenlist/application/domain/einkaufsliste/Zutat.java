@@ -42,4 +42,12 @@ public class Zutat {
     void moveToIndex(int einkaufslisteIndex) {
         this.einkaufslisteIndex = einkaufslisteIndex;
     }
+
+    void increment() {
+        this.menge++;
+    }
+
+    public void decrement() {
+        this.menge--;
+    }
 }

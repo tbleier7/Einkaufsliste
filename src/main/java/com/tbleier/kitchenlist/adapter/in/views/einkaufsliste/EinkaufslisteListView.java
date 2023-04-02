@@ -4,6 +4,7 @@ import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.commands.IncrementZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.MoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
@@ -32,6 +33,7 @@ public class EinkaufslisteListView extends VerticalLayout {
     private final AddArtikelDialogFactory addArtikelDialogFactory;
     private final CommandService<RemoveZutatCommand> removeZutatCommandService;
     private final CommandService<MoveZutatCommand> moveZutatCommandService;
+    private final CommandService<IncrementZutatCommand> incrementZutatCommandService;
     Grid<ZutatDTO> grid = new Grid<>(ZutatDTO.class, false);
 
     private List<ZutatDTO> zutatenDTOs = new ArrayList<>();
@@ -43,11 +45,13 @@ public class EinkaufslisteListView extends VerticalLayout {
     public EinkaufslisteListView(QueryService<ListZutatenQuery, List<ZutatDTO>> einkaufsListeQueryService,
                                  AddArtikelDialogFactory addArtikelDialogFactory,
                                  CommandService<RemoveZutatCommand> removeZutatCommandService,
-                                 CommandService<MoveZutatCommand> moveZutatCommandService) {
+                                 CommandService<MoveZutatCommand> moveZutatCommandService,
+                                 CommandService<IncrementZutatCommand> incrementZutatCommandService) {
         this.einkaufsListeQueryService = einkaufsListeQueryService;
         this.addArtikelDialogFactory = addArtikelDialogFactory;
         this.removeZutatCommandService = removeZutatCommandService;
         this.moveZutatCommandService = moveZutatCommandService;
+        this.incrementZutatCommandService = incrementZutatCommandService;
 
         addClassName("einkaufsliste-list-view");
         setSizeFull();
@@ -107,6 +111,9 @@ public class EinkaufslisteListView extends VerticalLayout {
 
         grid.addComponentColumn(item -> {
             var incrementAmountButton = new Button("+");
+            incrementAmountButton.addClickListener(event -> {
+                incrementZutat(item);
+            });
             return incrementAmountButton;
         });
 
@@ -144,8 +151,20 @@ public class EinkaufslisteListView extends VerticalLayout {
                 }
         );
 
+        refreshGrid();
+    }
+
+    private void refreshGrid() {
         zutatenDTOs = new ArrayList<>(einkaufsListeQueryService.execute(new ListZutatenQuery()));
         grid.setItems(zutatenDTOs);
+    }
+
+    private void incrementZutat(ZutatDTO zutatDTO) {
+        var commandResult = incrementZutatCommandService.execute(new IncrementZutatCommand(zutatDTO.getId()));
+        if(!commandResult.isSuccessful())
+            return;
+
+        refreshGrid();
     }
 
     public List<ZutatDTO> getZutatDTOs() {

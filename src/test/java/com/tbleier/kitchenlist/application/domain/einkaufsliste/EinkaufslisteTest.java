@@ -95,6 +95,32 @@ class EinkaufslisteTest {
         assertEquals(wurstZutat.getId(), testee.getZutaten().get(3).getId());
         assertEquals(3, testee.getZutaten().get(3).getEinkaufslisteIndex());
     }
+    
+    @Test
+    public void should_increment_menge_of_a_zutat() {
+        //Arrange
+        var zutatId = 12L;
+        testee.addExistingZutat(zutatId, CreateArtikel("AnArtikel", "Gemüse"), 2);
+
+        //Act
+        var actual = testee.incrementZutat(zutatId);
+
+        //Assert
+        assertEquals(actual.getMenge(), 3);
+    }
+
+    @Test
+    public void should_decrement_menge_of_a_zutat() {
+        //Arrange
+        var zutatId = 12L;
+        testee.addExistingZutat(zutatId, CreateArtikel("AnArtikel", "Gemüse"), 2);
+
+        //Act
+        var actual = testee.decrementZutat(zutatId);
+
+        //Assert
+        assertEquals(actual.getMenge(), 1);
+    }
 
     private Artikel CreateArtikel(String artikelName, String kategorieName) {
         return new Artikel(new Random().nextLong(), artikelName, Einheit.Stueck,

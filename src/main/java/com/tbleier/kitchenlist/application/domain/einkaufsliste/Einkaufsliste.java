@@ -1,6 +1,7 @@
 package com.tbleier.kitchenlist.application.domain.einkaufsliste;
 
 import com.tbleier.kitchenlist.application.domain.Artikel;
+import com.tbleier.kitchenlist.application.ports.out.NotFoundException;
 
 import java.util.*;
 
@@ -57,5 +58,27 @@ public class Einkaufsliste {
 
     public Optional<Zutat> getZutat(long zutatId) {
         return zutaten.stream().filter(zutat -> zutat.getId() == zutatId).findFirst();
+    }
+
+    public Zutat incrementZutat(long zutatId) {
+        var zutatOptional = getZutat(zutatId);
+
+        if(zutatOptional.isPresent()) {
+            var zutat = zutatOptional.get();
+            zutat.increment();
+            return zutat;
+        }
+        else throw new NotFoundException();
+    }
+
+    public Zutat decrementZutat(long zutatId) {
+        var zutatOptional = getZutat(zutatId);
+
+        if(zutatOptional.isPresent()) {
+            var zutat = zutatOptional.get();
+            zutat.decrement();
+            return zutat;
+        }
+        else throw new NotFoundException();
     }
 }

@@ -8,6 +8,7 @@ import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
 import com.tbleier.kitchenlist.application.ports.in.QueryService;
+import com.tbleier.kitchenlist.application.ports.in.commands.IncrementZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.MoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.kitchenlist.application.ports.in.queries.ListZutatenQuery;
@@ -36,6 +37,9 @@ class EinkaufslisteListViewTest {
     private CommandService<MoveZutatCommand> moveZutatCommandService;
 
     @Mock
+    private CommandService<IncrementZutatCommand> incrementZutatCommandService;
+
+    @Mock
     private AddArtikelDialog addArtikelDialog;
 
     @Mock
@@ -52,7 +56,8 @@ class EinkaufslisteListViewTest {
         testee = new EinkaufslisteListView(einkaufsListeQueryService,
                 addArtikelDialogFactory,
                 removeZutatCommandService,
-                moveZutatCommandService);
+                moveZutatCommandService,
+                incrementZutatCommandService);
     }
 
     @Test

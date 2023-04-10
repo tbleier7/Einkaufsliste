@@ -1,11 +1,11 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie;
 
-import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.MainLayout;
-import com.tbleier.essensplanung.application.ports.KategorieDTO;
-import com.tbleier.essensplanung.application.ports.in.CommandService;
-import com.tbleier.essensplanung.application.ports.in.QueryService;
-import com.tbleier.essensplanung.application.ports.in.queries.ListKategorienQuery;
-import com.tbleier.essensplanung.application.ports.in.commands.DeleteKategorieCommand;
+import com.tbleier.essensplanung.MainLayout;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.KategorieDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.CommandService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.QueryService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.queries.ListKategorienQuery;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.DeleteKategorieCommand;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;

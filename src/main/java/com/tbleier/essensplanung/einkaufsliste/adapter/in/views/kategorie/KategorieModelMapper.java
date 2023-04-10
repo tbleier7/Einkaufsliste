@@ -1,7 +1,7 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie;
 
-import com.tbleier.essensplanung.application.domain.Kategorie;
-import com.tbleier.essensplanung.application.ports.KategorieDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Kategorie;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.KategorieDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

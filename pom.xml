@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- Project from https://start.vaadin.com/project/54a2db52-4e59-4684-988b-2862d0fcce10 -->
-    <groupId>com.example.application</groupId>
-    <artifactId>kitchenlist</artifactId>
-    <name>kitchenlist</name>
+    <groupId>com.tbleier.essensplanung</groupId>
+    <artifactId>essensplanung</artifactId>
+    <name>essensplanung</name>
     <version>1.0</version>
     <packaging>jar</packaging>
 

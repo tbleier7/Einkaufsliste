@@ -1,14 +1,14 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.checkliste;
 
-import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.MainLayout;
-import com.tbleier.essensplanung.application.ports.ZutatDTO;
-import com.tbleier.essensplanung.application.ports.in.CommandService;
-import com.tbleier.essensplanung.application.ports.in.QueryService;
-import com.tbleier.essensplanung.application.ports.in.commands.DecrementZutatCommand;
-import com.tbleier.essensplanung.application.ports.in.commands.IncrementZutatCommand;
-import com.tbleier.essensplanung.application.ports.in.commands.MoveZutatCommand;
-import com.tbleier.essensplanung.application.ports.in.commands.RemoveZutatCommand;
-import com.tbleier.essensplanung.application.ports.in.queries.ListZutatenQuery;
+import com.tbleier.essensplanung.MainLayout;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.ZutatDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.CommandService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.QueryService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.DecrementZutatCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.IncrementZutatCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.MoveZutatCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.RemoveZutatCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.queries.ListZutatenQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.ColumnTextAlign;

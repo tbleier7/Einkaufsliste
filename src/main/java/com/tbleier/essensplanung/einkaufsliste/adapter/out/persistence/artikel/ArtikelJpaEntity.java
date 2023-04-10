@@ -1,6 +1,6 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.artikel;
 import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.kategorie.KategorieJpaEntity;
-import com.tbleier.essensplanung.application.domain.Einheit;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Einheit;
 
 import javax.persistence.*;
 

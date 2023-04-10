@@ -1,14 +1,11 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie;
 
-import com.tbleier.essensplanung.application.ports.KategorieDTO;
-import com.tbleier.essensplanung.application.ports.in.CommandService;
-import com.tbleier.essensplanung.application.ports.in.QueryService;
-import com.tbleier.essensplanung.application.ports.in.commands.SaveKategorieCommand;
-import com.tbleier.essensplanung.application.ports.in.queries.ListKategorienQuery;
-import com.tbleier.essensplanung.application.ports.in.commands.DeleteKategorieCommand;
-import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie.KategorieFormFactory;
-import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie.KategorieListView;
-import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie.KategorieModelMapper;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.KategorieDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.CommandService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.QueryService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.SaveKategorieCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.queries.ListKategorienQuery;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.DeleteKategorieCommand;
 import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

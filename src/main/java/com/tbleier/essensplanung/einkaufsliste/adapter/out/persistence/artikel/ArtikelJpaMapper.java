@@ -1,7 +1,7 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.artikel;
 
 import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.kategorie.KategorieJpaMapper;
-import com.tbleier.essensplanung.application.domain.Artikel;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Artikel;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

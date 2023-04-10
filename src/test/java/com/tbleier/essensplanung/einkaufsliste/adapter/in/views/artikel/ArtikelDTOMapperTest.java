@@ -1,10 +1,9 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.artikel;
 
-import com.tbleier.essensplanung.application.domain.Artikel;
-import com.tbleier.essensplanung.application.domain.Einheit;
-import com.tbleier.essensplanung.application.domain.Kategorie;
-import com.tbleier.essensplanung.application.ports.ArtikelDTO;
-import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.artikel.ArtikelDTOMapper;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Artikel;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Einheit;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Kategorie;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.ArtikelDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

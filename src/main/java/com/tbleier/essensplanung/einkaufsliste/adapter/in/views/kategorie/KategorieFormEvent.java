@@ -1,6 +1,6 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie;
 
-import com.tbleier.essensplanung.application.ports.KategorieDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.KategorieDTO;
 import com.vaadin.flow.component.ComponentEvent;
 
 public abstract class KategorieFormEvent extends ComponentEvent<KategorieForm> {

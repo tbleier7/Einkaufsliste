@@ -1,6 +1,6 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.artikel;
 
-import com.tbleier.essensplanung.application.ports.ArtikelDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.ArtikelDTO;
 import com.vaadin.flow.component.ComponentEvent;
 
 abstract class ArtikelFormEvent extends ComponentEvent<ArtikelForm> {

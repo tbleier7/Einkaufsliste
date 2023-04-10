@@ -1,8 +1,8 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.kategorie;
 
-import com.tbleier.essensplanung.application.domain.Kategorie;
-import com.tbleier.essensplanung.application.ports.out.KategorieRepository;
-import com.tbleier.essensplanung.application.ports.out.NonUniqueException;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Kategorie;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.out.KategorieRepository;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.out.NonUniqueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;

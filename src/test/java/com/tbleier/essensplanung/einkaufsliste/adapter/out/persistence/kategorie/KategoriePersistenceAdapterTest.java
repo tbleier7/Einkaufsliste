@@ -2,8 +2,8 @@ package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.kategori
 
 import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.JpaMapperConfig;
 import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.PersistenceConfig;
-import com.tbleier.essensplanung.application.domain.Kategorie;
-import com.tbleier.essensplanung.application.ports.out.NonUniqueException;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Kategorie;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.out.NonUniqueException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

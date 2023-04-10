@@ -1,9 +1,9 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie;
 
-import com.tbleier.essensplanung.application.ports.KategorieDTO;
-import com.tbleier.essensplanung.application.ports.in.CommandService;
-import com.tbleier.essensplanung.application.ports.in.commands.SaveKategorieCommand;
-import com.tbleier.essensplanung.application.ports.in.commands.DeleteKategorieCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.KategorieDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.CommandService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.SaveKategorieCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.DeleteKategorieCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

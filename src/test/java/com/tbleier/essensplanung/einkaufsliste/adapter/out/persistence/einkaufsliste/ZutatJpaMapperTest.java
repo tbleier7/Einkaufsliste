@@ -2,12 +2,10 @@ package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.einkaufs
 
 import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.artikel.ArtikelJpaMapperImpl;
 import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.kategorie.KategorieJpaMapperImpl;
-import com.tbleier.essensplanung.application.domain.Artikel;
-import com.tbleier.essensplanung.application.domain.Einheit;
-import com.tbleier.essensplanung.application.domain.Kategorie;
-import com.tbleier.essensplanung.application.domain.einkaufsliste.Einkaufsliste;
-import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.einkaufsliste.ZutatJpaEntity;
-import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.einkaufsliste.ZutatJpaMapper;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Artikel;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Einheit;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Kategorie;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.einkaufsliste.Einkaufsliste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

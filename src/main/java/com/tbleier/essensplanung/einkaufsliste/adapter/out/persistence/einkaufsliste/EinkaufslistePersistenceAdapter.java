@@ -1,9 +1,9 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.einkaufsliste;
 
 import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.artikel.ArtikelJpaMapper;
-import com.tbleier.essensplanung.application.domain.einkaufsliste.Einkaufsliste;
-import com.tbleier.essensplanung.application.domain.einkaufsliste.Zutat;
-import com.tbleier.essensplanung.application.ports.out.EinkaufslisteRepository;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.einkaufsliste.Einkaufsliste;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.einkaufsliste.Zutat;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.out.EinkaufslisteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

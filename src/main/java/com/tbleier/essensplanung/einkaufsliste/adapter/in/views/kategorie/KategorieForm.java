@@ -1,10 +1,10 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie;
 
-import com.tbleier.essensplanung.application.ports.KategorieDTO;
-import com.tbleier.essensplanung.application.ports.in.CommandResult;
-import com.tbleier.essensplanung.application.ports.in.CommandService;
-import com.tbleier.essensplanung.application.ports.in.commands.SaveKategorieCommand;
-import com.tbleier.essensplanung.application.ports.in.commands.DeleteKategorieCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.KategorieDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.CommandResult;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.CommandService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.SaveKategorieCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.DeleteKategorieCommand;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;

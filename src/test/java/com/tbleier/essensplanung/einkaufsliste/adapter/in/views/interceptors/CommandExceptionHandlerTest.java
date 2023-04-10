@@ -1,8 +1,7 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.interceptors;
 
-import com.tbleier.essensplanung.application.ports.in.CommandService;
-import com.tbleier.essensplanung.application.ports.out.NonUniqueException;
-import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.interceptors.CommandExceptionHandler;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.CommandService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.out.NonUniqueException;
 import com.vaadin.flow.component.UI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

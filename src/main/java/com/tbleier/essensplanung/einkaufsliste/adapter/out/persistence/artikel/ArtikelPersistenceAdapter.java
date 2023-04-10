@@ -1,7 +1,7 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.artikel;
 
-import com.tbleier.essensplanung.application.domain.Artikel;
-import com.tbleier.essensplanung.application.ports.out.ArtikelRepository;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Artikel;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.out.ArtikelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

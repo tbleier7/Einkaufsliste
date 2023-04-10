@@ -1,13 +1,13 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.artikel;
 
-import com.tbleier.essensplanung.application.ports.ArtikelDTO;
-import com.tbleier.essensplanung.application.ports.KategorieDTO;
-import com.tbleier.essensplanung.application.domain.Einheit;
-import com.tbleier.essensplanung.application.ports.in.CommandService;
-import com.tbleier.essensplanung.application.ports.in.QueryService;
-import com.tbleier.essensplanung.application.ports.in.commands.DeleteArtikelCommand;
-import com.tbleier.essensplanung.application.ports.in.commands.SaveArtikelCommand;
-import com.tbleier.essensplanung.application.ports.in.queries.ListKategorienQuery;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.ArtikelDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.KategorieDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Einheit;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.CommandService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.QueryService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.DeleteArtikelCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.SaveArtikelCommand;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.queries.ListKategorienQuery;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;

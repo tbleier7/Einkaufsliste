@@ -1,9 +1,9 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.in.views.artikel;
 
-import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.MainLayout;
-import com.tbleier.essensplanung.application.ports.ArtikelDTO;
-import com.tbleier.essensplanung.application.ports.in.QueryService;
-import com.tbleier.essensplanung.application.ports.in.queries.ListArtikelQuery;
+import com.tbleier.essensplanung.MainLayout;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.ArtikelDTO;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.QueryService;
+import com.tbleier.essensplanung.einkaufsliste.application.ports.in.queries.ListArtikelQuery;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;

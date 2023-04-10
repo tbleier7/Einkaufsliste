@@ -1,6 +1,6 @@
 package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.kategorie;
 
-import com.tbleier.essensplanung.application.domain.Kategorie;
+import com.tbleier.essensplanung.einkaufsliste.application.domain.Kategorie;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

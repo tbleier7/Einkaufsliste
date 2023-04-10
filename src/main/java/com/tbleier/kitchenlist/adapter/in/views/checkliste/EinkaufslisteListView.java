@@ -1,4 +1,4 @@
-package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
+package com.tbleier.kitchenlist.adapter.in.views.checkliste;
 
 import com.tbleier.kitchenlist.adapter.in.views.MainLayout;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
@@ -14,7 +14,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridMultiSelectionModel;
-import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;

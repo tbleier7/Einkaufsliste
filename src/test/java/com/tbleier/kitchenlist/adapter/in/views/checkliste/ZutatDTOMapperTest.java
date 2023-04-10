@@ -1,11 +1,10 @@
-package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
+package com.tbleier.kitchenlist.adapter.in.views.checkliste;
 
 import com.tbleier.kitchenlist.application.ZutatenDTOMapper;
 import com.tbleier.kitchenlist.application.domain.Artikel;
 import com.tbleier.kitchenlist.application.domain.Einheit;
 import com.tbleier.kitchenlist.application.domain.Kategorie;
 import com.tbleier.kitchenlist.application.domain.einkaufsliste.Einkaufsliste;
-import com.tbleier.kitchenlist.application.domain.einkaufsliste.Zutat;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
+package com.tbleier.kitchenlist.adapter.in.views.checkliste;
 
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 

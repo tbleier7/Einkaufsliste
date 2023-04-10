@@ -1,7 +1,7 @@
 package com.tbleier.kitchenlist.adapter.in.views;
 
 import com.tbleier.kitchenlist.adapter.in.views.artikel.ArtikelListView;
-import com.tbleier.kitchenlist.adapter.in.views.einkaufsliste.EinkaufslisteListView;
+import com.tbleier.kitchenlist.adapter.in.views.checkliste.EinkaufslisteListView;
 import com.tbleier.kitchenlist.adapter.in.views.kategorie.KategorieListView;
 import com.tbleier.kitchenlist.adapter.in.views.rezept.RezepteListView;
 import com.vaadin.flow.component.applayout.AppLayout;

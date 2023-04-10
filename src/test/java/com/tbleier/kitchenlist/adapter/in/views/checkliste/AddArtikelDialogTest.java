@@ -1,4 +1,4 @@
-package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
+package com.tbleier.kitchenlist.adapter.in.views.checkliste;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

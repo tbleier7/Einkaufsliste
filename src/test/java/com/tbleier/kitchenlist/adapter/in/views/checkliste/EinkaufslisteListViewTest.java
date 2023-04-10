@@ -1,10 +1,9 @@
-package com.tbleier.kitchenlist.adapter.in.views.einkaufsliste;
+package com.tbleier.kitchenlist.adapter.in.views.checkliste;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 
-import com.tbleier.kitchenlist.application.DecrementZutatService;
 import com.tbleier.kitchenlist.application.ports.ZutatDTO;
 import com.tbleier.kitchenlist.application.ports.in.CommandResult;
 import com.tbleier.kitchenlist.application.ports.in.CommandService;
@@ -24,7 +23,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)

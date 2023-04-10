@@ -1,7 +1,7 @@
 package com.tbleier.essensplanung.application;
 
 import com.tbleier.essensplanung.application.ports.KategorieDTO;
-import com.tbleier.essensplanung.adapter.in.views.kategorie.KategorieModelMapper;
+import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie.KategorieModelMapper;
 import com.tbleier.essensplanung.application.ports.in.QueryService;
 import com.tbleier.essensplanung.application.ports.in.queries.ListKategorienQuery;
 import com.tbleier.essensplanung.application.ports.out.KategorieRepository;

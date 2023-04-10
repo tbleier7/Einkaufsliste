@@ -1,8 +1,8 @@
 package com.tbleier.essensplanung;
 
-import com.tbleier.essensplanung.adapter.in.views.interceptors.CommandExceptionHandler;
+import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.interceptors.CommandExceptionHandler;
 import com.tbleier.essensplanung.application.ports.KategorieDTO;
-import com.tbleier.essensplanung.adapter.in.views.kategorie.KategorieModelMapper;
+import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie.KategorieModelMapper;
 import com.tbleier.essensplanung.application.DeleteKategorieService;
 import com.tbleier.essensplanung.application.FindAllKategorienService;
 import com.tbleier.essensplanung.application.SaveKategorieService;

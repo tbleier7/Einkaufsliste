@@ -1,6 +1,6 @@
 package com.tbleier.essensplanung;
 
-import com.tbleier.essensplanung.adapter.in.views.artikel.ArtikelDTOMapper;
+import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.artikel.ArtikelDTOMapper;
 import com.tbleier.essensplanung.application.DeleteArtikelService;
 import com.tbleier.essensplanung.application.ListArtikelService;
 import com.tbleier.essensplanung.application.ports.ArtikelDTO;

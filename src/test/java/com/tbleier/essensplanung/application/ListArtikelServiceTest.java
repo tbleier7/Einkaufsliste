@@ -3,7 +3,7 @@ package com.tbleier.essensplanung.application;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import com.tbleier.essensplanung.adapter.in.views.artikel.ArtikelDTOMapper;
+import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.artikel.ArtikelDTOMapper;
 import com.tbleier.essensplanung.application.domain.Artikel;
 import com.tbleier.essensplanung.application.domain.Einheit;
 import com.tbleier.essensplanung.application.domain.Kategorie;

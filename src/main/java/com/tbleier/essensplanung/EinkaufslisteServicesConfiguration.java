@@ -1,6 +1,6 @@
 package com.tbleier.essensplanung;
 
-import com.tbleier.essensplanung.adapter.in.views.interceptors.CommandExceptionHandler;
+import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.interceptors.CommandExceptionHandler;
 import com.tbleier.essensplanung.application.*;
 import com.tbleier.essensplanung.application.ports.MoveZutatService;
 import com.tbleier.essensplanung.application.ports.ZutatDTO;

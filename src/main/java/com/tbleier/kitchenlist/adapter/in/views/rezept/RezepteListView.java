@@ -45,7 +45,7 @@ public class RezepteListView extends VerticalLayout {
         addClassName("kategorie-list-view");
         setSizeFull();
 
-        listBox.setItems(List.of(new RezeptKategorieDTO()));
+        listBox.setItems(List.of(new RezeptKategorieDTO(), new RezeptKategorieDTO(), new RezeptKategorieDTO()));
 
         listBox.setRenderer(new ComponentRenderer<>(rezeptKategorieDTO -> {
             HorizontalLayout cardLayout = new HorizontalLayout();
@@ -54,21 +54,14 @@ public class RezepteListView extends VerticalLayout {
             Avatar avatar = new Avatar();
             avatar.setName("AvatarName");
             avatar.setImage("https://www.google.com/url?sa=i&url=https%3A%2F%2Frivierabarcrawltours.com%2Fde%2Fberuehmtes-essen-in-nizza-frankreich%2F&psig=AOvVaw2ZDDl-det1zxwlNS39brQL&ust=1681207533130000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCIjgn6GIn_4CFQAAAAAdAAAAABAE");
-            avatar.setHeight("64px");
-            avatar.setWidth("64px");
+            avatar.setHeight("80px");
+            avatar.setWidth("80px");
 
             VerticalLayout infoLayout = new VerticalLayout();
             infoLayout.setSpacing(false);
             infoLayout.setPadding(false);
             infoLayout.getElement().appendChild(
                     ElementFactory.createStrong("Sonntagsgerichte"));
-
-            VerticalLayout contactLayout = new VerticalLayout();
-            contactLayout.setSpacing(false);
-            contactLayout.setPadding(false);
-            contactLayout.add(new Grid<RezeptKategorieDTO>());
-            infoLayout
-                    .add(new Details("Rezepte", contactLayout));
 
             cardLayout.add(avatar, infoLayout);
             return cardLayout;

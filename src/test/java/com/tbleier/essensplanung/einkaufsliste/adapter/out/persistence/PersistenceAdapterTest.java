@@ -14,5 +14,6 @@ import java.lang.annotation.Target;
 @ContextConfiguration(
         classes = {PersistenceConfig.class,
                 JpaMapperConfig.class})
+//Everything related to testcontainers is configured in application config
 public @interface PersistenceAdapterTest {
 }

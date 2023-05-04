@@ -33,7 +33,7 @@ pipeline {
 
         stage('Build Dockerimage') {
             steps {
-                sh 'docker build . -t essensplanung:latest'
+                sh 'sudo docker build . -t essensplanung:latest'
             }
         }
 //        stage('Login to Github Container Registry') {

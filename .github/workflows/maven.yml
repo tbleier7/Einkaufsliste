@@ -31,7 +31,7 @@ jobs:
         run: mvn -B spring-boot:build-image --file pom.xml -P production
 
       - name: Deploy app to fly.io
-        run: flyctl deploy --remote-only
+        run: flyctl deploy
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       

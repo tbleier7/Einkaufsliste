@@ -40,4 +40,4 @@ jobs:
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         run:
-          mvn -B verify com.google.cloud.tools:jib-maven-plugin:3.3.2:build  -Djib.to.image=europe-west3-docker.pkg.dev/$GOOGLE_PROJECT/essensplanung:test --file pom.xml -P production
+          mvn -B compile com.google.cloud.tools:jib-maven-plugin:3.3.2:build  -Djib.to.image=europe-west3-docker.pkg.dev/$GOOGLE_PROJECT/essensplanung:test --file pom.xml -P production

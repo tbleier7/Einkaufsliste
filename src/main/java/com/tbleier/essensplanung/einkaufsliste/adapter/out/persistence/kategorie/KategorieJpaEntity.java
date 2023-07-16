@@ -2,7 +2,7 @@ package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.kategori
 
 import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.artikel.ArtikelJpaEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -14,12 +14,16 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: install the gcloud cli
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GOOGLE_PROJECT }}
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          export_default_credentials: true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -27,11 +31,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Build with Maven
-        run: mvn -B spring-boot:build-image --file pom.xml -P production
 
-#       - name: Deploy app to fly.io
-#         run: flyctl deploy
-#         env:
-#           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      
+      - name: Build with Maven
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+        run:
+          gcloud auth configure-docker us-central1-docker.pkg.dev
+          mvn -B verify com.google.cloud.tools:jib-maven-plugin:3.3.2:build  -Djib.to.image=europe-west3-docker.pkg.dev/$GOOGLE_PROJECT/essensplanung:test --file pom.xml -P production

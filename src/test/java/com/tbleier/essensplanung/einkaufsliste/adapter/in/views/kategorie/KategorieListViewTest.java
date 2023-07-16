@@ -34,9 +34,6 @@ class KategorieListViewTest {
     @Mock
     private QueryService<ListKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;
 
-
-
-
     private KategorieListView testee;
     private KategorieDTO firstKategorie;
     private KategorieDTO secondKategorie;

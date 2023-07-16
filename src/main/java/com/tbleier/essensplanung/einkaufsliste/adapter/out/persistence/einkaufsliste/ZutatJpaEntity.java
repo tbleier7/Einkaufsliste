@@ -2,7 +2,7 @@ package com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.einkaufs
 
 import com.tbleier.essensplanung.einkaufsliste.adapter.out.persistence.artikel.ArtikelJpaEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "zutat")

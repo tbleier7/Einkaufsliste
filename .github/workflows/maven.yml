@@ -26,8 +26,8 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Test Cloud SDK
-        run: gcloud info
+      - name: Auth docker stuff
+        run: gcloud auth configure-docker europe-west3-docker.pkg.dev
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -40,5 +40,4 @@ jobs:
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         run:
-          gcloud auth configure-docker us-central1-docker.pkg.dev
           mvn -B verify com.google.cloud.tools:jib-maven-plugin:3.3.2:build  -Djib.to.image=europe-west3-docker.pkg.dev/$GOOGLE_PROJECT/essensplanung:test --file pom.xml -P production

@@ -27,7 +27,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Auth docker stuff
-        run: gcloud auth configure-docker europe-west3-docker.pkg.dev
+        run: gcloud auth configure-docker
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -40,4 +40,4 @@ jobs:
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         run:
-          mvn -B compile com.google.cloud.tools:jib-maven-plugin:3.3.2:build -Djib.to.credHelper=gcr -Djib.to.image=europe-west3-docker.pkg.dev/$GOOGLE_PROJECT/essensplanung:test --file pom.xml -P production
+          mvn -B compile com.google.cloud.tools:jib-maven-plugin:3.3.2:build -Djib.to.credHelper=gcr -Djib.to.image=gcr.io/$GOOGLE_PROJECT/essensplanung:test --file pom.xml -P production

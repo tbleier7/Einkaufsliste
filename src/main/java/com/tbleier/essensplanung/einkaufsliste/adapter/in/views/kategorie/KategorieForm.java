@@ -46,6 +46,7 @@ public class KategorieForm extends FormLayout {
         this.setKategorieModel(kategorieDTO);
         binder.bindInstanceFields(this);
 
+        name.setId("kategorie-name-input-field");
         add(name, createButtonLayout());
     }
 

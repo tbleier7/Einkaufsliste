@@ -1,4 +1,4 @@
-package com.tbleier.essensplanung.acceptanceTests;
+package com.tbleier.essensplanung.einkaufsliste.acceptanceTests;
 
 import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.IncludeEngines;
@@ -9,7 +9,7 @@ import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("com.tbleier.essensplanung.acceptanceTests")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.tbleier.essensplanung.acceptanceTests")
-public class AcceptanceIT {
+@SelectClasspathResource("com.tbleier.essensplanung.einkaufsliste.acceptanceTests")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.tbleier.essensplanung.einkaufsliste.acceptanceTests")
+public class EssensplanungAcceptanceIT {
 }

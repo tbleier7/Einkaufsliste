@@ -22,7 +22,6 @@ import java.util.List;
 
 @PageTitle("Kategorien")
 @Route(value = "kategorie", layout = MainLayout.class)
-
 public class KategorieListView extends VerticalLayout {
 
     private final KategorieFormFactory kategorieFormFactory;
@@ -54,6 +53,7 @@ public class KategorieListView extends VerticalLayout {
         add(getToolbar(), getContent());
         closeEditor();
 
+        grid.setId("kategorie-grid");
         grid.asSingleSelect().addValueChangeListener(event ->
                 editKategorie(event.getValue()));
     }

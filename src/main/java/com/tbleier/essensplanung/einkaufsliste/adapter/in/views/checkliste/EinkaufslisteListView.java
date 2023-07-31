@@ -135,6 +135,9 @@ public class EinkaufslisteListView extends VerticalLayout {
 
         grid.addDropListener(
                 event -> {
+                    if(event.getDropTargetItem().isEmpty())
+                        return;
+
                     ZutatDTO dropOverItem = event.getDropTargetItem().get();
                     if (!dropOverItem.equals(draggedItem)) {
                         // reorder dragged item the backing gridItems container

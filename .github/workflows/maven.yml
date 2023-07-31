@@ -36,7 +36,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: setup Chrome
+      - name: setup Chrome for acceptance testing
         uses: browser-actions/setup-chrome@v1
 
       - name: Build with Maven

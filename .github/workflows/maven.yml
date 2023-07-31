@@ -37,10 +37,12 @@ jobs:
           cache: maven
 
       - name: setup Chrome for acceptance testing
-        uses: browser-actions/setup-chrome@v1
+        uses: browser-actions/setup-chrome@latest
+
+      - run: chrome --version
 
       - name: Build with Maven
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         run:
-          mvn -B verify com.google.cloud.tools:jib-maven-plugin:3.3.2:build -Djib.to.image=europe-west3-docker.pkg.dev/$GOOGLE_PROJECT/essensplanung/essensplanung:test --file pom.xml -P production -X
+          mvn -B verify com.google.cloud.tools:jib-maven-plugin:3.3.2:build -Djib.to.image=europe-west3-docker.pkg.dev/$GOOGLE_PROJECT/essensplanung/essensplanung:test --file pom.xml -P production

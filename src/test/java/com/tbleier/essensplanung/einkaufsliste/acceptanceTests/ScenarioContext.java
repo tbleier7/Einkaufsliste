@@ -21,6 +21,9 @@ public class ScenarioContext {
 
         //This is needed to establisch a websocket connection to localhost on a random port
         var options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless");
         options.addArguments("--remote-allow-origins=*");
 
         driver = new ChromeDriver(options);

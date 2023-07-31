@@ -357,9 +357,8 @@
                     <consoleOutputReporter>
                         <disable>false</disable>
                     </consoleOutputReporter>
-                    <statelessTestsetInfoReporter>
-                            implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporterUnicode"
-                    </statelessTestsetInfoReporter>
+                    <statelessTestsetInfoReporter
+                            implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporterUnicode"/>
                 </configuration>
             </plugin>
 

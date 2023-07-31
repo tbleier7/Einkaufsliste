@@ -9,14 +9,14 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 @CucumberContextConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AcceptanceITContext {
+public class ScenarioContext {
 
     @LocalServerPort
     protected int randomServerPort;
 
-    protected ChromeDriver driver;
+    protected static ChromeDriver driver;
 
-    public AcceptanceITContext() {
+    public ScenarioContext() {
         WebDriverManager.chromedriver().setup();
 
         //This is needed to establisch a websocket connection to localhost on a random port
@@ -25,5 +25,7 @@ public class AcceptanceITContext {
 
         driver = new ChromeDriver(options);
     }
+
+
 
 }

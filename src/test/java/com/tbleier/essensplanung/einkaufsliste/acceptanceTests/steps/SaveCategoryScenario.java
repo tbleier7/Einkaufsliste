@@ -1,7 +1,6 @@
 package com.tbleier.essensplanung.einkaufsliste.acceptanceTests.steps;
 
-import com.tbleier.essensplanung.einkaufsliste.acceptanceTests.AcceptanceITContext;
-import io.cucumber.java.AfterAll;
+import com.tbleier.essensplanung.einkaufsliste.acceptanceTests.ScenarioContext;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -9,11 +8,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static java.time.Duration.ofSeconds;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 
-public class SaveCategoryStep extends AcceptanceITContext {
+public class SaveCategoryScenario extends ScenarioContext {
 
     @Given("the user wants to add a new category")
     public void theUserWantsToAddANewCategory() {

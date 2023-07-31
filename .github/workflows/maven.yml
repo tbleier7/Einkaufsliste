@@ -36,8 +36,17 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: beta
+        id: setup-chrome
+        run: |
+          echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
+          ${{ steps.setup-chrome.outputs.chrome-path }} --version
+
       - name: Build with Maven
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         run:
-          mvn -B compile com.google.cloud.tools:jib-maven-plugin:3.3.2:build -Djib.to.image=europe-west3-docker.pkg.dev/$GOOGLE_PROJECT/essensplanung/essensplanung:test --file pom.xml -P production
+          mvn -B verify com.google.cloud.tools:jib-maven-plugin:3.3.2:build -Djib.to.image=europe-west3-docker.pkg.dev/$GOOGLE_PROJECT/essensplanung/essensplanung:test --file pom.xml -P production

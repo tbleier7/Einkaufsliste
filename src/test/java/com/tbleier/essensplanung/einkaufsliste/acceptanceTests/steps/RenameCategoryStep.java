@@ -5,17 +5,16 @@ import com.tbleier.essensplanung.einkaufsliste.acceptanceTests.pages.KategoriePa
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class CreateNewCategoryStep extends StepDefinitionContext {
+public class RenameCategoryStep extends StepDefinitionContext {
 
     @Autowired
     private KategoriePage kategoriePage;
 
-    @When("a category with name {string} is saved")
-    public void aCategoryWithNameIsSaved(String categoryName) {
-//        var kategoriePage = new KategoriePage(getWebDriverContext());
-
-        kategoriePage.openKategoryFormForNewCategory();
-        kategoriePage.typeCategoryName(categoryName);
+    @When("category {string} is renamed to {string}")
+    public void categoryIsRenamedTo(String oldCategoryName, String newCategoryName) {
+        kategoriePage.openKategoryFormForCategory(oldCategoryName);
+        kategoriePage.clearCategoryName();
+        kategoriePage.typeCategoryName(newCategoryName);
         kategoriePage.clickSaveButton();
     }
 }

@@ -3,14 +3,21 @@ package com.tbleier.essensplanung.einkaufsliste.acceptanceTests.pages;
 import com.tbleier.essensplanung.einkaufsliste.acceptanceTests.WebDriverContext;
 import com.tbleier.essensplanung.einkaufsliste.adapter.in.views.kategorie.KategorieListView;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.stereotype.Component;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Component
 public class KategoriePage {
 
     private final WebDriverContext webDriverContext;
 
+    @Autowired
     public KategoriePage(WebDriverContext webDriverContext) {
         this.webDriverContext = webDriverContext;
     }
@@ -66,8 +73,13 @@ public class KategoriePage {
     }
 
     public void assertThatCategoryListDoesNotContain(String categoryName) {
-        var actualKategorieCell = findKategorieInKategorieGrid(categoryName);
-        assertFalse(actualKategorieCell.isDisplayed());
+        try {
+            var actualKategorieCell = findKategorieInKategorieGrid(categoryName);
+            assertFalse(actualKategorieCell.isDisplayed());
+        }
+        catch (NoSuchElementException e) {
+            // All is good if it isn't there - Pass
+        }
     }
 
     public void assertThatCategoryListDoesContain(String expectedKategorieName) {
@@ -78,5 +90,11 @@ public class KategoriePage {
     private WebElement findKategorieInKategorieGrid(String categoryName) {
         return webDriverContext.findElement(
                 By.xpath("//vaadin-grid-cell-content[contains(.,'" + categoryName + "')]"));
+    }
+
+    public void clearCategoryName() {
+        var nameInputField = webDriverContext.findElement(By.id("kategorie-name-input-field"));
+        webDriverContext.waitUntilWebElementIsVisible(nameInputField);
+        nameInputField.sendKeys(Keys.chord(Keys.CONTROL, "a"), "");
     }
 }

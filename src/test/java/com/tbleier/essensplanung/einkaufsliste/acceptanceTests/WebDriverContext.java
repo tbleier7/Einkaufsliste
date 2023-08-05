@@ -5,33 +5,31 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
+import org.springframework.stereotype.Component;
 
 import static java.time.Duration.ofSeconds;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
+@Component
 public class WebDriverContext {
 
-    private static WebDriverContext instance;
+    //How to get a random port at runtime: https://www.baeldung.com/spring-boot-running-port
+    @Autowired
+    private ServletWebServerApplicationContext webServerAppCtxt;
 
-    public static WebDriverContext getInstanceForPort(int serverPort) {
-        if(instance == null)
-            instance = new WebDriverContext(serverPort);
+    public static ChromeDriver driver;
 
-        return instance;
-    }
-
-    private final int serverPort;
-
-    public ChromeDriver driver;
-
-    private WebDriverContext(int serverPort) {
-        this.serverPort = serverPort;
+    public static void setupChromeDriver() {
         WebDriverManager.chromedriver().setup();
 
         var options = new ChromeOptions();
         //Following arguments are needed to run webdriver on a build agent
-        options.addArguments("--headless");
+        //TODO:
+//        options.addArguments("--headless");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
 
@@ -42,7 +40,7 @@ public class WebDriverContext {
     }
 
     public void openPage(String resource) {
-        driver.get("http://localhost:" + this.serverPort + resource);
+        driver.get("http://localhost:" + webServerAppCtxt.getWebServer().getPort() + resource);
     }
 
     public void waitForTitle(String title) {
@@ -51,10 +49,14 @@ public class WebDriverContext {
     }
 
     public void waitUntilWebElementIsVisible(WebElement webElement) {
-
         new WebDriverWait(driver, ofSeconds(30), ofSeconds(1))
                 .until(visibilityOf(webElement));
     }
+
+//    public void waitUntilWebElementIsEnabled(WebElement webElement) {
+//        new WebDriverWait(driver, ofSeconds(30), ofSeconds(1))
+//                .until(ExpectedConditions.e(webElement));
+//    }
 
     public void waitUntilWebElementIsInvisible(WebElement webElement) {
         new WebDriverWait(driver, ofSeconds(30), ofSeconds(1))
@@ -65,7 +67,7 @@ public class WebDriverContext {
         return driver.findElement(locator);
     }
 
-    public static void quit() {
-        instance.driver.quit();
+    public static void cleanup() {
+        driver.quit();
     }
 }

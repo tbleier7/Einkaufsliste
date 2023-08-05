@@ -61,7 +61,6 @@ public class EinkaufslisteListView extends VerticalLayout {
         configureGrid();
 
         add(getToolbar(), grid);
-
     }
 
     private Component getToolbar() {

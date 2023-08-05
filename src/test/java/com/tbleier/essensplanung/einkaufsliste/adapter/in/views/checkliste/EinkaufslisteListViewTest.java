@@ -13,6 +13,8 @@ import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.Inc
 import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.MoveZutatCommand;
 import com.tbleier.essensplanung.einkaufsliste.application.ports.in.commands.RemoveZutatCommand;
 import com.tbleier.essensplanung.einkaufsliste.application.ports.in.queries.ListZutatenQuery;
+import com.vaadin.flow.component.UI;
+import org.junit.AfterClass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,6 +65,10 @@ class EinkaufslisteListViewTest {
                 moveZutatCommandService,
                 incrementZutatCommandService,
                 decrementZutatCommandService);
+
+        //Tests fail on Buildserver with:
+        // java.lang.NullPointerException: Cannot invoke "com.vaadin.flow.dom.Element.getProperty(String, int)" because the return value of "com.vaadin.flow.component.UI.getElement()" is null
+        UI.setCurrent(new UI());
     }
 
     @Test

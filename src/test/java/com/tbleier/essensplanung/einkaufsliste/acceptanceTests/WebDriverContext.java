@@ -30,10 +30,12 @@ public class WebDriverContext {
         WebDriverManager.chromedriver().setup();
 
         var options = new ChromeOptions();
+        //Following arguments are needed to run webdriver on a build agent
         options.addArguments("--headless");
-        //Following argurments are needed to establish a websocket connection to localhost on a random port
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
+
+        //Following arguments are needed to establish a websocket connection to localhost on a random port
         options.addArguments("--remote-allow-origins=*");
 
         driver = new ChromeDriver(options);

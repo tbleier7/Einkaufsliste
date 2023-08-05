@@ -20,9 +20,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-@PageTitle("Kategorien")
+@PageTitle(value = KategorieListView.title)
 @Route(value = "kategorie", layout = MainLayout.class)
 public class KategorieListView extends VerticalLayout {
+
+    public static final String title = "Kategorien";
 
     private final KategorieFormFactory kategorieFormFactory;
     private final QueryService<ListKategorienQuery, List<KategorieDTO>> listAllKategorienQueryService;

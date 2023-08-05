@@ -8,8 +8,7 @@ Feature:  Kategorie Verwaltung
     When a category with name "Obst" is saved
     Then "Obst" should be visible in the category list
 
-#  Scenario: should delete an article category
-#    Given the user wants to delete an existing category
-#    And there is a category named "Gemüse"
-#    When "Gemüse" is deleted
-#    Then "Gemüse" should not be visible in the category list
+  Scenario: should delete an article category
+    Given a category with name "Gemüse" is saved
+    When category "Gemüse" is deleted
+    Then "Gemüse" should not be visible in the category list

@@ -28,8 +28,7 @@ public class WebDriverContext {
 
         var options = new ChromeOptions();
         //Following arguments are needed to run webdriver on a build agent
-        //TODO:
-//        options.addArguments("--headless");
+        options.addArguments("--headless");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
 
@@ -52,11 +51,6 @@ public class WebDriverContext {
         new WebDriverWait(driver, ofSeconds(30), ofSeconds(1))
                 .until(visibilityOf(webElement));
     }
-
-//    public void waitUntilWebElementIsEnabled(WebElement webElement) {
-//        new WebDriverWait(driver, ofSeconds(30), ofSeconds(1))
-//                .until(ExpectedConditions.e(webElement));
-//    }
 
     public void waitUntilWebElementIsInvisible(WebElement webElement) {
         new WebDriverWait(driver, ofSeconds(30), ofSeconds(1))

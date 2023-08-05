@@ -12,7 +12,6 @@ public class CreateNewCategoryStep extends StepDefinitionContext {
 
     @When("a category with name {string} is saved")
     public void aCategoryWithNameIsSaved(String categoryName) {
-//        var kategoriePage = new KategoriePage(getWebDriverContext());
 
         kategoriePage.openKategoryFormForNewCategory();
         kategoriePage.typeCategoryName(categoryName);

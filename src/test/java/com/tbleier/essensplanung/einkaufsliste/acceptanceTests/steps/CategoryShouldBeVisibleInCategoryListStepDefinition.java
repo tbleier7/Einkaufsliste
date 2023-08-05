@@ -3,9 +3,6 @@ package com.tbleier.essensplanung.einkaufsliste.acceptanceTests.steps;
 import com.tbleier.essensplanung.einkaufsliste.acceptanceTests.ScenarioContext;
 import com.tbleier.essensplanung.einkaufsliste.acceptanceTests.pages.KategoriePage;
 import io.cucumber.java.en.Then;
-import org.openqa.selenium.By;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CategoryShouldBeVisibleInCategoryListStepDefinition extends ScenarioContext {
 
